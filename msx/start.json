@@ -1,0 +1,5 @@
+{
+    "name": "TorrServer Plugin",
+    "version": "0.0.1",
+    "parameter": "menu:request:interaction:init@https://damiva.github.io/msx/torrserver.html"
+}
