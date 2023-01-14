@@ -1,89 +1,13 @@
 <!DOCTYPE html>
 <html>
-<head>
-<title>TorrServer Plugin</title>
-<script type="text/javascript" src="tvx.js"></script>
-<script>
-function T(P, S, A){
-    var H = S.get("torrserver", "");
-    var sets = {
-        type: "list", reuse: false, cache: false, restore: false,
-        ready: {action: "[interaction:commit:message:version|interaction:commit:message:init]"},
-        template: {type: "control", action: "interaction:commit", layout: "0,0,12,1"},
-        items: [
-            {type: "space", headline: "TorrServer"}, {type: "space", text: ""},
-            {icon: "offline-bolt", label: "{dic:label:content_server|Server}:", extensionLabel: H || "{dic:label:none|None}", action: "panel:request:interaction:init@" + window.location.origin + "/msx/torraddress.html"},
-            {icon: "language", label: "{dic:Russian|Russian language}:", extensionIcon: "", action: "[interaction:commit:message:russian|reload]", id: "russian"},
-            {icon: "zoom-out", label: "{dic:Font|Smaller font size for lists}", extensionIcon: "", action: "interaction:commit:message:compress", id: "compress"},
-            {icon: "folder", label: "{dic:Folders|Show folders in torrents}", extensionIcon: "", action: "interaction:commit:message:folders", id: "folders"}
-        ]
-    };
-    var menu = function(d){
-        d = typeof d == "object" && d.trn || [];
-        d.p;
-    };
-    var list = function(d, c){return {
-        type: "list", reuse: false, cache: false, restore: false, compress: c,
-        template: {icon: "msx-glass:bolt", imageWidth: 1.3, imageFiller: "height", layout: "0,0," + (c ? "8" : "6") + ",2"},
-        items: d.map(function(t){return {
-            id: t.hash,
-            headline: t.title,
-            image: t.poster || null,
-            titleFooter: "{ico:msx-white:attachment} " + BS(t.torrent_size),
-            stampColor: t.stat == 5 ? "default" : t.stat == 4 ? "msx-red" : t.stat == 3 ? "msx-green" : "msx-yellow",
-            stamp: t.stat < 5 ? ("{ico:north} " + (t.active_peers || 0) + " - " + (t.pending_peers || 0) + " / " + (t.total_peers || 0)) : null,
-            action: "content:request:interaction:init@" + window.location.origin + "/msx/torrplay.html?link=" + t.hash
-        }})
-    }};
-    this.ready = function(){
-        var h = TVXServices.urlParams.get("host", "");
-        if(h){
-            sets.items[3].enable = false;
-            H = h;
-        }
-    };
-    this.handleRequest = function(i, _, f){
-        switch(i){
-            case "init":
-                f({
-                    "name": "TorrServer Plugin",
-                    "version": "0.0.1",
-                    "dictionary": S.getBool("russian", false) ? "russian.json" : null,
-                    "reference": "request:interaction:menu@" + window.location.href
-                });
-                break;
-            case "menu":
-                if(H) A.get("plugins.json", {success: function(d){f(menu(d))}, error: function(e){P.error(e); f(menu(true))}});
-                else f(menu());
-                break;
-            case "list":
-                A.post(S.get("torrserver") + "/torrents", '{"action":"list"}', {success: function(d){f(list(d, S.getBool("compress", false)))}, error: function(e){P.error(e); f();}});
-                break;
-            case "sets":
-                f(sets);
-                break;
-            default: 
-                P.error("Wrong request ID");
-                f();
-        }
-    };
-    this.handleData = function(d){
-        var s = ["russian", "compress", "folders"];
-        switch(d.message){
-            case "version":
-                A.get(H + "/echo", {success: function(v){P.executeAction("update:content:version", {text: "{dic:label:version|Version}: {col:msx-white}" + v})}}, {dataType: "text"});
-                break;
-            case "russian":
-            case "compress":
-            case "folders":
-                s = [d.message];
-                S.set(d.message, S.getBool(d.message, false));
-            case "init":
-                s.forEach(function(k){P.executeAction("update:content:" + k, {extensionIcon: "check-box" + (S.getBool(k, false) ? "" : "--outline-blank"})});
-        }
-    };
-}
-</script>
-</head>
-<body></body>
+    <head>
+        <title>TorrServer Plugin</title>
+        <meta charset="UTF-8" />
+        <meta name="author" content="damiva" />
+        <script type="text/javascript" src="http://msx.benzac.de/js/tvx-plugin.min.js"></script>
+        <script type="text/javascript" src="http://msx.benzac.de/js/tizen-player.js"></script>
+        <script type="text/javascript" src="js/torrserver.js"></script>
+    </head>
+    <body>
+    </body>
 </html>

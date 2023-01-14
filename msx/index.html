@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>damiva's MSX Plugin</title>
+        <meta charset="UTF-8" />
+        <meta name="author" content="damiva" />
+        <script type="text/javascript" src="js/tvx.js"></script>     
+        <script type="text/javascript">
+            function M(P, S, Q){
+                this.ready = function(){
+                    if(Q.has("trn")) S.set("stg:trn", Q.getFullStr("trn", ""));
+                }
+                this.handleRequest = function(i, d, f){
+                    if(!S.getFullStr("stg:trn", null)){
+                        P.error("TorrServer is not set")
+                        f();
+                    } else switch(i){
+                        case "init":
+                            f({
+                                name: "MSX Plugin"
+                            });
+                            break;
+                        case "sets":
+
+                        default:
+                            P.error("wrong dataID")
+                            f();
+                    }
+                };
+            }
+            TVXPluginTools.onReady(function(){
+                var t = TVXInteractionPlugin;
+                t.setupHandler(new P(t, TVXServices.storage, TVXServices.urlParams));
+                t.init();
+            });
+        </script>
+    </head>
+    <body>
+    </body>
+</html>
