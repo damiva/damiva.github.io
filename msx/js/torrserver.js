@@ -1,4 +1,4 @@
-var TZN = null, VRS = "", ADR = "";
+var TZN = null, VRS = "", ADR = "", HID = -1;
 function EXT(p){
     var x = [["mkv", "mp4", "ts", "avi", "mpeg"], ["mp3", "acc"]], 
         f = p.indexOf("/"), l = p.lastIndexOf("/");
@@ -33,7 +33,17 @@ function TDB(d, c, r){return {
     template: {
         imageWidth: 1.3, imageFiller: "height", icon: "msx-glass:bolt",
         layout: c ? "0,0,8,1" : "0,0,6,1",
-        action: "execute:request:interaction:list@" + window.location.href, data: {link: "{context:id}"}
+        action: "execute:request:interaction:list@" + window.location.href, data: {link: "{context:id}"},
+        options: {
+            caption: "{dic:caption:options|Options}:{tb}{ico:msx-red:stop} {dic:rmv|Remove the torrent}{tb}{ico:msc-green:stop} {dic:drop|Drop the torrent}",
+            headline: "{dic:czption:options|Options}:",
+            template: {enumerate: false, type: "control"},
+            items: [
+                {icon: "msx-red:stop", label: "{dic:rem|Remove the torrent}", action: "interaction:commit:message:rem", data: "{context:id}"},
+                {icon: "msx-green:stop", label: "{dic:drop|Remove the torrent}", action: "interaction:commit:message:drop", data: "{context:id}"},
+                {icon: "msx-blue:menu", label: "{dic:caprion:menu|Menu}", action: "menu"},
+            ]
+        }
     },
     items: d.map(function(t){return {
         id: t.hash,
@@ -44,9 +54,25 @@ function TDB(d, c, r){return {
         stampColor: t.stat == 4 ? "msx-red" : t.stat == 3 ? "msx-green" : "msx-yellow"
     }})
 }}
-function TFS(d, c){return {
+function TFS(d, c){
+    var l = [], t = [false, false];
+    d.file_stats.forEaach(function(f){
+        if((f.path = EXT(f.path))[2] >= 0) l.push({
+            id: d.hash + "-" + f.id,
+            Dir: f.path[1] ? ("{ico:folder} " + f.path[1] + "{br}") : "",
+            label: f.path[0],
+            extensionLabel: LNG(f.length),
+            display: (t[f.path] = true) && (HID != f.path),
+            icon: "msx-white-soft:" + (f.path[2] ? "audiotrack" : "movie"),
+            group: "{dic:label:" + (f.path[2] ? "audio|Audio}" : "video|Video}"),
+            action: SRC(f.path[2], d.hash, f.id)
+        });
+    });
+    
+    return {
     type: "list", reuse: false, cache: false, restore: false, headline: d.title, extension: PRS(d),
     ready: {action: "interaction:commit:message:cnt", data: d.hash},
+
     template: {type: "control", layout: c ? "0,0,16,1" : "0,0,12,1", playerLabel: d.title, 
         progress: -1, live: {type: "playback", action: "player:show"},
         properties: {
@@ -63,7 +89,7 @@ function TFS(d, c){return {
         Dir: (f.path = EXT(f.path))[1] ? ("{ico:folder} " + f.path[1] + "{br}") : "",
         label: f.path[0],
         extensionLabel: LNG(f.length),
-        display: f.path[2] >= 0,
+        display: f.path[2] >= 0 && HID != f.path[2],
         icon: f.path[2] ? "audiotrack" : "movie",
         group: "{dic:label:" + (f.path[2] ? "audio|Audio}" : "video|Video}"),
         action: SRC(f.path[2], d.hash, f.id)
@@ -75,7 +101,7 @@ function PLG(P, S, Q, A){
         W.start();
         if(Q.has("trn")) S.set("stg:trn", ADR = Q.getFullStr("trn", ""));
         else ADR = S.getFullStr("stg:trn");
-        P.validateSettings(function(){
+        P.onValidatedSettings(function(){
             if(TVXSettings.PLATFORM == "tizen"){
                 TZN = new TizenPlayer();
                 TZN.init();
@@ -86,7 +112,7 @@ function PLG(P, S, Q, A){
     this.handleEvent = function(d){
         if(d.event == "video:load" && data.info.type == "video"){
             P.executeAction("player:button:content:setup", {icon: "build", action: TZN
-                ? "content:request:interaction:tzn"
+                ? "content:request:interaction:tizen"
                 : "panel:request:player:options"
             })
         }
@@ -97,34 +123,45 @@ function PLG(P, S, Q, A){
                 c = S.getBool("stg:cmp", false),
                 r = S.getBool("stg:rus", false)
             if(!ADR) e("TorrServer is not set!");
-            else if(i == "tzn" && TZN) TZN.handleRequest("tizen", "init", f); 
-            else if(d) A.get(
-                ADR + "/stream/?stat&" + Object.keys(d).map(function(k){return k + "=" + encodeURIComponent(d[k])}).join("&"),
-                {success: function(d){f({action: "content:data", data: TFS(d, c)})}, error: e}
-            );
-            else if(i == "init") A.get(
-                ADR + "/echo",
-                {
-                    success: function(d){f({
-                        name: "TorrServer",
-                        version: V = d,
-                        reference: "request:interaction:list@" + window.location.href,
-                        dictionary: r ? (window.location.origin + "/msx/russian.json") : null
-                    })},
-                    error: e
-                },
-                {dataType: "text"}
-            );
-            else if(i == "list") A.post(
-                ADR + "/torrents", 
-                '{"action":"list"}',
-                {success: function(d){f(TDB(d, c, r))}, error: e}
-            );
-            else A.post(
-                ADR + "/cache",
-                '{"action":"get","hash":"' + i + '"}',
-                {success: function(d){f({action: "player:label:position:{VALUE}{tb}" + PRS(d.torrent)})}}
-            );
+            else switch(i){
+                case "init":
+                    A.get(
+                        ADR + "/echo",
+                        {
+                            success: function(d){f({
+                                name: "TorrServer",
+                                version: V = d,
+                                reference: "request:interaction:list@" + window.location.href,
+                                dictionary: r ? (window.location.origin + "/msx/russian.json") : null
+                            })},
+                            error: e
+                        },
+                        {dataType: "text"}
+                    );
+                    break;
+                case "list":
+                    A.post(
+                        ADR + "/torrents", 
+                        '{"action":"list"}',
+                        {success: function(d){f(TDB(d, c, r))}, error: e}
+                    );
+                    break;
+                case "load":
+                    A.get(
+                        ADR + "/stream/?stat&" + Object.keys(d).map(function(k){return k + "=" + encodeURIComponent(d[k])}).join("&"),
+                        {success: function(d){f({action: "content:data", data: TFS(d, c)})}, error: e}
+                    );
+                    break;
+                case "tizen":
+                    TZN.handleRequest("tizen", "init", f);
+                    break;
+                default:
+                    A.post(
+                        ADR + "/cache",
+                        '{"action":"get","hash":"' + i + '"}',
+                        {success: function(d){f({action: "player:label:position:{VALUE}{tb}" + PRS(d.torrent)})}}
+                    );
+            }
         });
     };
     this.handleData = function(d){
