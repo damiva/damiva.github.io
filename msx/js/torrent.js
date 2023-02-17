@@ -37,7 +37,7 @@ function Torrent(P, Q){
     };
     this.handleRequst = function(i, d, f){W.onReady(function(){
         var e = function(m){P.error(m); f();}, l = "";
-        if(d) f({action: "interaction:commit:message:" + (i == "get" ? i : "add"), data: d.data});
+        if(d & d.data) f({action: "interaction:commit:message:" + (i == "get" ? i : "add"), data: d.data});
         else switch(i){
             case "add":
                 i = null;
