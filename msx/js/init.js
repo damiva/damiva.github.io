@@ -10,7 +10,7 @@ TVXPluginTools.onReady(function() {
                 name:       "TorrServer Plugin",
                 version:    "0.0.3",
                 dictionary: TVXServices.storage.getBool("russian", false) ? (window.location.origin + "/msx/russian.json") : null,
-                reference:  "request:interaction:menu@" + window.location.origin + "/msx/torrents+torrent?platform=" + TVXSettings.PLATFORM
+                reference:  "request:interaction:menu@" + window.location.origin + "/msx/torrents?platform=" + TVXSettings.PLATFORM
                             + (TVXServices.urlParams.has("addr") ? ("&addr=" + encodeURIComponent(TVXServices.urlParams.getFullStr("addr", ""))) : "")
             })});
         }
