@@ -74,7 +74,7 @@ function Torrents(P){
                 );
                 f({
                     type: "list", extension: "rutor", items: is,
-                    underlay: {items:[{type: "space", color: "msx-black-soft", label: S, id: "val", layout: "0,0,12,1"}]},
+                    underlay: {items:[{type: "space", color: "msx-black-soft", headline: S, id: "val", layout: "0,0,12,1", text: "", alignment: "center"}]},
                     template: {type: "button", action: "interaction:commit:message:key", data: "{context:label}", layout: "0,0,1,1", area: "0,1," + l + ",5"}
                 });
                 return true;
@@ -114,8 +114,8 @@ function Torrents(P){
                         image: t.poster,
                         headline: t.title,
                         group: t.data && t.data.substr(0, 4) == "GRP:" ? t.data.substr(4) : "",
-                        stamp: "{ico:attach-file} " + SIZE(t.torrent_size) + (t.stat > 4 ? "" : ("{tb}{ico:north} " + (t.active_peers || 0) + " / " + (t.pending_peers || 0) + " / " + (t.total_peers || 0))),
-                        stampColor: t.stat == 5 ? "" : t.stat == 4 ? "msx-red" : t.stat == 3 ? "msx-green" : "msx-yellow"
+                        stamp: "{ico:attach-file} " + SIZE(t.torrent_size) + (t.stat > 4 ? "" : ("{tb}{ico:north} " + (t.active_peers || 0) + " · " + (t.pending_peers || 0) + " / " + (t.total_peers || 0))),
+                        stampColor: t.stat > 4 ? "" : t.stat == 4 ? "msx-red" : t.stat == 3 ? "msx-green" : "msx-yellow"
                     }} : function(t){return {
                         image: t.Poster,
                         headline: t.Title,
@@ -132,7 +132,7 @@ function Torrents(P){
     this.handleData = function(d){
         switch(d.message){
             case "rem":
-            case "srop":
+            case "drop":
                 AJAX("/torrents", {action: d.message, hash: d.data}, function(){P.executeAction("[cleanup|reload:content]")});
                 return true;
             case "set":
@@ -145,7 +145,7 @@ function Torrents(P){
                         AJAX("/settings", {action: "get"}, function(s){
                             s.EnableRutorSearch = !R;
                             s.action = "set";
-                            AJAX("/ettings", s, function(){
+                            AJAX("/settings", s, function(){
                                 R = !R;
                                 P.executeAction("reload:menu");
                             });
@@ -168,7 +168,11 @@ function Torrents(P){
                     case "bs":
                         S = S ? S.substr(0, S.length - 1) : "";
                         d.data = "";
-                    default: P.executeAction("update:content:underlay:val", {label: S += d.data});
+                    default: 
+                        if(d.data == " ") AJAX("/search/?query=", encodeURIComponent(S), function(d){
+                            P.executeAction("update:content:underlay:val", {text: "{dic:found|Found}: " + d.length});
+                        });
+                        P.executeAction("update:content:underlay:val", {headline: S += d.data, text: ""});
                 }
                 return true;
             default: return false;

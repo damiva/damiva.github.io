@@ -1,6 +1,7 @@
 var ADDR = window.location.origin,
     EXTS = [
-
+        ["3g2","3gp","aaf","asf","avchd","avi","drc","flv","m2ts","ts","m2v","m4p","m4v","mkv","mng","mov","mp2","mp4","mpe","mpeg","mpg","mpv","mxf","nsv","ogg","ogv","qt","rm","rmvb","roq","svi",".vob","webm","wmv","yuv"],
+        ["aac","aiff","ape","au","flac","gsm","it","m3u","m4a","mid","mod","mp3","mpa","pls","ra","s3m","sid","wav","wma","xm"]
     ];
 function AJAX(u, d, s, e){
     var r = {success: s, error: e || TVXInteractionPlugin.error},
@@ -17,12 +18,32 @@ function SIZE(s){
     var i = s == 0 ? 0 : Math.floor(Math.log(s) / Math.log(1024));
     return (s / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
 }
+function OPTS(){
+    var r = {caption: "{dic:caption:options|Options}:", template: {enumerate: false, type: "control", layout: "0,0,8,1"}, items: []},
+        k = ["red", "green", "yellow"];
+    r.headline = r.caption;
+    for(var i = 0; i < 3 && i < arguments.length; i++) if(arguments[i]){
+        arguments[i].key = k[i];
+        arguments[i].icon = "msx-" + k[i] + ":stop";
+        r.items.push(arguments[i]);
+        r.caption += "{tb}{ico:" + arguments[i].icon + "} " + arguments[i].label;
+    }
+    if(r.items.length == 0) return null
+    r.items.push({icon: "msx-blue:menu", label: "{dic:caption:menu|Menu}", action: "[cleanup|menu]"});
+    if(arguments.length > 3 && arguments[3]) r.template.action = arguments[3];
+    return r;
+}
 function Torrent(P, Q){
-    var L = Q.has("link") ? {link: Q.getFullStr("link", ""), title: Q.getFullStr("title", ""), poster: Q.getFullStr("poster", ""), group: Q.getFullStr("group", "")} : null
+    var L = Q.has("link") ? {
+            link: Q.getFullStr("link", ""),
+            title: Q.getFullStr("title", ""),
+            poster: Q.getFullStr("poster", ""),
+            group: Q.getFullStr("group", "")
+        } : null,
         TP = null, TS = null,
         W = new TVXBusyService();
     this.ready = function(){
-        ADDR = Q.getFullStr("addr", TVXServices.storage.getFullStr("address", ADDR)),
+        ADDR = Q.getFullStr("addr", ADDR),
         W.start();
         P.onValidatedSettings(function(){
             if(TVXSettings.PLATFORM == "tizen" && TizenPlayer){
@@ -51,7 +72,7 @@ function Torrent(P, Q){
                         v.path = [v.path.substr(e + 1), e > 0 ? v.path.substr(0, e) : ""];
                         if(!(e = (e = v.path[0].lastIndexOf(".")) > -1 ? v.path[0].substr(e + 1) : "")) return;
                         for(var l = 0; l < EXTS.length; l++) if(EXTS[l].lastIndexOf(e)) break;
-                        if(l > 1) return;
+                        if(l = EXTS.length) return;
                         if(v.path[1] && (ds.length == 0 || ds[ds.length - 1].label != v.path[1])){
                             ds.push({label: v.path[1], action: "{cleanup|focus:" + d.hash + "-" + v.id + "]"});
                             if(s) fs.push({type: "space", label: "{col:msx-yellow}{ico:folder} " + v.path[1]});
@@ -114,6 +135,7 @@ function Torrent(P, Q){
                     title: L.title || "",
                     poster: L.poster || "",
                     data: d.data.group ? ("GRP:" + d.data.group) : "",
+                    save_to_db: true
                 }, function(){P.executeAction("replace:content:torrent:request:interaction:get")});
                 break;
             case "continue":
