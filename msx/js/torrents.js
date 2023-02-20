@@ -12,7 +12,7 @@ function Torrents(P){
     };
     this.handleRequest = function(i, f, e){
         var c = SETS("compress"), a = null;
-        vonsole.log(i);
+        console.log(i);
         switch(i){
             case "menu":
                 f({logo: ADDR + "/logo.png", menu: [
