@@ -21,21 +21,18 @@ function Torrents(P){
                 ]});
                 return true;
             case "sets":
-                var w = new TVXBusyService(), v = "TorrServer ", r = SETS("russian");
-                w.start();
-                AJAX("/echo", "", function(d){v += d});
-                w.onReady(function(){f({
-                    type: "list", extension: v,
+                f({
+                    type: "list", ready: {action: "interaction:commit:message:info"},
                     template: {enumerate: false, type: "control", action: "interaction:commit:message:set", data: "{context:id}", layout: "0,0,12,1"},
                     items: [
-                        {id: "russian", icon: "translate", label: r ? "Switch to english" : "Перевести на русский", extensionIcon: "msx-red:restart-alt"},
+                        {id: "version", type: "space", image: ADDR + "/logo.png", imageFiller: "height-right", headline: "TorrServer", text: "https://github.com/YouROK/TorrServer"},
+                        {id: "russian", icon: "translate", label: SETS("russian") ? "Switch to english" : "Перевести на русский", extensionIcon: "msx-red:restart-alt"},
                         {id: "rutor", icon: "search", label: "{dic:find|Search torrents} (rutor)", extensionIcon: I(R)},
                         {id: "compress", icon: "compress", label: "{dic:comprtess|Smaller font in lists}", extensionIcon: I(c)},
                         {id: "folders", icon: "folder", label: "{dic:folders|Show folders in torrents}", extensionIcon: I(SETS("folders"))},
-                        {id: "backgrgound", icon: "image", label: "{dic:background|Random image for audio player}", extensionIcon: I(SETS("background"))},
-                        {icon: "logout", label: "{dic:label:exit|Exit}", action: "exit"}
+                        {id: "backgrgound", icon: "image", label: "{dic:background|Random image for audio player}", extensionIcon: I(SETS("background"))}
                     ]
-                })});
+                });
                 return true
             case "keys":
                 var l = K ? 12 : 10, is = [], ks = [[
@@ -52,7 +49,7 @@ function Torrents(P){
                     is.push({label: k, key: k, offset: K && i == 0 ? "1,0,0,0" : K && i == 9 ? "-1,0,0,0" : undefined});
                     if(i == 0 && K) is.push({type: "space"});
                 });
-                for(var y = 0; y < 4; y++) for(var x = 0; x < l; x++){
+                for(var y = 0; y < 3; y++) for(var x = 0; x < l; x++){
                     var k = ks[K ? 1 : 0][y][x];
                     is.push(!k
                         ? {type: "space"} : k == "comma" ? {label: "'", key: "quote"}
@@ -174,6 +171,9 @@ function Torrents(P){
                         });
                         P.executeAction("update:content:underlay:val", {headline: S += d.data, text: ""});
                 }
+                return true;
+            case "info":
+                AJAX("/echo", "", function(v){P.executeAction("update:content:version", {headline: "TorrServer{tb}" + v})});
                 return true;
             default: return false;
         }
