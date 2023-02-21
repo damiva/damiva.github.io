@@ -178,9 +178,9 @@ function Torrents(P){
                 AJAX("/echo", "", function(v){P.executeAction("update:content:version", {headline: "TorrServer{tb}" + v})});
                 return true;
             case "imdb":
-                AJAX(d.data.imdb, ".json", function(j){
+                TVXServices.ajax.get(window.location.origin + "/msx/" + d.data.imdb + ".json", {siccess: function(j){
                     if(j && j.d && j.d.length > 0) P.executeAction("update:content:" + d.data.id, {image: j.d[0].i.imageUrl});
-                }, function(){});
+                }});
                 return true;
             default: return false;
         }
