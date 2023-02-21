@@ -98,7 +98,7 @@ function Torrents(P){
                     type: "list", headline: "{ico:search} " + S, extension: "{ico:msx-white:list} " + d.length,
                     compress: c, reuse: !!a, cache: !!a, restore: !!a,
                     template: {
-                        imageWidth: 1.3, imageFiller: "height", layout: c ? "0,0,8,2" : "0,0,6,2",
+                        imageWidth: 1.3, imageFiller: "height", layout: c ? "0,0,8,2" : "0,0,6,2", icon: "msx-glass:bolt",
                         action: "interaction:commit:message:" + (!a ? "get" : "add"),
                         data: !a ? {link: "{context:id}"} : {link: "{context:magnet}", title: "{context:headline}", poster: "{context:image}", group: "{context:group}"},
                         options: a ? null : OPTS(
@@ -108,18 +108,20 @@ function Torrents(P){
                     },
                     items: d.map(!a ? function(t){return {
                         id: t.hash,
-                        image: t.poster,
+                        image: t.poster || "",
                         headline: t.title,
                         group: t.data && t.data.substr(0, 4) == "GRP:" ? t.data.substr(4) : "",
                         stamp: "{ico:attach-file} " + SIZE(t.torrent_size) + (t.stat > 4 ? "" : ("{tb}{ico:north} " + (t.active_peers || 0) + " · " + (t.pending_peers || 0) + " / " + (t.total_peers || 0))),
                         stampColor: t.stat > 4 ? "" : t.stat == 4 ? "msx-red" : t.stat == 3 ? "msx-green" : "msx-yellow"
                     }} : function(t){return {
-                        image: t.Poster,
+                        id: t.Hash,
+                        image: t.Poster || "",
                         headline: t.Title,
                         group: "{dic:rutor:" + t.Categories + "|" + t.Categories + "}",
                         titleFooter: a(t.AudioQuality),
                         stamp: "{ico:attach-file} " + t.Size + "{tb}{ico:north} " + t.Peer + " {ico:south} " + t.Seed,
-                        magnet: t.Magnet
+                        magnet: t.Magnet,
+                        live: !t.Poster && t.IMDBID ? {type: "setup", action: "interaction:commit:message:imdb", data: {id: t.Hash, imdb: t.IMDBID}} : null
                     }})
                 })}, e);
                 return true;
@@ -174,6 +176,11 @@ function Torrents(P){
                 return true;
             case "info":
                 AJAX("/echo", "", function(v){P.executeAction("update:content:version", {headline: "TorrServer{tb}" + v})});
+                return true;
+            case "imdb":
+                AJAX(d.data.imdb, ".json", function(j){
+                    if(j && j.d && j.d.length > 0) P.executeAction("update:content:" + d.data.id, {image: j.d[0].i.imageUrl});
+                }, function(){});
                 return true;
             default: return false;
         }
