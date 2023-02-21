@@ -44,6 +44,7 @@ function Torrent(P, Q){
         W = new TVXBusyService();
     this.ready = function(){
         ADDR = Q.getFullStr("a", ADDR),
+        console.log(ADDR)
         W.start();
         P.onValidatedSettings(function(){
             if(TVXSettings.PLATFORM == "tizen" && TizenPlayer){
