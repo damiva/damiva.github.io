@@ -114,14 +114,14 @@ function Torrents(P){
                         stamp: "{ico:attach-file} " + SIZE(t.torrent_size) + (t.stat > 4 ? "" : ("{tb}{ico:north} " + (t.active_peers || 0) + " · " + (t.pending_peers || 0) + " / " + (t.total_peers || 0))),
                         stampColor: t.stat > 4 ? "" : t.stat == 4 ? "msx-red" : t.stat == 3 ? "msx-green" : "msx-yellow"
                     }} : function(t){return {
-                        id: t.Hash,
+                        id: t.IMDBID,
                         image: t.Poster || "",
                         headline: t.Title,
                         group: "{dic:rutor:" + t.Categories + "|" + t.Categories + "}",
                         titleFooter: a(t.AudioQuality),
                         stamp: "{ico:attach-file} " + t.Size + "{tb}{ico:north} " + t.Peer + " {ico:south} " + t.Seed,
                         magnet: t.Magnet,
-                        live: !t.Poster && t.IMDBID ? {type: "setup", action: "interaction:commit:message:imdb", data: {id: t.Hash, imdb: t.IMDBID}} : null
+                        live: !t.Poster && t.IMDBID ? {type: "setup", action: "interaction:commit:message:imdb", data: t.IMDBID} : null
                     }})
                 })}, e);
                 return true;
@@ -178,8 +178,8 @@ function Torrents(P){
                 AJAX("/echo", "", function(v){P.executeAction("update:content:version", {headline: "TorrServer{tb}" + v})});
                 return true;
             case "imdb":
-                TVXServices.ajax.get(window.location.origin + "/msx/" + d.data.imdb + ".json", {siccess: function(j){
-                    if(j && j.d && j.d.length > 0) P.executeAction("update:content:" + d.data.id, {image: j.d[0].i.imageUrl});
+                TVXServices.ajax.get(window.location.origin + "/msx/" + d.data + ".json", {success: function(j){
+                    if(j && j.d && j.d.length > 0) P.executeAction("update:content:" + d.data, {image: j.d[0].i.imageUrl});
                 }});
                 return true;
             default: return false;
