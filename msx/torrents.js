@@ -1,14 +1,13 @@
 function Torrents(P){
     var R = false, K = SETS("russian"), S = "",
         I = function(v){return v ? "msx-white:toggle-on" : "toggle-off"};
-    this.init = function(f){
-        console.log("init");
+    this.init = function(w){
         AJAX("/settings", {action: "get"}, function(d){
             R = d.EnableRutorSearch;
-            f();
+            w.stop();
         }, function(e){
             P.error(e);
-            f();
+            w.stop();
         });
     };
     this.handleRequest = function(i, f, e){

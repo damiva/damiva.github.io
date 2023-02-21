@@ -53,12 +53,11 @@ function Torrent(P, Q){
             if(Torrents){
                 console.log("torrents");
                 TS = new Torrents(P);
-                TS.init(function(){W.stop()});
+                TS.init(W);
             } else W.stop();
-            console.log(TS, TP);
         });
     };
-    this.handleRequst = function(i, d, f){W.onReady(function(){
+    this.handleRequest = function(i, d, f){W.onReady(function(){
         var e = function(m){P.error(m); f();}, l = "";
         console.log(i, d);
         if(d && d.data) f({action: "interaction:commit:message:" + (i == "get" ? i : "add"), data: d.data});
