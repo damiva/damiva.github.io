@@ -52,16 +52,17 @@ function Torrents(P){
                 for(var y = 0; y < 3; y++) for(var x = 0; x < l; x++){
                     var k = ks[K ? 1 : 0][y][x];
                     is.push(!k
-                        ? {type: "space"} : k == "comma" ? {label: "'", key: "quote"}
-                        : {label: k, key: ks[0][y][x], offset: y == 1 && x > 7 ? "-.5,0,0,0" : y == 2 && x == 0 ? "1,0,0,0" : y == 2 && x > 6 ? "-1,0,0,0" : y == 1 ? ".5,0,0,0" : undefined}
+                        ? {type: "space"} : k == "comma" ? {label: "'", key: "quote", offset: "-1,0,0,0"}
+                        : {label: k, key: ks[0][y][x], offset: y == 1 && x > 7 ? "-.5,0,0,0" : y == 2 && x == 0 ? "1,0,0,0" : y == 2 && x > 7 ? "-1,0,0,0" : y == 1 ? ".5,0,0,0" : undefined}
                     );
                 }
+                is[K ? 28 : 24].focus = true;
                 is.push(
                     {label: "{ico:backspace}", key: "delete|red", data: "bs", offset: "0,0,1,0", progress: 1, progressColor: "msx-red"},
                     {type: "space"},
                     {label: "{ico:clear}", key: "home", data: "cl", offset: "0,0,1,0"}, 
                     {type: "space"},
-                    {label: "{ico:space-bar", key: "insert|yellow", data: " ", offset: "0,0," + (l - 9) + ",0", progress: 1, progressColor: "msx-yellow"},
+                    {label: "{ico:space-bar}", key: "insert|yellow", data: " ", offset: "0,0," + (l - 9) + ",0", progress: 1, progressColor: "msx-yellow"},
                     {type: "space"}, {type: "space"}
                 );
                 if(K) is.push({type: "space"}, {type: "space"});
@@ -70,9 +71,9 @@ function Torrents(P){
                     {label: "{ico:done}", key: "end|green", data: "ok", offset: "-1,0,1,0", progress: 1, progressColor: "msx-green"}
                 );
                 f({
-                    type: "list", extension: "rutor", items: is,
+                    type: "list", extension: "rutor", items: is, wrap: true,
                     underlay: {items:[{type: "space", color: "msx-black-soft", headline: S, id: "val", layout: "0,0,12,1", text: "", alignment: "center"}]},
-                    template: {type: "button", action: "interaction:commit:message:key", data: "{context:label}", layout: "0,0,1,1", area: "0,1," + l + ",5"}
+                    template: {type: "button", action: "interaction:commit:message:key", data: "{context:label}", layout: "0,0,1,1", area: (K ? 0 : 1) + ",1," + l + ",5"}
                 });
                 return true;
             case "find":
@@ -98,7 +99,7 @@ function Torrents(P){
                     type: "list", headline: "{ico:search} " + S, extension: "{ico:msx-white:list} " + d.length,
                     compress: c, reuse: !!a, cache: !!a, restore: !!a,
                     template: {
-                        imageWidth: 1.3, imageFiller: "height", layout: c ? "0,0,8,1" : "0,0,6,1",
+                        imageWidth: 1.3, imageFiller: "height", layout: c ? "0,0,8,2" : "0,0,6,2",
                         action: "interaction:commit:message:" + (i ? "get" : "add"),
                         data: i ? {link: "{context:id}"} : {link: "{context:magnet}", title: "{context:headline}", poster: "{context:image}", group: "{context:group}"},
                         options: a ? null : OPTS(
