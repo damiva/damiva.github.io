@@ -1,18 +1,17 @@
 function Torrents(P){
     var R = false, K = SETS("russian"), S = "",
         I = function(v){return v ? "msx-white:toggle-on" : "toggle-off"};
-    this.init = function(w){
+    this.init = function(f){
         AJAX("/settings", {action: "get"}, function(d){
             R = d.EnableRutorSearch;
-            w.stop();
+            f();
         }, function(e){
             P.error(e);
-            w.stop();
+            f();
         });
     };
     this.handleRequest = function(i, f, e){
         var c = SETS("compress"), a = null;
-        console.log(i);
         switch(i){
             case "menu":
                 f({logo: ADDR + "/logo.png", menu: [

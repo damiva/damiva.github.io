@@ -52,7 +52,7 @@ function Torrent(P, Q){
             }
             if(Torrents){
                 TS = new Torrents(P);
-                TS.init(W);
+                TS.init(function(){W.stop()});
             } else W.stop();
         });
     };
