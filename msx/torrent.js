@@ -59,7 +59,6 @@ function Torrent(P, Q){
     };
     this.handleRequest = function(i, d, f){W.onReady(function(){
         var e = function(m){P.error(m); f();}, l = "";
-        console.log(i, d);
         if(d && d.data) f({action: "interaction:commit:message:" + (i == "get" ? i : "add"), data: d.data});
         else switch(i){
             case "add":
@@ -73,7 +72,7 @@ function Torrent(P, Q){
                         var e = v.path.lastIndexOf("/"), u = ADDR + "/play/" + d.hash + "/" + v.id;
                         v.path = [v.path.substr(e + 1), e > 0 ? v.path.substr(0, e) : ""];
                         if(!(e = (e = v.path[0].lastIndexOf(".")) > -1 ? v.path[0].substr(e + 1) : "")) return;
-                        for(var l = 0; l < EXTS.length; l++) if(EXTS[l].lastIndexOf(e)) break;
+                        for(var l = 0; l < EXTS.length; l++) if(EXTS[l].indexOf(e) > -1) break;
                         if(l = EXTS.length) return;
                         if(v.path[1] && (ds.length == 0 || ds[ds.length - 1].label != v.path[1])){
                             ds.push({label: v.path[1], action: "{cleanup|focus:" + d.hash + "-" + v.id + "]"});
@@ -87,7 +86,7 @@ function Torrent(P, Q){
                             group: l ? "{dic:label:audio|Audio}" : "{dic:label:video|Video}",
                             background: l && b ? ("https://source.unsplash.com/random/" + TVXSettings.WIDTH + "x" + TVXSettings.HEIGHT + "/" + Math.random() + "#msx-keep-ratio") : "default",
                             extensionLabel: SIZE(v.length),
-                            action: (l ? "audio:" : "video:") + (TP || l ? u : ("http://msx.benzac.de/plugins/html5x.html?url=" + encodeURIComponent(u)))
+                            action: (l ? "audio:" : "video:") + (TP ? u : ("plugin:http://msx.benzac.de/plugins/html5x.html?url=" + encodeURIComponent(u)))
                         });
                         is++;
                     });

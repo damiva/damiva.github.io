@@ -56,7 +56,6 @@ function Torrents(P){
                         : {label: k, key: ks[0][y][x], offset: y == 1 && x > 7 ? "-.5,0,0,0" : y == 2 && x == 0 ? "1,0,0,0" : y == 2 && x > 7 ? "-1,0,0,0" : y == 1 ? ".5,0,0,0" : undefined}
                     );
                 }
-                is[K ? 28 : 24].focus = true;
                 is.push(
                     {label: "{ico:backspace}", key: "delete|red", data: "bs", offset: "0,0,1,0", progress: 1, progressColor: "msx-red"},
                     {type: "space"},
@@ -67,13 +66,13 @@ function Torrents(P){
                 );
                 if(K) is.push({type: "space"}, {type: "space"});
                 is.push(
-                    {label: "{ico:language}", key: "tab", data: "ck", offset: "-1,0,1,0"}, {type: "space"},
+                    {id: "ck", label: "{ico:language}", key: "tab", data: "ck", offset: "-1,0,1,0"}, {type: "space"},
                     {label: "{ico:done}", key: "end|green", data: "ok", offset: "-1,0,1,0", progress: 1, progressColor: "msx-green"}
                 );
                 f({
                     type: "list", extension: "rutor", items: is, wrap: true,
                     underlay: {items:[{type: "space", color: "msx-black-soft", headline: S, id: "val", layout: "0,0,12,1", text: "", alignment: "center"}]},
-                    template: {type: "button", action: "interaction:commit:message:key", data: "{context:label}", layout: "0,0,1,1", area: (K ? 0 : 1) + ",1," + l + ",5"}
+                    template: {type: "button", action: "interaction:commit:message:key", data: "{context:label}", layout: "0,0,1,1", area: (K ? 0 : 1) + ",1," + l + ",5", enumerate: false}
                 });
                 return true;
             case "find":
@@ -100,8 +99,8 @@ function Torrents(P){
                     compress: c, reuse: !!a, cache: !!a, restore: !!a,
                     template: {
                         imageWidth: 1.3, imageFiller: "height", layout: c ? "0,0,8,2" : "0,0,6,2",
-                        action: "interaction:commit:message:" + (i ? "get" : "add"),
-                        data: i ? {link: "{context:id}"} : {link: "{context:magnet}", title: "{context:headline}", poster: "{context:image}", group: "{context:group}"},
+                        action: "interaction:commit:message:" + (!a ? "get" : "add"),
+                        data: !a ? {link: "{context:id}"} : {link: "{context:magnet}", title: "{context:headline}", poster: "{context:image}", group: "{context:group}"},
                         options: a ? null : OPTS(
                             {label: "{dic:rem|Remove the torrent}", action: "rem", data: "{context:id}"}, null,
                             {label: "{dic:drop|Drop the torrent}", action: "drop", data: "{context:id}"}
@@ -159,7 +158,7 @@ function Torrents(P){
                         break;
                     case "ck":
                         K = !K;
-                        P.executeAction("reload:content");
+                        P.executeAction("[reload:content|focus:ck]");
                         break;
                     case "cl":
                         S = "";
