@@ -1,5 +1,5 @@
 function Torrents(P){
-    var R = false, K = SETS("russian"), S = "",
+    var R = false, K = SETS("russian"), S = "", M = {},
         I = function(v){return v ? "msx-white:toggle-on" : "toggle-off"};
     this.init = function(w){
         AJAX("/settings", {action: "get"}, function(d){
@@ -114,14 +114,14 @@ function Torrents(P){
                         stamp: "{ico:attach-file} " + SIZE(t.torrent_size) + (t.stat > 4 ? "" : ("{tb}{ico:north} " + (t.active_peers || 0) + " · " + (t.pending_peers || 0) + " / " + (t.total_peers || 0))),
                         stampColor: t.stat > 4 ? "" : t.stat == 4 ? "msx-red" : t.stat == 3 ? "msx-green" : "msx-yellow"
                     }} : function(t){return {
-                        id: t.IMDBID || t.Hash,
+                        id: t.Hash,
                         image: t.Poster || "",
                         headline: t.Title,
                         group: "{dic:rutor:" + t.Categories + "|" + t.Categories + "}",
                         titleFooter: a(t.AudioQuality),
                         stamp: "{ico:attach-file} " + t.Size + "{tb}{ico:north} " + t.Peer + " {ico:south} " + t.Seed,
                         magnet: t.Magnet,
-                        live: !t.Poster && t.IMDBID ? {type: "setup", action: "interaction:commit:message:imdb", data: t.IMDBID} : null
+                        live: !t.Poster && t.IMDBID ? {type: "setup", action: "interaction:commit:message:imdb", data: {id: t.Hash, imdb: t.IMDBID}} : null
                     }})
                 })}, e);
                 return true;
@@ -172,14 +172,17 @@ function Torrents(P){
                             P.executeAction("update:content:underlay:val", {text: "{dic:found|Found}: " + d.length});
                         });
                         P.executeAction("update:content:underlay:val", {headline: S += d.data, text: ""});
+                        M = {};
                 }
                 return true;
             case "info":
                 AJAX("/echo", "", function(v){P.executeAction("update:content:version", {headline: "TorrServer{tb}" + v})});
                 return true;
             case "imdb":
-                TVXServices.ajax.get(window.location.origin + "/msx/" + d.data + ".json", {success: function(j){
-                    if(j && j.d && j.d.length > 0) P.executeAction("update:content:" + d.data, {image: j.d[0].i.imageUrl});
+                var u = function(){P.executeAction("update:content:" + d.data.id, {image: M[d.data.imdb]})};
+                if(M[d.data.imdb]) u();
+                else TVXServices.ajax.get(window.location.origin + "/msx/" + d.data + ".json", {success: function(j){
+                    if(j && j.d && j.d.length > 0 && (M[d.data.imdb] = j.d[0].i.iamgeUrl)) u();
                 }});
                 return true;
             default: return false;
