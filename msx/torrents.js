@@ -91,7 +91,7 @@ function Torrents(P){
                         300:  "Official",
                         301:  "License"
                     }
-                    return (qs = qs[q]) ? ("{ico:msx-white:audiotrack} {dic:a" + q + "|" + qs + "}{br}") : "";        
+                    return (qs = qs[q]) ? ("{ico:msx-white:audiotrack} {dic:rutor:a" + q + "|" + qs + "}{br}") : "";        
                 };
             case "trns":
                 AJAX(!a ? "/torrents" : "/search/?query=", !a ? {action: "list"} : encodeURIComponent(S), function(d){f({
@@ -114,7 +114,7 @@ function Torrents(P){
                         stamp: "{ico:attach-file} " + SIZE(t.torrent_size) + (t.stat > 4 ? "" : ("{tb}{ico:north} " + (t.active_peers || 0) + " · " + (t.pending_peers || 0) + " / " + (t.total_peers || 0))),
                         stampColor: t.stat > 4 ? "" : t.stat == 4 ? "msx-red" : t.stat == 3 ? "msx-green" : "msx-yellow"
                     }} : function(t){return {
-                        id: t.IMDBID,
+                        id: t.IMDBID || t.Hash,
                         image: t.Poster || "",
                         headline: t.Title,
                         group: "{dic:rutor:" + t.Categories + "|" + t.Categories + "}",
