@@ -73,8 +73,7 @@ function Torrent(P, Q){
                         v.path = [v.path.substr(e + 1), e > 0 ? v.path.substr(0, e) : ""];
                         if(!(e = (e = v.path[0].lastIndexOf(".")) > -1 ? v.path[0].substr(e + 1) : "")) return;
                         for(var l = 0; l < EXTS.length; l++) if(EXTS[l].indexOf(e) > -1) break;
-                        console.log(e, l);
-                        if(l = EXTS.length) return;
+                        if(l == EXTS.length) return;
                         if(v.path[1] && (ds.length == 0 || ds[ds.length - 1].label != v.path[1])){
                             ds.push({label: v.path[1], action: "{cleanup|focus:" + d.hash + "-" + v.id + "]"});
                             if(s) fs.push({type: "space", label: "{col:msx-yellow}{ico:folder} " + v.path[1]});
