@@ -44,7 +44,6 @@ function Torrent(P, Q){
         W = new TVXBusyService();
     this.ready = function(){
         ADDR = Q.getFullStr("a", ADDR),
-        console.log(ADDR)
         W.start();
         P.onValidatedSettings(function(){
             if(TVXSettings.PLATFORM == "tizen" && TizenPlayer){
@@ -52,15 +51,16 @@ function Torrent(P, Q){
                 TP.init();
             }
             if(Torrents){
+                console.log("torrents");
                 TS = new Torrents(P);
                 TS.init(function(){W.stop()});
             } else W.stop();
+            console.log(TS, TP);
         });
     };
     this.handleRequst = function(i, d, f){W.onReady(function(){
         var e = function(m){P.error(m); f();}, l = "";
-        console.log(i);
-        console.log(d);
+        console.log(i, d);
         if(d && d.data) f({action: "interaction:commit:message:" + (i == "get" ? i : "add"), data: d.data});
         else switch(i){
             case "add":

@@ -2,6 +2,7 @@ function Torrents(P){
     var R = false, K = SETS("russian"), S = "",
         I = function(v){return v ? "msx-white:toggle-on" : "toggle-off"};
     this.init = function(f){
+        console.log("init");
         AJAX("/settings", {action: "get"}, function(d){
             R = d.EnableRutorSearch;
             f();
