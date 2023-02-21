@@ -117,10 +117,10 @@ function Torrent(P, Q){
                 }, e);
                 break;
             case "tizen":
-                if(TP) TP.handleRequst("tizen", "init", f);
+                if(TP) TP.handleRequest("tizen", "init", f);
                 else e("No tizen!");
                 break;
-            default: if(!TS || !TS.handleRequst(i, f, e)) e("Wrong requestID: " + i);
+            default: if(!TS || !TS.handleRequest(i, f, e)) e("Wrong requestID: " + i);
         }
     })};
     this.handleData = function(d){
