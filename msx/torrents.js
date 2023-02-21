@@ -181,7 +181,7 @@ function Torrents(P){
             case "imdb":
                 var u = function(){P.executeAction("update:content:" + d.data.id, {image: M[d.data.imdb]})};
                 if(M[d.data.imdb]) u();
-                else TVXServices.ajax.get(window.location.origin + "/msx/" + d.data + ".json", {success: function(j){
+                else TVXServices.ajax.get(window.location.origin + "/msx/" + d.data.imdb + ".json", {success: function(j){
                     if(j && j.d && j.d.length > 0 && (M[d.data.imdb] = j.d[0].i.iamgeUrl)) u();
                 }});
                 return true;
