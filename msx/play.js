@@ -60,8 +60,7 @@ function Handler(){
     this.init = function(){
         bs.start();
         TVXInteractionPlugin.onValidatedSettings(function(){
-            for(var i = 0; i < arguments.length; i++) ps.push(new arguments[i]());
-            ps.push(new Play());
+            ps = ps.map(function(p){return new p});
             bs.stop();
         });
     };
@@ -74,4 +73,6 @@ function Handler(){
     this.handleRequest = function(i, d, f){bs.onReady(function(){
         for(var p = 0; p < ps.length; p++) if(ps[p].handleRequest(i, d, f)) break;
     })};
+    for(var i = 0; i < arguments.length; i++) ps.push(arguments[i]);
+    ps.push(Play);
 }
