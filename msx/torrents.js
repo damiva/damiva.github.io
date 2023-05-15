@@ -153,7 +153,7 @@ function Torrents(){
         case "init":
             f({
                 name: document.title,
-                version: document.head.querySelector("[property~=version][content]").content,
+                version: document.head.querySelector("meta[name=version]").content,
                 reference: "request:interaction:trns" + H,
                 dictionary: Stor("russian") ? (window.location.origin + "/msx/dic.json") : null,
             });
