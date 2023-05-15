@@ -15,13 +15,13 @@ function Torrents(){
             R = false;
             d = {action: "error:" + d};
         }
-        return {logo: "https://damiva.github.io/msx/ts.png", action: d, menu: [
+        return {logo: "https://damiva.github.io/msx/ts.png", ready: d, menu: [
             {icon: "history", label: "{dic:goon|Continue playing}", data: "request:interaction:goon" + H},
             {icon: "bookmarks", label: "{dic:trns|My torrents}", data: "request:interaction:trns" + H},
             {icon: "search", label: "{dic:srch|Search torrents}", data: window.location.origin + "/msx/search." + (r ? "ru" : "en") + ".json", enable: R},
             {type: "separator"},
             {icon: "settings", label: "{dic:label:settings|Settings}", data: {
-                type: "list", extension: "{ico:msx-white:settings}",
+                type: "list", extension: "{ico:msx-white:settings}", ready: {action: "interaction:commit:message:info"},
                 underlay: {items: [
                     {id: "tor", type: "space", headline: "TorrServer", text: "", layout: "0,0,4,1", alignment: "center"},
                     {id: "plg", type: "space", headline: "Plugin", text: "", layout: "4,0,4,1", alignment: "center"},
@@ -52,7 +52,7 @@ function Torrents(){
         stampColor: t.stat == 4 ? "msx-red" : t.stat == 3 ? "msx-green" : "msx-yellow",
     }};
     var S = function(t, i){return {
-        id: i = TVXTools.strVal(i),
+        id: i = TVXTools.strValue(i),
         image: t.Poster || undefined,
         headline: t.Title,
         text: Q(t.AudioQuality),
@@ -76,7 +76,7 @@ function Torrents(){
         items: !d.length ? [E] : d.map(v ? D : S)
     }};
     var L = function(h, i, t, n, s){
-        var l = TVXServies.storage.get("lastvideo", []);
+        var l = TVXServises.storage.get("lastvideo", []);
         if(!h) return l;
         l = l.filter(function(i){return i.hash != h});
         if(i) l.unshift({hash: h, id: i, title: t, fname: n, total: s});
@@ -109,10 +109,14 @@ function Torrents(){
     this.handleData = function(d){switch(d.message){
         case "info":
             Ajax(Addr + "/echo", "", function(v){A("update:content:underlay:tor", {text: v})});
-            TVXInteractionPlugin.requestData("info", function(d){A("data", [
-                {action: "update:content:underlay:app", data: {headline: d.info.application.name, text: d.info.application.version}},
-                {action: "update:content:underlay:plg", data: {headline: d.info.content.name, text: d.info.content.version}}
-            ])});
+            TVXInteractionPlugin.requestData(
+                "info:application", 
+                function(d){A("update:content:underlay:app", {headline: d.info.application.name, text: d.info.application.version})}
+            );
+            TVXInteractionPlugin.requestData(
+                "info:content", 
+                function(d){A("update:content:underlay:app", {headline: d.info.content.name, text: d.info.content.version})}
+            );
             return true;
         case "imdb":
             Imdb(function(i){if(i){A("update:content:" + d.data.id, {image: i})}}, d.data.imdb);
