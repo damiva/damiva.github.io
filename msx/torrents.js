@@ -155,7 +155,7 @@ function Torrents(){
                 name: document.title,
                 version: document.head.querySelector("meta[name=version]").content,
                 reference: "request:interaction:trns" + H,
-                dictionary: Stor("russian") ? (window.location.origin + "/msx/dic.json") : null,
+                dictionary: Stor("russian") ? (window.location.origin + "/msx/russian.json") : null,
             });
             return true;
         case "menu":
@@ -174,7 +174,7 @@ function Torrents(){
             );
             return true;
         case "trns":
-            b.onReady(Ajax(
+            Ajax(
                 Addr + "/torrents",
                 {action: "list"},
                 function(d){Ajax(
@@ -188,7 +188,7 @@ function Torrents(){
                     function(){f(T(d, {}))}
                 )},
                 function(e){TVXInteractionPlugin.error(e); f();}
-            ));
+            );
             return true;
         default: return false;
     }};
