@@ -1,157 +1,118 @@
-var ADDR = window.location.origin,
-    EXTS = [
-        ["3g2","3gp","aaf","asf","avchd","avi","drc","flv","m2ts","ts","m2v","m4p","m4v","mkv","mng","mov","mp2","mp4","mpe","mpeg","mpg","mpv","mxf","nsv","ogg","ogv","qt","rm","rmvb","roq","svi",".vob","webm","wmv","yuv"],
-        ["aac","aiff","ape","au","flac","gsm","it","m3u","m4a","mid","mod","mp3","mpa","pls","ra","s3m","sid","wav","wma","xm"]
-    ];
-function AJAX(u, d, s, e){
-    var r = {success: s, error: e || TVXInteractionPlugin.error},
-        t = {dataType: e ? "json" : "text"},
-        g = typeof d == "string";
-    TVXServices.ajax[g ? "get" : "post"](ADDR + u + (g ? d : ""), g ? r : JSON.stringify(d), g ? t : r, g ? null : t);
-}
-function SETS(k, c){
+var Addr = window.location.origin;
+function Stor(k, c){
     var v = TVXServices.storage.getBool(k, false);
     if(c) TVXServices.storage.set(k, v = !v);
     return v;
 }
-function SIZE(s){
+function Size(s){
     var i = s == 0 ? 0 : Math.floor(Math.log(s) / Math.log(1024));
     return (s / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'kB', 'MB', 'GB', 'TB'][i];
 }
-function OPTS(){
-    var r = {caption: "{dic:caption:options|Options}:", template: {enumerate: false, type: "control", layout: "0,0,8,1"}, items: []},
-        k = ["red", "green", "yellow"];
-    r.headline = r.caption;
-    for(var i = 0; i < 3 && i < arguments.length; i++) if(arguments[i]){
+function Opts(r, g, y){
+    var k = ["red", "green", "yellow"],
+        o = {headline: "{dic:caption:options|Options}:", template: {enumerate: false, type: "control", layout: "0,0,8,1"}, items: []};
+    o.caption = o.headline;
+    for(var i = 0; i < k.length && i < arguments.length; i++) if(arguments[i]) {
         arguments[i].key = k[i];
         arguments[i].icon = "msx-" + k[i] + ":stop";
-        r.items.push(arguments[i]);
-        r.caption += "{tb}{ico:" + arguments[i].icon + "} " + arguments[i].label;
+        o.items.push(arguments[i]);
+        o.caption += "{tb}{ico:" + arguments[i].icon + "} " + arguments[i].label;
     }
-    if(r.items.length == 0) return null
-    r.items.push({icon: "msx-blue:menu", label: "{dic:caption:menu|Menu}", action: "[cleanup|menu]"});
-    if(arguments.length > 3 && arguments[3]) r.template.action = arguments[3];
-    return r;
+    return o.items.length ? o : null;
 }
-function Torrent(P, Q){
-    var L = Q.has("link") ? {
-            link: Q.getFullStr("link", ""),
-            title: Q.getFullStr("title", ""),
-            poster: Q.getFullStr("poster", ""),
-            group: Q.getFullStr("group", "")
-        } : null,
-        TP = null, TS = null,
-        W = new TVXBusyService();
-    this.ready = function(){
-        ADDR = Q.getFullStr("a", ADDR),
-        W.start();
-        P.onValidatedSettings(function(){
-            if(TVXSettings.PLATFORM == "tizen" && TizenPlayer){
-                TP = new TizenPlayer();
-                TP.init();
+function Ajax(u, d, s, e){
+    var x = {success: s, error: typeof e == "function" ? e : TVXInteractionPlugin.error},
+        t = {dataType: e ? "json" : "text"},
+        s = typeof d == "string";
+    TVXServices.ajax[s ? "get" : "post"](u + (s ? d : ""), s ? x : TVXTools.serialize(d), s ? t : x, s ? undefined : t);
+}
+function Imdb(f, i){Ajax("/msx/", ("?img&imdb=" + i) || "", f, function(){f()})};
+function Torrent(){
+    var D = null, B = window.location.origin + "/msx/?img=" + TVXSettings.SCREEN_WIDTH + "x" + TVXSettings.SCREEN_HEIGHT;
+    var T = function(d, a){
+        var fs = [], ds = [], ct = Stor("compress"), sf = Stor("folders"), is = 0;
+        d.file_stats.forEach(function(f){
+            var b = f.path.indexOf("/"), e = f.path.lastIndexOf("/");
+            f.path = [f.path.substr(e + 1), b > 0 && e > b ? f.path.substr(b + 1, e - b - 1) : ""];
+            if((e = f.path[0].lastIndexOf(".")) < 0 || !(e = f.path[0].substr(e + 1))) return;
+            for(b = 0; b < EXTS.length; b++) if(EXTS[b].indexOf(e) >= 0) break;
+            if(b < EXTS.length) b = [{i: "movie", t: "video"}, {i: "audiotrack", t: "audio", b: B}][b];
+            else return;
+            if(f.path[1] && (ds.length == 0 || ds[ds.length - 1].label != f.path[1])){
+                ds.push({label: f.path[1], action: "[cleanup|focus:" + d.hash + f.id + "]"});
+                if(sf) fs.push({type:"space", label: "{col:msx-yellow}{ico:folder} " + f.path[1]});
             }
-            if(Torrents){
-                console.log("torrents");
-                TS = new Torrents(P);
-                TS.init(W);
-            } else W.stop();
+            is++;
+            fs.push({
+                id: d.hash + f.id,
+                icon: "msx-green:" + b.i,
+                label: f.path[0],
+                extensionLabel: Size(f.length),
+                group: "{dic:label:" + b.t + "|" + b.t + "}",
+                background: b.b,
+                focus: D.focus && D.focus == f.id,
+                execute: D.execute && D.execute == f.id,
+                folder: f.path[1] ? ("{ico:msx-yellow:folder} " + f.path[1] + "{br}") : "",
+                action: b.t + ":resolve:request:interaction:" + b.t + ":" + [Addr, "play", d.hash, f.id].join("/") + H
+            });
         });
+        return {
+            type: "list", headline: d.title, extension: "{ico:msx-white:list} " + is, compress: ct, items: fs, flag: "torrent",
+            options: Opts(null,
+                a ? {label: "{dic:save|Save the torrent}", action: "[cleanup|interaction:commit:message:save]"} : null,
+                ds.length > 1 ? {label: "{dic:folder|Select folder}", action: "[cleanup|panel:data]", data: {
+                    type: "list", headline: "{dic:folder|Select folder}:", compress: true, items: ds,
+                    template: {type: "control", icon: "folder", layout: "0,0,10,1"}
+                }} : null
+            ),
+            template: {
+                type: "control", layout: ct ? "0,0,16,1" : "0,0,12,1", playerLabel: d.title, progress: -1,
+                live: {type: "playback", action: "player:show"},
+                properties: {
+                    "info:text": "{context:folder}{ico:{context:icon}} {context:label}",
+                    "info:image": d.poster || "default",
+                    "control:type": "extended",
+                    "resume:key": "id",
+                    "trigger:complete": "[player:auto:next|resume:cancel]"
+                }
+            }
+        };
     };
-    this.handleRequest = function(i, d, f){W.onReady(function(){
-        var e = function(m){P.error(m); f();}, l = "";
-        if(d && d.data) f({action: "interaction:commit:message:" + (i == "get" ? i : "add"), data: d.data});
-        else switch(i){
-            case "add":
-                i = null;
-                l = "&title=" + encodeURIComponent(L.title) + "&poster=" + encodeURIComponent(L.poster);
-            case "get":
-                l += "&link=" + encodeURIComponent(L.link);
-                AJAX("/stream/?stat", l, function(d){
-                    var c = SETS("compress"), s = SETS("folders"), b = SETS("background"), fs = [], ds = [], is = 0;
-                    d.file_stats.forEach(function(v){
-                        var e = v.path.lastIndexOf("/"), u = ADDR + "/play/" + d.hash + "/" + v.id;
-                        v.path = [v.path.substr(e + 1), e > 0 ? v.path.substr(0, e) : ""];
-                        if(!(e = (e = v.path[0].lastIndexOf(".")) > -1 ? v.path[0].substr(e + 1) : "")) return;
-                        for(var l = 0; l < EXTS.length; l++) if(EXTS[l].indexOf(e) > -1) break;
-                        if(l == EXTS.length) return;
-                        if(v.path[1] && (ds.length == 0 || ds[ds.length - 1].label != v.path[1])){
-                            ds.push({label: v.path[1], action: "{cleanup|focus:" + d.hash + "-" + v.id + "]"});
-                            if(s) fs.push({type: "space", label: "{col:msx-yellow}{ico:folder} " + v.path[1]});
-                        }
-                        fs.push({
-                            id: d.hash + "-" + v.id,
-                            label: v.path[0],
-                            folder: v.path[1] ? ("{ico:msx-white:msx-yellow:folder} " + v.path[1] + "{br}") : "",
-                            icon: l ? "audiotrack" : "movie",
-                            group: l ? "{dic:label:audio|Audio}" : "{dic:label:video|Video}",
-                            background: l && b ? ("https://source.unsplash.com/random/" + TVXSettings.WIDTH + "x" + TVXSettings.HEIGHT + "/" + Math.random() + "#msx-keep-ratio") : "default",
-                            extensionLabel: SIZE(v.length),
-                            action: (l ? "audio:" : "video:") + (TP ? u : ("plugin:http://msx.benzac.de/plugins/html5x.html?url=" + encodeURIComponent(u)))
-                        });
-                        is++;
-                    });
-                    f({
-                        type: "list", compress: c, items: fs, flag: "torrent",
-                        extension: "{ico:msx-white:list} " + is , headline: d.title,
-                        options: OPTS(null,
-                            !i ? {label: "{dic:add|Add to} {dic:trns|My torrents}", action: "[cleanup|interaction:commit:message:save]"} :
-                            is > 1 ? {label: "{dic:continue|Continue}", action: "[cleanup|interaction:commit:message:continue]", data: d.hash} : null,
-                            ds.length > 1 ? {label: "{dic:folder|Select folder}", action: "[cleanup|panel:data]", data: {
-                                type: "list", headline: "{dic:folder|Select folder}", items: ds, compress: true,
-                                template: {type: "control", icon: "folder", layout: "0,0,10,1"}
-                            }} : null
-                        ),
-                        template: {type: "control", layout: c ? "0,0,16,1" : "0,0,12,1", progress: -1, playerLabel: d.title,
-                            live: {type: "playback", action: "player:show"}, properties: {
-                                "info:text": "{context:folder}{ico:msx-green:play-arrow} {context:label}",
-                                "info:image": d.poster || "default",
-                                "control:type": "extended",
-                                "resume:key": "id",
-                                "trigger:complete": "[player:auto:next|resume:cancel]",
-                                "button:content:icon": "build",
-                                "button:content:action": TP ? "content:request:interaction:tizen" : "panel:request:player:options"
-                            }
-                        }   
-                    });        
-                }, e);
-                break;
-            case "tizen":
-                if(TP) TP.handleRequest("tizen", "init", f);
-                else e("No tizen!");
-                break;
-            default: if(!TS || !TS.handleRequest(i, f, e)) e("Wrong requestID: " + i);
-        }
-    })};
-    this.handleData = function(d){
-        switch(d.message){
-            case "add":
-            case "get":
-                L = d.data;
-                P.executeAction("content:request:interaction:" + d.message);
-                break;
-            case "save":
-                AJAX("/torrents", {
-                    action: "add",
-                    link: L.link,
-                    title: L.title || "",
-                    poster: L.poster || "",
-                    data: d.data.group ? ("GRP:" + d.data.group) : "",
-                    save_to_db: true
-                }, function(){P.executeAction("replace:content:torrent:request:interaction:get")});
-                break;
-            case "continue":
-                AJAX("/viewed", {action: "list", hash: d.data}, function(v){
-                    var i = 0;
-                    v.forEach(function(t){if(t.file_index > i) i = t.file_index});
-                    if(i > 0) P.executeAction("focus:" + d.data + "-" + i);
-                }, P.error);
-                break;
-            default: if((!TS || !TS.handleData(d)) && TP) TP.handleData("tizen", d);
-        }
+    this.handleData = function(d){switch(d.message){
+        case "save":
+            D.action = "get";
+            D.save_to_db = true;
+            Ajax(Addr + "/torrents", D, function(d){
+                D = {link: d.hash}
+                TVXInteractionPlugin.executeAction("replace:content:torrent:request:interaction:trn@" + window.location.href);
+            }, true);
+            return true;
+        case "goon":
+            Ajax(Addr + "/viewed", {action: "list", hash: d.data}, function(l){
+                var i = 0;
+                l.forEach(function(f){if(f.file_index > i) i = f.file_index});
+                if(i > 0) TVXInteractionPlugin.executeAction("focus:" + d.data + "." + i);
+            }, function(){});
+            return true;
+        default: return false;
+    }}
+    this.handleRequest = function(i, d, f){
+        if(i != "trn") return false;
+        else if(d && d.data) {
+            var r = function(i){
+                D.poster = i || "";
+                f({action: "content:request:interaction:trn"});
+            }
+            D = d.data;
+            if(D.poster && D.poster.substr(0, 2) == "tt") Imdb(r, D.poster);
+            else r(D.poster);
+        } else Ajax(
+            Addr + "/stream/?stat&",
+            ["link", "title", "poster"].map(function(k){return k + "=" + TVXTools.strToUrlStr(D[k])}).join("&"),
+            function(t){f(T(t, typeof D.save_to_db != "boolean" || D.save_to_db))},
+            function(e){TVXInteractionPlugin.error(e); f();}
+        )
+        return true;
     };
+    Addr = TVXServices.urlParams.getFullStr("addr", Addr);
 }
-TVXPluginTools.onReady(function() {
-    var p = TVXInteractionPlugin;
-    p.setupHandler(new Torrent(p, TVXServices.urlParams));
-    p.init();
-});
