@@ -154,7 +154,7 @@ function Torrents(){
             f({
                 name: document.title,
                 version: document.head.querySelector("meta[name=version]").content,
-                reference: "request:interaction:trns" + H,
+                reference: "request:interaction:menu" + H,
                 dictionary: Stor("russian") ? (window.location.origin + "/msx/russian.json") : null,
             });
             return true;
@@ -182,7 +182,7 @@ function Torrents(){
                     {action: "list"},
                     function(l){
                         var v = {};
-                        d.forEach(function(i){if(!v[i.hash] || v[i.hash] < i.file_index) v[i.hash] = i.file_index});
+                        l.forEach(function(i){if(!v[i.hash] || v[i.hash] < i.file_index) v[i.hash] = i.file_index});
                         f(T(d, v));
                     },
                     function(){f(T(d, {}))}
