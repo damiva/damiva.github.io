@@ -63,7 +63,7 @@
         {"type": "space"},
         {"label": "{ico:space-bar}", "key": "space|insert|yellow", "offset": "0,0,1,0", "data": " ", "progress": 1, "progressColor": "msx-yellow", "titleFooter": "{ico:fast-forward}"},
         {"type": "space"},
-        {"label": "{ico:language}", "key": "tab|end", "offset": "0,0,1,0", "data": "en", "titleFooter": "{ico:skip-next}"},
+        {"label": "{ico:language}", "key": "tab|end", "offset": "0,0,1,0", "data": "en", "titleFooter": "{ico:skip-next}", "id": "lang"},
         {"type": "space"},
         {"type": "space"},
         {"type": "space"},

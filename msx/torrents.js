@@ -155,7 +155,7 @@ function Torrents(){
                 return true;
             case "ru":
             case "en":
-                A("replace:content:keyboard:" + window.location.origin + "/msx/search." + d.data + ".json");
+                A("replace:content:keyboard:" + window.location.origin + "/msx/search." + d.data + ".json>lang");
                 return true;
             case "cl":
                 W = "";
