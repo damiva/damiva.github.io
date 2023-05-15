@@ -100,7 +100,7 @@ function Torrents(){
         }})
     }};
     this.handleEvent = function(d){
-        if(d.video.info.type == "video") switch(D.event){
+        if(d.video && d.video.info && d.video.info.type == "video") switch(d.event){
             case "video:load":
                 L(d.video.info.id.substr(0, 40), d.video.info.number, d.video.info.customLabel, d.video.info.label, d.info.count);
                 break;
