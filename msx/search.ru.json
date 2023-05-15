@@ -61,12 +61,12 @@
         {"type": "space"},
         {"label": "{ico:clear}", "key": "home", "offset": "0,0,1,0", "data": "cl", "titleFooter": "{ico:skip-previous}"},
         {"type": "space"},
-        {"label": "{ico:space-bar}", "key": "space|insert|yellow", "offset": "1,0,1,0", "data": " ", "progress": 1, "progressColor": "msx-yellow", "titleFooter": "{ico:fast-forward}"},
+        {"label": "{ico:space-bar}", "key": "space|insert|yellow", "offset": "0,0,1,0", "data": " ", "progress": 1, "progressColor": "msx-yellow", "titleFooter": "{ico:fast-forward}"},
         {"type": "space"},
         {"label": "{ico:language}", "key": "tab|end", "offset": "0,0,1,0", "data": "en", "titleFooter": "{ico:skip-next}"},
         {"type": "space"},
         {"type": "space"},
         {"type": "space"},
-        {"label": "{ico:done}", "key": "green", "offset": "-1,0,1,0", "data": "ok", "progress": 1, "progressColor": "msx-green"}
+        {"label": "{ico:done}", "key": "green", "offset": "-2,0,1,0", "data": "ok", "progress": 1, "progressColor": "msx-green"}
     ]
 }

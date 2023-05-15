@@ -30,13 +30,13 @@ function Imdb(f, i){Ajax("/msx/", ("?img&imdb=" + i) || "", f, function(){f()})}
 function Torrent(){
     var D = null, B = window.location.origin + "/msx/?img=" + TVXSettings.SCREEN_WIDTH + "x" + TVXSettings.SCREEN_HEIGHT;
     var T = function(d, a){
-        var fs = [], ds = [], ct = Stor("compress"), sf = Stor("folders"), is = 0;
+        var fs = [], ds = [], ct = Stor("compress"), sf = Stor("folders"), ap = Stor("audiopic"), is = 0;
         d.file_stats.forEach(function(f){
             var b = f.path.indexOf("/"), e = f.path.lastIndexOf("/");
             f.path = [f.path.substr(e + 1), b > 0 && e > b ? f.path.substr(b + 1, e - b - 1) : ""];
             if((e = f.path[0].lastIndexOf(".")) < 0 || !(e = f.path[0].substr(e + 1))) return;
             for(b = 0; b < EXTS.length; b++) if(EXTS[b].indexOf(e) >= 0) break;
-            if(b < EXTS.length) b = [{i: "movie", t: "video"}, {i: "audiotrack", t: "audio", b: B}][b];
+            if(b < EXTS.length) b = [{i: "movie", t: "video"}, {i: "audiotrack", t: "audio", b: ap ? B : undefined}][b];
             else return;
             if(f.path[1] && (ds.length == 0 || ds[ds.length - 1].label != f.path[1])){
                 ds.push({label: f.path[1], action: "[cleanup|focus:" + d.hash + f.id + "]"});

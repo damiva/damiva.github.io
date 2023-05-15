@@ -33,26 +33,25 @@ function Torrents(){
                     action: "interaction:commit:message:set", data: "{context:id}"
                 },
                 items: [
-                    {id: "russian", icon: "trnslate", label: r ? "Switch to english" : "Первести на русский"},
+                    {id: "russian", icon: "translate", label: r ? "Switch to english" : "Первести на русский"},
                     {id: "rutor", icon: "search", label: "{dic:srch|Search torrents}", extensionIcon: I(R)},
                     {id: "compress", icon: "compress", label: "{dic:compress|Smaller font in lists}", extensionIcon: I(Stor("compress"))},
-                    {id: "folders", icon: "folder", label: "{dic:folders|Show folders in torrents", extensionIcon: I(Stor("folders"))},
-                    {id: "audiopic", icon: "last-page", label: "{dic:audipic|Random picture in audio player", extensionIcon: I(Stor("audiopic"))}
+                    {id: "folders", icon: "folder", label: "{dic:folders|Show folders in torrents}", extensionIcon: I(Stor("folders"))},
+                    {id: "audiopic", icon: "last-page", label: "{dic:audiopic|Random picture in audio player}", extensionIcon: I(Stor("audiopic"))}
                 ]
             }}
         ]};
     };
-    var D = function(d, i){return d.map(function(t){return {
+    var D = function(t){return {
         id: t.hash,
-        color: i ? "msx-glass" : "msx-black-soft",
         image: t.poster || undefined,
         headline: t.title,
-        titleFooter: "{ico:msx-white:attach-file} " + Size(t.length),
+        titleFooter: "{ico:msx-white:attach-file} " + Size(t.torrent_size),
         group: t.data && t.data.substr(0, 4) == "GRP:" ? t.data.substr(4) : null,
         stamp: t.stat < 5 ? ("{ico:north} " + (t.active_peers || 0) + " / " + (t.pending_peers || 0) + " / " + (t.total_peers || 0)) : "",
         stampColor: t.stat == 4 ? "msx-red" : t.stat == 3 ? "msx-green" : "msx-yellow",
-    }})};
-    var S = function(d){return d.map(function(t, i){return {
+    }};
+    var S = function(t, i){return {
         id: i = TVXTools.strVal(i),
         image: t.Poster || undefined,
         headline: t.Title,
@@ -62,7 +61,7 @@ function Torrents(){
         live: !t.Poster && t.IMDBID ? {type: "setup", action: "interaction:commit:message:imdb", data: {imdb: t.IMDBID, id: i}} : null,
         Magnet: t.Magnet,
         Poster: t.Poster || t.IMDBID
-    }})};
+    }};
     var T = function(d, v){return {
         type: "list", compress: d.c = Stor("compress"), reuse: !v, restore: !v, cache: !v,
         headline: v ? "{dic:trns|My torrents}" : W,
@@ -71,10 +70,10 @@ function Torrents(){
             imageWidth: 1.3, imageFiller: "height", layout: d.c ? "0,0,8,2" : "0,0,6,2",
             action: "execute:request:interaction:trn" + H,
             data: v 
-                ? {link: "{context:id}", focus: v[d.hash]}
+                ? {link: "{context:id}"}
                 : {link: "{context:Magnet}", poster: "{context:Poster}", title: "{context:headline}"}
         },
-        items: !d.length ? [E] : v ? D(d, v[d.hash]) : S(d)
+        items: !d.length ? [E] : d.map(v ? D : S)
     }};
     var L = function(h, i, t, n, s){
         var l = TVXServies.storage.get("lastvideo", []);
@@ -82,7 +81,7 @@ function Torrents(){
         l = l.filter(function(i){return i.hash != h});
         if(i) l.unshift({hash: h, id: i, title: t, fname: n, total: s});
         if(l.length > 6) l.pop();
-        TVXServies.storage.set("lastvideo", l);
+        TVXServises.storage.set("lastvideo", l);
     };
     var G = function(d){return {
         type: "list", reuse: false, retore: false, cache: false, extension: "{ico:msx-white:history} " + d.length,
@@ -177,16 +176,7 @@ function Torrents(){
             Ajax(
                 Addr + "/torrents",
                 {action: "list"},
-                function(d){Ajax(
-                    Addr + "/viewed",
-                    {action: "list"},
-                    function(l){
-                        var v = {};
-                        l.forEach(function(i){if(!v[i.hash] || v[i.hash] < i.file_index) v[i.hash] = i.file_index});
-                        f(T(d, v));
-                    },
-                    function(){f(T(d, {}))}
-                )},
+                function(d){f(T(d))},
                 function(e){TVXInteractionPlugin.error(e); f();}
             );
             return true;
