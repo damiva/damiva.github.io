@@ -163,7 +163,7 @@ function Torrents(){
                 W = W ? W.substr(0, W.length - 1) : "";
                 d.data = "";
             default: 
-                A("update:content:underlay:val", {label: (W += d.data) || "{txt:msx-white-soft:dic:input|Enter the word(s) to search}"});
+                A("update:content:underlay:val", {label: (W += d.data) || "{txt:msx-white-soft:dic:words|Enter the word(s) to search}"});
                 return true;
         }
         default: return false;
