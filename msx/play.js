@@ -75,4 +75,5 @@ function Handler(){
     })};
     for(var i = 0; i < arguments.length; i++) ps.push(arguments[i]);
     ps.push(Play);
+    console.log(ps);
 }
