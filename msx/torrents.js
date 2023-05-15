@@ -76,12 +76,12 @@ function Torrents(){
         items: !d.length ? [E] : d.map(v ? D : S)
     }};
     var L = function(h, i, t, n, s){
-        var l = TVXServises.storage.get("lastvideo", []);
+        var l = TVXServices.storage.get("lastvideo", []);
         if(!h) return l;
         l = l.filter(function(i){return i.hash != h});
         if(i) l.unshift({hash: h, id: i, title: t, fname: n, total: s});
         if(l.length > 6) l.pop();
-        TVXServises.storage.set("lastvideo", l);
+        TVXServices.storage.set("lastvideo", l);
     };
     var G = function(d){return {
         type: "list", reuse: false, retore: false, cache: false, extension: "{ico:msx-white:history} " + d.length,
