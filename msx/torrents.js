@@ -55,7 +55,7 @@ function Torrents(){
             "203":"{dic:rutor:203|Prof. studio}",
             "300":"{dic:rutor:300|Official}",
             "301":"{dic:rutor:301|Licese}" 
-        }[TVX.strtValue(q)];
+        }[TVXTools.strtValue(q)];
         return q || "";
     };
     var D = function(t){return {
