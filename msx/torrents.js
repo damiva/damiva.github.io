@@ -42,6 +42,22 @@ function Torrents(){
             }}
         ]};
     };
+    var Q = function(q){
+        q = {
+            "1":"{dic:rutor:1|Author's}",
+            "100":"{dic:rutor:100|Amateur one voice}",
+            "101":"{dic:rutor:101|Amateur two voices}",
+            "102":"{dic:rutor:102|Amateur many voices}",
+            "103":"{dic:rutor:103|Amateur studio}",
+            "200":"{dic:rutor:200|Prof. one voice}",
+            "201":"{dic:rutor:201|Prof. two voices}",
+            "202":"{dic:rutor:202|Prof. many voices}",
+            "203":"{dic:rutor:203|Prof. studio}",
+            "300":"{dic:rutor:300|Official}",
+            "301":"{dic:rutor:301|Licese}" 
+        }[TVX.strtValue(q)];
+        return q || "";
+    };
     var D = function(t){return {
         id: t.hash,
         image: t.poster || undefined,
@@ -56,7 +72,7 @@ function Torrents(){
         image: t.Poster || undefined,
         headline: t.Title,
         text: Q(t.AudioQuality),
-        group: "{dic:" + t.Categories + "|" + t.Categories + "}",
+        group: "{dic:rutor:" + t.Categories + "|" + t.Categories + "}",
         stamp: "{ico:attch-file} " + t.Size + "{tb}{ico:north} " + t.Peer + " {ico:south} " + t.Seed,
         live: !t.Poster && t.IMDBID ? {type: "setup", action: "interaction:commit:message:imdb", data: {imdb: t.IMDBID, id: i}} : null,
         Magnet: t.Magnet,
