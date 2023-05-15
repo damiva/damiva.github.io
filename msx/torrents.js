@@ -131,7 +131,7 @@ function Torrents(){
             );
             TVXInteractionPlugin.requestData(
                 "info:content", 
-                function(d){A("update:content:underlay:app", {headline: d.info.content.name, text: d.info.content.version})}
+                function(d){A("update:content:underlay:plg", {headline: d.info.content.name, text: d.info.content.version})}
             );
             return true;
         case "imdb":
