@@ -1,5 +1,5 @@
 {
-    "type": "list", "headline": "{dic:srch|Search torrents}", "extension": "{ico:msx-white:keyboard} ru",
+    "type": "list", "headline": "{dic:srch|Search torrents}", "extension": "{ico:msx-white:keyboard} ru", "wrap": true,
     "ready": {"action": "interaction:commit:message:key", "data": ""}, "flag": "keyboard",
     "underlay": {"items": [{"type": "space", "color": "msx-black-soft", "layout": "0,0,12,1", "label": "", "id": "val"}]},
     "template": {"type": "button", "layout": "0,0,1,1", "area": "0,1,12,5", "action": "interaction:commit:message:key", "data": "{context:label}", "enumerate": false},

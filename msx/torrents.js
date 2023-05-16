@@ -23,9 +23,9 @@ function Torrents(){
             {icon: "settings", label: "{dic:label:settings|Settings}", data: {
                 type: "list", extension: "{ico:msx-white:settings}", ready: {action: "interaction:commit:message:info"},
                 underlay: {items: [
-                    {id: "tor", type: "space", headline: "TorrServer", text: "", layout: "0,0,4,1", alignment: "center"},
-                    {id: "plg", type: "space", headline: "Plugin", text: "", layout: "4,0,4,1", alignment: "center"},
-                    {id: "app", type: "space", headline: "MSX", text: "", layout: "8,0,4,1", alignment: "center"},
+                    {id: "tor", type: "space", headline: "TorrServer", text: "", layout: "0,0,4,1", alignment: "center", color: "msx-black-soft"},
+                    {id: "plg", type: "space", headline: "Plugin", text: "", layout: "4,0,4,1", alignment: "center", color: "msx-black-soft"},
+                    {id: "app", type: "space", headline: "MSX", text: "", layout: "8,0,4,1", alignment: "center", color: "msx-black-soft"},
                 ]},
                 template: {
                     type: "control", enumerate: false,
@@ -33,7 +33,7 @@ function Torrents(){
                     action: "interaction:commit:message:set", data: "{context:id}"
                 },
                 items: [
-                    {id: "russian", icon: "translate", label: r ? "Switch to english" : "Первести на русский"},
+                    {id: "russian", icon: "translate", label: r ? "Switch to english" : "Первести на русский", extensionIcon: "msx-yellow:refresh"},
                     {id: "rutor", icon: "search", label: "{dic:srch|Search torrents}", extensionIcon: I(R)},
                     {id: "compress", icon: "compress", label: "{dic:compress|Smaller font in lists}", extensionIcon: I(Stor("compress"))},
                     {id: "folders", icon: "folder", label: "{dic:folders|Show folders in torrents}", extensionIcon: I(Stor("folders"))},
@@ -55,7 +55,7 @@ function Torrents(){
             "203":"{dic:rutor:203|Prof. studio}",
             "300":"{dic:rutor:300|Official}",
             "301":"{dic:rutor:301|Licese}" 
-        }[TVXTools.strtValue(q)];
+        }[TVXTools.strValue(q)];
         return q || "";
     };
     var D = function(t){return {
@@ -145,8 +145,23 @@ function Torrents(){
                 function(){A("reload:content")}
             );
             return true;
-        case "set":
-            return true;
+        case "set": switch (d.data){
+            case "russian":
+                Stor(d.data, true)
+                A("reload");
+                return true;
+            case "rutor":
+                Ajax(Addr + "/settings", {action: "get"}, function(d){
+                    d.EnableRutorSearch = !R;
+                    Ajax(Addr + "/settings", {action: "set", sets: d}, function(){
+                        A("reload:menu");
+                    }, true);
+                }, true);
+                return true;
+            default:
+                A("update:content:" + d.data, {extensionIcon: I(Stor(d.data, true))});
+                return true;
+            }
         case "key": switch(d.data){
             case "ok":
                 if(W != O) Ajax("", "*");
