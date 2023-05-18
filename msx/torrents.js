@@ -151,10 +151,12 @@ function Torrents(){
                 A("reload");
                 return true;
             case "rutor":
+                TVXInteractionPlugin.startLoading();
                 Ajax(Addr + "/settings", {action: "get"}, function(d){
                     d.EnableRutorSearch = !R;
                     Ajax(Addr + "/settings", {action: "set", sets: d}, function(){
                         A("reload:menu");
+                        TVXInteractionPlugin.stopLoading();
                     });
                 }, true);
                 return true;

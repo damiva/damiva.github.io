@@ -32,7 +32,9 @@ function Ajax(u, d, s, e){
 }
 function Imdb(f, i){Ajax("/msx/", ("?img&imdb=" + i) || "", f, function(){f()})};
 function Torrent(){
-    var D = null, B = window.location.origin + "/msx/?img=" + TVXSettings.SCREEN_WIDTH + "x" + TVXSettings.SCREEN_HEIGHT;
+    var D = null,
+        H = "@" + window.location.href,
+        B = window.location.origin + "/msx/?img=" + TVXSettings.SCREEN_WIDTH + "x" + TVXSettings.SCREEN_HEIGHT;
     var T = function(d, a){
         var fs = [], ds = [], ct = Stor("compress"), sf = Stor("folders"), ap = Stor("audiopic"), is = 0;
         d.file_stats.forEach(function(f){
