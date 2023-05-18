@@ -15,7 +15,7 @@ function Torrents(){
             R = false;
             d = {action: "error:" + d};
         }
-        return {logo: "https://damiva.github.io/msx/ts.png", ready: d, menu: [
+        return {logo: "https://damiva.github.io/msx/ts.png", ready: d, reuse: false, restore: false, cache: false,menu: [
             {icon: "history", label: "{dic:goon|Continue playing}", data: "request:interaction:goon" + H},
             {icon: "bookmarks", label: "{dic:trns|My torrents}", data: "request:interaction:trns" + H},
             {icon: "search", label: "{dic:srch|Search torrents}", data: window.location.origin + "/msx/search." + (r ? "ru" : "en") + ".json", enable: R},
@@ -211,7 +211,7 @@ function Torrents(){
             Ajax(
                 Addr + "/torrents",
                 {action: "list"},
-                function(d){f(T(d))},
+                function(d){f(T(d, true))},
                 function(e){TVXInteractionPlugin.error(e); f();}
             );
             return true;
