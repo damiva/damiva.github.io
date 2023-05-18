@@ -42,7 +42,7 @@ function Torrent(){
             f.path = [f.path.substr(e + 1), b > 0 && e > b ? f.path.substr(b + 1, e - b - 1) : ""];
             if((e = f.path[0].lastIndexOf(".")) < 0 || !(e = f.path[0].substr(e + 1))) return;
             for(b = 0; b < Exts.length; b++) if(Exts[b].indexOf(e) >= 0) break;
-            if(b < Exts.length) b = [{i: "movie", t: "video"}, {i: "audiotrack", t: "audio", b: ap ? B : undefined}][b];
+            if(b < Exts.length) b = [{i: "movie", t: "video"}, {i: "audiotrack", t: "audio", a: true}][b];
             else return;
             if(f.path[1] && (ds.length == 0 || ds[ds.length - 1].label != f.path[1])){
                 ds.push({label: f.path[1], action: "[cleanup|focus:" + d.hash + f.id + "]"});
@@ -55,11 +55,11 @@ function Torrent(){
                 label: f.path[0],
                 extensionLabel: Size(f.length),
                 group: "{dic:label:" + b.t + "|" + b.t + "}",
-                background: b.b,
+                background: b.a && ap ? B : "default",
                 focus: D.focus && D.focus == f.id,
                 execute: D.execute && D.execute == f.id,
                 folder: f.path[1] ? ("{ico:msx-yellow:folder} " + f.path[1] + "{br}") : "",
-                action: b.t + ":resolve:request:interaction:" + b.t + ":" + [Addr, "play", d.hash, f.id].join("/") + H
+                action: b.t + (b.a ? [Addr, "play", d.hash, f.id].join("/") : (":resolve:request:interaction:" + [Addr, "play", d.hash, f.id].join("/") + H))
             });
         });
         return {
