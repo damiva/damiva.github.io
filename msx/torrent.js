@@ -1,4 +1,8 @@
-var Addr = window.location.origin;
+var Addr = window.location.origin,
+    Exts = [
+        ["dif","dv","fli","mp4","mpeg","mpg","mpe","mpv","mkv","ts","m2ts","mts","ogv","webm","vob","avi","qt","mov"],
+        ["aac","dsd","dsf","dff","flac","mpga","mpega","mp2","mp3","m4a","oga","ogg","opus","spx","opus","weba","ape","wav"]
+    ];
 function Stor(k, c){
     var v = TVXServices.storage.getBool(k, false);
     if(c) TVXServices.storage.set(k, v = !v);
@@ -35,8 +39,8 @@ function Torrent(){
             var b = f.path.indexOf("/"), e = f.path.lastIndexOf("/");
             f.path = [f.path.substr(e + 1), b > 0 && e > b ? f.path.substr(b + 1, e - b - 1) : ""];
             if((e = f.path[0].lastIndexOf(".")) < 0 || !(e = f.path[0].substr(e + 1))) return;
-            for(b = 0; b < EXTS.length; b++) if(EXTS[b].indexOf(e) >= 0) break;
-            if(b < EXTS.length) b = [{i: "movie", t: "video"}, {i: "audiotrack", t: "audio", b: ap ? B : undefined}][b];
+            for(b = 0; b < Exts.length; b++) if(Exts[b].indexOf(e) >= 0) break;
+            if(b < Exts.length) b = [{i: "movie", t: "video"}, {i: "audiotrack", t: "audio", b: ap ? B : undefined}][b];
             else return;
             if(f.path[1] && (ds.length == 0 || ds[ds.length - 1].label != f.path[1])){
                 ds.push({label: f.path[1], action: "[cleanup|focus:" + d.hash + f.id + "]"});
