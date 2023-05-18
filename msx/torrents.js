@@ -15,7 +15,7 @@ function Torrents(){
             R = false;
             d = {action: "error:" + d};
         }
-        return {logo: "https://damiva.github.io/msx/ts.png", ready: d, reuse: false, restore: false, cache: false,menu: [
+        return {logo: "https://damiva.github.io/msx/ts.png", ready: d, menu: [
             {icon: "history", label: "{dic:goon|Continue playing}", data: "request:interaction:goon" + H},
             {icon: "bookmarks", label: "{dic:trns|My torrents}", data: "request:interaction:trns" + H},
             {icon: "search", label: "{dic:srch|Search torrents}", data: window.location.origin + "/msx/search." + (r ? "ru" : "en") + ".json", enable: R},
@@ -155,7 +155,7 @@ function Torrents(){
                     d.EnableRutorSearch = !R;
                     Ajax(Addr + "/settings", {action: "set", sets: d}, function(){
                         A("reload:menu");
-                    }, true);
+                    });
                 }, true);
                 return true;
             default:
