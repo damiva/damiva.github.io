@@ -30,7 +30,7 @@ function Ajax(u, d, s, e){
         s = typeof d == "string";
     TVXServices.ajax[s ? "get" : "post"](u + (s ? d : ""), s ? x : TVXTools.serialize(d), s ? t : x, s ? undefined : t);
 }
-function Imdb(f, i){Ajax("/msx/", ("?img&imdb=" + i) || "", f, function(){f()})};
+function Imdb(f, i){Ajax("/msx/", i ? ("?img&imdb=" + i) : "", f, function(){f()})};
 function Torrent(){
     var D = null,
         H = "@" + window.location.href,
@@ -59,7 +59,7 @@ function Torrent(){
                 focus: D.focus && D.focus == f.id,
                 execute: D.execute && D.execute == f.id,
                 folder: f.path[1] ? ("{ico:msx-yellow:folder} " + f.path[1] + "{br}") : "",
-                action: b.t + (b.a ? [Addr, "play", d.hash, f.id].join("/") : (":resolve:request:interaction:" + [Addr, "play", d.hash, f.id].join("/") + H))
+                action: b.t + ":" + (b.a ? [Addr, "play", d.hash, f.id].join("/") : ("resolve:request:interaction:" + [Addr, "play", d.hash, f.id].join("/") + H))
             });
         });
         return {
