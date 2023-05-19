@@ -30,7 +30,7 @@ function Ajax(u, d, s, e){
         s = typeof d == "string";
     TVXServices.ajax[s ? "get" : "post"](u + (s ? d : ""), s ? x : TVXTools.serialize(d), s ? t : x, s ? undefined : t);
 }
-function Imdb(f, i){Ajax("/msx/", i ? ("?img&imdb=" + i) : "", f, function(){f()})};
+function Imdb(f, i){Ajax("/msx/?img&imdb=", i, f, function(){f()})};
 function Torrent(){
     var D = null,
         H = "@" + window.location.href,
