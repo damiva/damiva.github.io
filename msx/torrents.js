@@ -166,7 +166,7 @@ function Torrents(){
             }
         case "key": switch(d.data){
             case "ok":
-                if(W != O) Ajax("", "");
+                if(W != O) Ajax("/msx/", "");
                 O = W;
                 A("content:request:interaction:find");
                 return true;
