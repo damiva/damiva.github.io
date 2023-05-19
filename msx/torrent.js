@@ -55,7 +55,7 @@ function Torrent(){
                 label: f.path[0],
                 extensionLabel: Size(f.length),
                 group: "{dic:label:" + b.t + "|" + b.t + "}",
-                background: b.a && ap ? B : "default",
+                background: b.a && ap ? B : undefined,
                 focus: D.focus && D.focus == f.id,
                 execute: D.execute && D.execute == f.id,
                 folder: f.path[1] ? ("{ico:msx-yellow:folder} " + f.path[1] + "{br}") : "",
