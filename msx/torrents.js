@@ -1,7 +1,7 @@
 function Torrents(){
     var R = false, 
         H = "@" + window.location.href,
-        E = {icon: "back", label: "{dic:empty|Nothing found}", action: "back"}, 
+        E = {icon: "arrow-back", label: "{dic:empty|Nothing found}", action: "close"}, 
         W = "", 
         O = "",
         A = TVXInteractionPlugin.executeAction;
