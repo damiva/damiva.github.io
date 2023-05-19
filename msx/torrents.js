@@ -37,7 +37,7 @@ function Torrents(){
                     {id: "rutor", icon: "search", label: "{dic:srch|Search torrents}", extensionIcon: I(R)},
                     {id: "compress", icon: "compress", label: "{dic:compress|Smaller font in lists}", extensionIcon: I(Stor("compress"))},
                     {id: "folders", icon: "folder", label: "{dic:folders|Show folders in torrents}", extensionIcon: I(Stor("folders"))},
-                    {id: "audiopic", icon: "wallpaper", label: "{dic:audiopic|Random picture in audio player}", extensionIcon: I(Stor("audiopic"))}
+                    {icon: "refresh", label: "{dic:label:restart|Restart}", action: "restart"}
                 ]
             }}
         ]};

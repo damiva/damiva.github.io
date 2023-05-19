@@ -33,10 +33,9 @@ function Ajax(u, d, s, e){
 function Imdb(f, i){Ajax("/msx/?img&imdb=", i, f, function(){f()})};
 function Torrent(){
     var D = null,
-        H = "@" + window.location.href,
-        B = window.location.origin + "/msx/?img=" + TVXSettings.SCREEN_WIDTH + "x" + TVXSettings.SCREEN_HEIGHT;
+        H = "@" + window.location.href;
     var T = function(d, a){
-        var fs = [], ds = [], ct = Stor("compress"), sf = Stor("folders"), ap = Stor("audiopic"), is = 0;
+        var fs = [], ds = [], ct = Stor("compress"), sf = Stor("folders"), is = 0;
         d.file_stats.forEach(function(f){
             var b = f.path.indexOf("/"), e = f.path.lastIndexOf("/");
             f.path = [f.path.substr(e + 1), b > 0 && e > b ? f.path.substr(b + 1, e - b - 1) : ""];
@@ -55,7 +54,6 @@ function Torrent(){
                 label: f.path[0],
                 extensionLabel: Size(f.length),
                 group: "{dic:label:" + b.t + "|" + b.t + "}",
-                background: b.a && ap ? (B + "?" + Math.random()): undefined,
                 focus: D.focus && D.focus == f.id,
                 execute: D.execute && D.execute == f.id,
                 folder: f.path[1] ? ("{ico:msx-yellow:folder} " + f.path[1] + "{br}") : "",
