@@ -61,7 +61,9 @@ function Torrent(){
             });
         });
         return {
-            type: "list", headline: d.title, extension: "{ico:msx-white:list} " + is, compress: ct, items: fs, flag: "torrent",
+            type: "list", compress: ct, items: fs, flag: "torrent",
+            headline: d.title, extension: "{ico:msx-white:list} " + is,
+            ready: Stor("goon") ? {action: "interaction:commit:message:goon", data: d.hash} : null,
             options: Opts(null,
                 a ? {label: "{dic:save|Save the torrent}", action: "[cleanup|interaction:commit:message:save]"} : null,
                 ds.length > 1 ? {label: "{dic:folder|Select folder}", action: "[cleanup|panel:data]", data: {
