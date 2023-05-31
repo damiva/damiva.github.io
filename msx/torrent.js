@@ -30,7 +30,7 @@ function Ajax(u, d, s, e){
         s = typeof d == "string";
     TVXServices.ajax[s ? "get" : "post"](u + (s ? d : ""), s ? x : TVXTools.serialize(d), s ? t : x, s ? undefined : t);
 }
-function Imdb(f, i){Ajax("/msx/?img&imdb=", i, f, function(){f()})};
+function Imdb(f, i){Ajax("/msx/?img&imdb=", i || "*", f, f ? function(){f()} : undefined)};
 function Torrent(){
     var D = null,
         H = "@" + window.location.href;
@@ -63,7 +63,6 @@ function Torrent(){
         return {
             type: "list", compress: ct, items: fs, flag: "torrent",
             headline: d.title, extension: "{ico:msx-white:list} " + is,
-            ready: Stor("goon") ? {action: "interaction:commit:message:goon", data: d.hash} : null,
             options: Opts(null,
                 a ? {label: "{dic:save|Save the torrent}", action: "[cleanup|interaction:commit:message:save]"} : null,
                 ds.length > 1 ? {label: "{dic:folder|Select folder}", action: "[cleanup|panel:data]", data: {
@@ -84,24 +83,16 @@ function Torrent(){
             }
         };
     };
-    this.handleData = function(d){switch(d.message){
-        case "save":
-            D.action = "get";
-            D.save_to_db = true;
-            Ajax(Addr + "/torrents", D, function(d){
-                D = {link: d.hash}
-                TVXInteractionPlugin.executeAction("replace:content:torrent:request:interaction:trn@" + window.location.href);
-            }, true);
-            return true;
-        case "goon":
-            Ajax(Addr + "/viewed", {action: "list", hash: d.data}, function(l){
-                var i = 0;
-                l.forEach(function(f){if(f.file_index > i) i = f.file_index});
-                if(i > 0) TVXInteractionPlugin.executeAction("focus:" + d.data + "." + i);
-            }, function(){});
-            return true;
-        default: return false;
-    }}
+    this.handleData = function(d){
+        if(D.message != "save") return false;
+        D.action = "get";
+        D.save_to_db = true;
+        Ajax(Addr + "/torrents", D, function(d){
+            D = {link: d.hash}
+            TVXInteractionPlugin.executeAction("replace:content:torrent:request:interaction:trn@" + window.location.href);
+        }, true);
+        return true;
+    }
     this.handleRequest = function(i, d, f){
         if(i != "trn") return false;
         else if(d && d.data) {
