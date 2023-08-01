@@ -1,0 +1,3 @@
+[
+    {"label": "ТВ", "icon": "live-tv", "data": "request:interaction:init@iptv/"}
+]
