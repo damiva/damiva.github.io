@@ -78,7 +78,7 @@ function IPTV(){
             }
         };
     var m3u = function(i, id, ic, f){
-        TVXServices.ajax.get("/proxy?" + TVXTools.strToUrlStr(url + i + ".m3u"), {
+        TVXServices.ajax.get("/proxy?url=" + TVXTools.strToUrlStr(url + i + ".m3u"), {
             success: function(d){
                 tvs.flag = i;
                 tvs.template.options = opo;
