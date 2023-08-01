@@ -153,7 +153,7 @@ function IPTV(){
         }
     };
     var epg = function(id, all, f){
-        if(id === null) TVXServices.ajax.get("/proxy?https://epg.iptvx.one/api/channels.json", {
+        if(id === null) TVXServices.ajax.get("/proxy?url=https://epg.iptvx.one/api/channels.json", {
             success: all ? function(d){
                 var id = {}, ic = {};
                 d.channels.forEach(function(c){
@@ -167,7 +167,7 @@ function IPTV(){
             error: f
         });
         else if(!id) f();
-        else TVXServices.ajax.get("/proxy?https://epg.iptvx.one/api/id/" + id + ".json", {
+        else TVXServices.ajax.get("/proxy?url=https://epg.iptvx.one/api/id/" + id + ".json", {
             success: function(d){
                 var r = {i: -1, n: TVXDateTools.getNow(), p: []};
                 d.ch_programme.every(function(p, i){
