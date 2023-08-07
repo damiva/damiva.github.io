@@ -18,7 +18,7 @@ function Torrent(){
         x: function(n){
             var d = n.indexOf("/"), b = n.lastIndexOf("/"), e = n.lastIndexOf("."), i = 0;
             if(e < 0 || e == n.length - 1) return null;
-            else e = n.substr(e + 1);
+            else e = n.substr(e + 1).toLowerCase();
             for(i = 0; i < this.e.length; i++) if(this.e[i].indexOf(e) >= 0) break;
             return i == this.e.length ? null : {d: d < b ? n.substr(d + 1, b - d - 1) : "", n: n.substr(b + 1), t: i};
         }
