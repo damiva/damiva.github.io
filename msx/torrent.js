@@ -1,6 +1,6 @@
 var ADDR = window.location.origin;
 function IMDB(id, f){
-    TVXServices.ajax.get(window.location.origin+"/imdb?id=" + (id || ""), {success: f, error: f ? function(){f()} : undefined});
+    TVXServices.ajax.get("/imdb?id=" + (id || ""), {success: f, error: f ? function(){f()} : undefined});
 }
 function SIZE(s){
     var i = s == 0 ? 0 : Math.floor(Math.log(s) / Math.log(1024));
