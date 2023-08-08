@@ -183,7 +183,6 @@ function Torrents(){
         switch(d.message){
             case "imdb":
                 IMDB(d.data.imdb, function(i){
-                    console.log(i);
                     if(i) TVXInteractionPlugin.executeAction("update:content:" + d.data.id, {image: i});
                 });
                 return true;

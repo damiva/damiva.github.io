@@ -56,7 +56,7 @@ function Torrent(){
                 d.data = {link: d.data.substr(0, 40)};
             }
             B.start();
-            if(d.poster && d.poster.indexOf("tt") == 0) IMDB(d.poster, function(i){d.poster = i; B.stop()});
+            if(d.data.poster && d.data.poster.indexOf("tt") == 0) IMDB(d.data.poster, function(i){d.data.poster = i; B.stop()});
             else B.stop();
             B.onReady(function(){TVXServices.ajax.get(ADDR + "/stream/?stat&" + U(d.data), {
                 success: function(t){
