@@ -151,7 +151,7 @@ function Torrents(){
     }};
     var FT = function(t, i){return {
         id: i = TVXTools.strValue(i),
-        image: t.Poster,
+        image: t.Poster || "",
         headline: t.Title,
         text: AQ(t.AudioQuality),
         group: "{dic:" + t.Categories + "|" + t.Categories + "}",
