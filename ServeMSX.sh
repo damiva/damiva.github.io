@@ -7,7 +7,7 @@ function ask() {
     fi
 }
 function dnl() {
-    curl -L -o $1 $2 || wget -O $1 $2
+    curl -L -o "$1" "$2" || wget -O "$1" "$2"
     return
 }
 [ $EUID -ne 0 ] && echo "Please run me as root!" && exit 1
