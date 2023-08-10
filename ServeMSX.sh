@@ -14,7 +14,7 @@ esac
 case $(uname) in
     Linux)
         ARC=linux.$ARC
-        command -v systemctl >/dev/null || SYS=""\
+        command -v systemctl >/dev/null || SYS=""
         ;;
     *)
         echo "Your OS is not supported!" && exit 1
@@ -27,7 +27,7 @@ echo -n "Loading $URI/$ARC to $DIR/$EXE..."
 curl -L -o $DIR/$EXE $URI/$ARC || wget -O $DIR/$EXE $URI/$ARC || exit
 echo "done"
 
-if [ ! -z "$SYS" ] && read -p "Would you like to install $EXE as a service? [Y/n]: " && [ "$REPLY" -ne "n" ]
+if [ ! -z "$SYS" ] && read -p "Would you like to install $EXE as a service? [Y/n]: " && [[ "$REPLY" -ne "n" ]]
 then 
     case $SYS in
         Linux)
