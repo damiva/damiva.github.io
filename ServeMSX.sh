@@ -1,7 +1,7 @@
 #!/bin/bash
 function ask() {
     if [[ "$1" =~ ^*?$ ]]; then
-        read -p "$1 [Y/n]: " -n 1 -r && echo && [[ "$REPLY" =~ ^[Nn]$ ]] && return 1 || return 0
+        read -p "$1 [Y/n]: " -n 1 -r && echo && [[ $REPLY =~ ^[Nn]$ ]] && return 1 || return 0
     else
         read -r -p "$1: " && [ -z "$REPLY" ] && return 1 || return 0
     fi
