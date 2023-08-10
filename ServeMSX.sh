@@ -24,7 +24,7 @@ esac
 
 echo -n "Loading $URI/$ARC to $DIR/$EXE..."
 [ -d $DIR ] || mkdir $DIR || exit
-curl -L -o $DIR/$EXE $URI/$ARC || exit
+curl -L -o $DIR/$EXE $URI/$ARC || wget -O $DIR/$EXE $URI/$ARC || exit
 echo "done"
 
 if [ ! -z "$SYS" ] && read -p "Would you like to install $EXE as a service? [Y/n]: " && [ "$REPLY" -ne "n" ]
