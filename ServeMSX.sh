@@ -40,7 +40,7 @@ then
                     ExecStart=*)        echo "ExecStart=$DIR/$EXE -t $PRT";;
                     *)                  echo "$line";;
                 esac
-            done <(curl -L -s $URI/$EXE.service) >/etc/systemd/system/$EXE.service
+            done < $URI/$EXE.service > /etc/systemd/system/$EXE.service
             echo -e -n "done\nEnabling and starting the service..."
             systemctl daemon-reload
             systemctl enable $EXE
