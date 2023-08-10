@@ -6,6 +6,7 @@ function ask() {
         read -r -p "$1: " && [ -z "$REPLY" ] && return 1 || return 0
     fi
 }
+[ $EUID -ne 0 ] && echo "Please run me as root!" && exit 1
 EXE=ServeMSX
 DIR=/opt/$EXE
 [ -z "$1" ] || DIR=$1
@@ -24,7 +25,6 @@ case $(uname) in
         echo "Your OS is not supported!" && exit 1
         ;;
 esac
-[ $EUID -ne 0 ] && echo "Please run me as root!" && exit 1
 
 echo -n "Loading $URI/$ARC to $DIR/$EXE..."
 [ -d $DIR ] || mkdir $DIR || exit
