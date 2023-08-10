@@ -23,15 +23,17 @@ esac
 
 [ "$EUID" -ne 0 ] && echo "Please run me as root!" && exit 1
 
+echo -n "Loading $EXE to $DIR..."
 [ -d $DIR ] || mkdir $DIR || exit
 curl -L -o $DIR/$EXE $URI/$ARC || exit
+echo "done"
 
 if [ ! -z "$SYS" ] && ask "Would you like to install $EXE as a service"; then 
     case $SYS in
         Linux)
             systemctl stop $EXE
             echo -n "Address to listen to (lieave blanc to use ':80'): " && read -r PRT
-            get $DIR/$EXE.service $URI/$EXE.service || exit
+            echo -n "Creating service file..."
             while read line; do
                 case line in
                     WorkingDirectory=*) echo "WorkingDirectory=$DIR";;
@@ -39,9 +41,11 @@ if [ ! -z "$SYS" ] && ask "Would you like to install $EXE as a service"; then
                     *)                  echo "$line";;
                 esac
             done < (curl -L -s $URI/$EXE.service) > /etc/systemd/system/$EXE.service
+            echo -e -n "done\nEnabling and starting the service..."
             systemctl daemon-reload
             systemctl enable $EXE
             systemctl start $EXE
+            echo "done"
             ;;
     esac
 fi
