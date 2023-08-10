@@ -1,38 +1,38 @@
 #!/bin/bash
 function ask() {
-    echo -n "$1? [Y/n]: " && read && [ "$REPLY" -eq "n" ] && return 1 || return 0
+    read -p "$1? [Y/n]: " && [ "$REPLY" -eq "n" ] && return 1 || return 0
 }
 EXE=ServeMSX
 DIR=/opt/$EXE
-URI=https://damiva.github.io/$EXE
-echo "$EXE installation from $URI to $DIR:"
 if [ ! -z "$1" ]; then DIR=$1; fi
-read SYS ARC <(uname -s -m)
-case $ARC in
+URI=https://damiva.github.io/$EXE
+case $(arch) in
     armv7*) ARC=arm;;
     x86_64) ARC=amd64;;
-    *) echo "Your architecture is not suppported" && exit 1;;
+    *) echo "Your arch is not supported!" && exit 1;;
 esac
-case $SYS in
-    Linux) 
+case $(uname) in
+    Linux)
         ARC=linux.$ARC
-        command -v systemctl >/dev/null || SYS=""
+        command -v systemctl >/dev/null || SYS=""\
         ;;
-    *) echo "Your OS is not supported!" && exit 1;;
+    *)
+        echo "Your OS is not supported!" && exit 1
+        ;;
 esac
-
 [ $EUID -ne 0 ] && echo "Please run me as root!" && exit 1
 
-echo -n "Loading $EXE to $DIR..."
+echo -n "Loading $URI/$ARC to $DIR/$EXE..."
 [ -d $DIR ] || mkdir $DIR || exit
 curl -L -o $DIR/$EXE $URI/$ARC || exit
 echo "done"
 
-if [ ! -z "$SYS" ] && ask "Would you like to install $EXE as a service"; then 
+if [ ! -z "$SYS" ] && read -p "Would you like to install $EXE as a service? [Y/n]: " && [ "$REPLY" -ne "n" ]
+then 
     case $SYS in
         Linux)
             systemctl stop $EXE
-            echo -n "Address to listen to (lieave blanc to use ':80'): " && read -r PRT
+            read -r -p "Address to listen to (lieave blanc to use ':80'): " PRT
             echo -n "Creating service file..."
             while read line; do
                 case line in
@@ -50,15 +50,13 @@ if [ ! -z "$SYS" ] && ask "Would you like to install $EXE as a service"; then
     esac
 fi
 
-if ask "Would you like to setup $EXE"; then
+if read -p "Would you like to setup $EXE? [Y/n]: " && [ "$REPLY" -eq "n" ]; then
     for md in video music photo
     do
-        echo -n "Enter absulute path to share $md files (leave blanc to skip): "
-        read -r
+        read -r -p "Enter absulute path to share $md files (leave blanc to skip): "
         [ -z "$REPLY" ] || ln -s "$REPLY" $DIR/$md
     done
-    echo -n "Enter the address (<IP>:<PORT>) of TorrServer (if it's not used or runs on this machine on port 8090, leave blanc): "
-    read -r
+    read -r -p "Enter the address (<IP>:<PORT>) of TorrServer (if it's not used or runs on this machine on port 8090, leave blanc): "
     [ -z "$REPLY" ] || echo "http://$REPLY" > $DIR/torrserver
 fi
 
