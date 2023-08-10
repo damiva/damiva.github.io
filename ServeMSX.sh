@@ -6,6 +6,10 @@ function ask() {
         read -r -p "$1: " && [ -z "$REPLY" ] && return 1 || return 0
     fi
 }
+function dnl() {
+    curl -L -o $1 $2 || wget -O $1 $2
+    return
+}
 [ $EUID -ne 0 ] && echo "Please run me as root!" && exit 1
 EXE=ServeMSX
 DIR=/opt/$EXE
@@ -28,27 +32,27 @@ esac
 
 echo -n "Loading $URI/$ARC to $DIR/$EXE..."
 [ -d $DIR ] || mkdir $DIR || exit
-curl -L -o $DIR/$EXE $URI/$ARC || wget -O $DIR/$EXE $URI/$ARC || exit
+dnl $DIR/$EXE $URL/$ARC || exit
 echo "done"
 
 if [ -n "$SYS" ] && ask "Would you like to install $EXE as a service?"
 then 
     case $SYS in
         systemd)
-            systemctl stop $EXE
             ask "Address to listen to (leave blanc to use ':80')"
-            echo -n "Creating service file..."
+            echo -n "Installing and disbling the service..."
+            systemctl -q --now disable $EXE
+            dnl $DIR/$EXE.service $URI/$EXE.service || exit
             while read line; do
                 case line in
                     WorkingDirectory=*) echo "WorkingDirectory=$DIR";;
                     ExecStart=*)        echo "ExecStart=$DIR/$EXE -t $REPLY";;
                     *)                  echo "$line";;
                 esac
-            done < $URI/$EXE.service > /etc/systemd/system/$EXE.service
-            echo -e -n "done\nEnabling and starting the service..."
+            done < $DIR/$EXE.service > /etc/systemd/system/$EXE.service
+            rm $DIR/$EXE.service
             systemctl daemon-reload
-            systemctl enable $EXE
-            systemctl start $EXE
+            systemctl --now enable $EXE
             echo "done"
             ;;
     esac
