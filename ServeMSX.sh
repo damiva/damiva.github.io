@@ -1,4 +1,4 @@
-#/bin/bash
+#!/bin/bash
 function ask() {
     echo -n "$1? [Y/n]: " && read && [[ "$REPLY" -eq "n" ]] && return 1 || return 0
 }
