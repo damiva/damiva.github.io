@@ -52,7 +52,7 @@ do
 done
 echo "Enter the address (<IP>:<PORT>) of TorrServer (if it's not used or runs on this machine on port 8090, leave blanc):"
 read -r
-if [ -z "$REPLY" ]; then; echo "http://$REPLY" > $DIR/torrserver; fi
+[[ -z "$REPLY" ]] && echo "http://$REPLY" > $DIR/torrserver
 fi
 
 echo Done!
