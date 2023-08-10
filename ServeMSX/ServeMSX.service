@@ -1,0 +1,13 @@
+[Unit]
+Description=Media server for Media Station X
+Requires=network.target
+After=network-online.target syslog.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/ServeMSX
+ExecStart=/opt/ServeMSX/ServeMSX -t
+Restart=on-success
+
+[Install]
+WantedBy=multi-user.target
