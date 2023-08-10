@@ -21,7 +21,7 @@ case $SYS in
     *) echo "Your OS is not supported!" && exit 1;;
 esac
 
-[ "$EUID" -ne 0 ] && echo "Please run me as root!" && exit 1
+[ $EUID -ne 0 ] && echo "Please run me as root!" && exit 1
 
 echo -n "Loading $EXE to $DIR..."
 [ -d $DIR ] || mkdir $DIR || exit
