@@ -1,10 +1,14 @@
 #!/bin/bash
 function ask() {
-    read -p "$1? [Y/n]: " && [ "$REPLY" -eq "n" ] && return 1 || return 0
+    if [[ "$1" =~ ^*?$ ]]; then
+        read -p "$1 [Y/n]: " -n 1 -r && echo && [[ "$REPLY" =~ ^[Nn]$ ]] && return 1 || return 0
+    else
+        read -r -p "$1: " && [ -z "$REPLY" ] && return 1 || return 0
+    fi
 }
 EXE=ServeMSX
 DIR=/opt/$EXE
-if [ ! -z "$1" ]; then DIR=$1; fi
+[ -z "$1" ] || DIR=$1
 URI=https://damiva.github.io/$EXE
 case $(arch) in
     armv7*) ARC=arm;;
@@ -27,17 +31,17 @@ echo -n "Loading $URI/$ARC to $DIR/$EXE..."
 curl -L -o $DIR/$EXE $URI/$ARC || wget -O $DIR/$EXE $URI/$ARC || exit
 echo "done"
 
-if [ ! -z "$SYS" ] && read -p "Would you like to install $EXE as a service? [Y/n]: " && [[ "$REPLY" -ne "n" ]]
+if [ -n "$SYS" ] && ask "Would you like to install $EXE as a service?"
 then 
     case $SYS in
         systemd)
             systemctl stop $EXE
-            read -r -p "Address to listen to (leave blanc to use ':80'): " PRT
+            ask "Address to listen to (leave blanc to use ':80')"
             echo -n "Creating service file..."
             while read line; do
                 case line in
                     WorkingDirectory=*) echo "WorkingDirectory=$DIR";;
-                    ExecStart=*)        echo "ExecStart=$DIR/$EXE -t $PRT";;
+                    ExecStart=*)        echo "ExecStart=$DIR/$EXE -t $REPLY";;
                     *)                  echo "$line";;
                 esac
             done < $URI/$EXE.service > /etc/systemd/system/$EXE.service
@@ -50,15 +54,13 @@ then
     esac
 fi
 
-if read -p "Would you like to setup $EXE? [Y/n]: " && [[ "$REPLY" -ne "n" ]]
+if ask "Would you like to setup $EXE?"
 then
     for md in video music photo
     do
-        read -r -p "Enter absulute path to share $md files (leave blanc to skip): "
-        [ -z "$REPLY" ] || ln -s "$REPLY" $DIR/$md
+        ask "Enter absulute path to share $md files (leave blanc to skip)" && ln -s "$REPLY" $DIR/$md
     done
-    read -r -p "Enter the address (<IP>:<PORT>) of TorrServer (if it's not used or runs on this machine on port 8090, leave blanc): "
-    [ -z "$REPLY" ] || echo "http://$REPLY" > $DIR/torrserver
+    ask "Enter the address (<IP>:<PORT>) of TorrServer (if it's not used or runs on this machine on port 8090, leave blanc)" && echo "http://$REPLY" > $DIR/torrserver
 fi
 
 echo Done!
