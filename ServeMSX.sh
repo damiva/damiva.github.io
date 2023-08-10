@@ -44,10 +44,10 @@ then
             dnl $DIR/$EXE.service $URI/$EXE.service
             while read line; do
                 case line in
-                    WorkingDirectory=*) echo "WorkingDirectory=$DIR";;
-                    ExecStart=*)        echo "ExecStart=$DIR/$EXE -t $REPLY";;
-                    *)                  echo "$line";;
+                    WorkingDirectory*) line="WorkingDirectory=$DIR";;
+                    ExecStart*) line="ExecStart=$DIR/$EXE -t $REPLY";;
                 esac
+                echo "$line"
             done < $DIR/$EXE.service > /etc/systemd/system/$EXE.service
             rm $DIR/$EXE.service
             systemctl daemon-reload
