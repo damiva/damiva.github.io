@@ -14,7 +14,7 @@ esac
 case $(uname) in
     Linux)
         ARC=linux.$ARC
-        command -v systemctl >/dev/null || SYS=""
+        command -v systemctl >/dev/null && SYS="systemd"
         ;;
     *)
         echo "Your OS is not supported!" && exit 1
@@ -27,12 +27,12 @@ echo -n "Loading $URI/$ARC to $DIR/$EXE..."
 curl -L -o $DIR/$EXE $URI/$ARC || wget -O $DIR/$EXE $URI/$ARC || exit
 echo "done"
 
-if [ ! -z "$SYS" ] && read -p "Would you like to install $EXE as a service? [Y/n]: " && [[ "$REPLY" -ne "n" ]]
+if [ ! -z "$SYS" ] && read -p "Would you like to install $EXE as a service? [Y/n]: " && [ "$REPLY" -ne "n" ]
 then 
     case $SYS in
-        Linux)
+        systemd)
             systemctl stop $EXE
-            read -r -p "Address to listen to (lieave blanc to use ':80'): " PRT
+            read -r -p "Address to listen to (leave blanc to use ':80'): " PRT
             echo -n "Creating service file..."
             while read line; do
                 case line in
@@ -50,7 +50,7 @@ then
     esac
 fi
 
-if read -p "Would you like to setup $EXE? [Y/n]: " && [ "$REPLY" -eq "n" ]; then
+if read -p "Would you like to setup $EXE? [Y/n]: " && [ "$REPLY" -ne "n" ]; then
     for md in video music photo
     do
         read -r -p "Enter absulute path to share $md files (leave blanc to skip): "
