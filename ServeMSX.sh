@@ -2,10 +2,10 @@
 function ask() {
     echo -n "$1? [Y/n]: " && read && [[ "$REPLY" -eq "n" ]] && return 1 || return 0
 }
-
 EXE=ServeMSX
 DIR=/opt/$EXE
 URI=https://damiva.github.io/$EXE
+echo "$EXE installation from $URI to $DIR:"
 if [ ! -z "$1" ]; then DIR=$1; fi
 read SYS ARC <(uname -s -m)
 case $ARC in
