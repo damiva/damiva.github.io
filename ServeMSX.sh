@@ -1,4 +1,8 @@
 #/bin/bash
+function ask(){
+    echo "$1? [Y/n]:" && read && [[ "$REPLY" -eq "n" ]] && return 1 || return 0
+}
+
 EXE=ServeMSX
 DIR=/opt/$EXE
 URI=https://damiva.github.io/$EXE.linux
@@ -7,22 +11,16 @@ case $(uname -m) in
     x86_64) URI=$URI.amd64;;
     *) echo "Your architecture is not supported!" && exit 1;;
 esac
-command -v systemctl >/dev/null
-SYS=$?
-
-function ask(){
-    echo "$1? [Y/n]:" && read && [[ "$REPLY" -eq "n" ]] && return 1 || return 0
-}
 
 [ "$EUID" -ne 0 ] && echo "Please run me as root!" && exit 1
 
 [ -d $DIR ] || mkdir $DIR || exit
-if $SYS; then systemctl stop $EXE; fi
 wget -O $DIR/$EXE $URI || curl -o $DIR/$EXE $URI || exit
 
-if $SYS && ask "Would you like to install $EXE as a service"
+if command -v systemctl >/dev/null && ask "Would you like to install $EXE as a service"
 then
 echo "Enter the address ([IP]:<PORT>) to listen to (leave blanc to use ':80'):" && read -r
+systemctl stop $EXE
 if ! cat << EOF > /etc/systemd/system/$EXE.service
 [Unit]
 Description=Media server for Media Station X
@@ -54,7 +52,7 @@ do
 done
 echo "Enter the address (<IP>:<PORT>) of TorrServer (if it's not used or runs on this machine on port 8090, leave blanc):"
 read -r
-if [[ -ne "$REPLY" ]]; then; echo "http://$REPLY" > $DIR/torrserver; fi
+if [ -z "$REPLY" ]; then; echo "http://$REPLY" > $DIR/torrserver; fi
 fi
 
 echo Done!
