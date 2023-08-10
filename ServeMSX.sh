@@ -7,8 +7,7 @@ function ask() {
     fi
 }
 function dnl() {
-    curl -L -o "$1" "$2" || wget -O "$1" "$2"
-    return
+    curl -L -o "$1" "$2" || wget -O "$1" "$2" || exit
 }
 [ $EUID -ne 0 ] && echo "Please run me as root!" && exit 1
 EXE=ServeMSX
@@ -32,7 +31,7 @@ esac
 
 echo -n "Loading $URI/$ARC to $DIR/$EXE..."
 [ -d $DIR ] || mkdir $DIR || exit
-dnl $DIR/$EXE $URL/$ARC || exit
+dnl $DIR/$EXE $URL/$ARC
 echo "done"
 
 if [ -n "$SYS" ] && ask "Would you like to install $EXE as a service?"
@@ -42,7 +41,7 @@ then
             ask "Address to listen to (leave blanc to use ':80')"
             echo -n "Installing and disbling the service..."
             systemctl -q --now disable $EXE
-            dnl $DIR/$EXE.service $URI/$EXE.service || exit
+            dnl $DIR/$EXE.service $URI/$EXE.service
             while read line; do
                 case line in
                     WorkingDirectory=*) echo "WorkingDirectory=$DIR";;
