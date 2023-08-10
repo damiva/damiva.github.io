@@ -32,6 +32,7 @@ esac
 echo -n "Loading $URI/$ARC to $DIR/$EXE..."
 [ -d $DIR ] || mkdir $DIR || exit
 dnl $DIR/$EXE $URI/$ARC
+chmod +x $DIR/$EXE || exit
 echo "done"
 
 if [ -n "$SYS" ] && ask "Would you like to install $EXE as a service?"
