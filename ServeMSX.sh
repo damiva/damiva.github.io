@@ -1,6 +1,6 @@
 #!/bin/bash
 function ask() {
-    echo -n "$1? [Y/n]: " && read && [[ "$REPLY" -eq "n" ]] && return 1 || return 0
+    echo -n "$1? [Y/n]: " && read && [ "$REPLY" -eq "n" ] && return 1 || return 0
 }
 EXE=ServeMSX
 DIR=/opt/$EXE
