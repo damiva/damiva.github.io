@@ -7,7 +7,6 @@ After=network-online.target syslog.target
 Type=simple
 WorkingDirectory=/opt/ServeMSX
 ExecStart=/opt/ServeMSX/ServeMSX -t
-Restart=on-success
 
 [Install]
 WantedBy=multi-user.target
