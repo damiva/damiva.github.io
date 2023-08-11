@@ -1,12 +1,7 @@
 #!/bin/bash
 [ $EUID -ne 0 ] && echo "Please run me as root!" && exit 1
 EXE=ServeMSX
-case $1 in
-    )   DIR=/opt/$EXE;;
-    .)  DIR=$PWD;;
-    *)  DIR=$1;;
-esac
-URI=https://damiva.github.io/$EXE
+DIR=/opt/$EXE
 read -r SYS ARC < <(uname -s -m)
 case $ARC in
     aarch64*)   ARC=arm64;;
@@ -21,37 +16,35 @@ case $SYS in
     *) echo "Your OS '$SYS' is not supported at this time!" && exit 1;;
 esac
 
+function Download(){
+    uri=https://damiva.github.io/$EXE
+    curl -L -o $2 $uri/$1 || wget -O $2 $uri/$1
+    return
+}
+
 [ -d $DIR ] || mkdir $DIR || exit
-curl -L -o $DIR/$EXE $URI/$SYS.$ARC && chmod +x $DIR/$EXE || exit
+Download $SYS.$ARC $DIR/$EXE && chmod +x $DIR/$EXE || exit
 
-if read -p "Would you like to configure $EXE? [Y/n]: " -n 1 -r && [[ ! $REPLY =~ ^[Nn]$ ]]
-then
-    for md in video music photo
-    do
-        read -p "Enter absulute path to share $md files (leave blanc to skip): " -r && [ -n "$REPLY" ] && ln -s "$REPLY" $DIR/$md
-    done
-    read -p "Enter the address (<IP>:<PORT>) of TorrServer (if it's not used or runs on this machine on port 8090, leave blanc): " && [ -n "$REPLY" ] && echo "http://$REPLY" > $DIR/torrserver
-fi
+read -p "Would you like to install $EXE as a service? [Y/n]: " -n 1 -r && [[ $REPLY =~ ^[Nn]$ ]] && exit 0
 
-if read -p "Would you like to install $EXE as a service? [Y/n]: " -n 1 -r && [[ ! $REPLY =~ ^[Nn]$ ]]
-then
-    read -r -p "Address to listen to (leave blanc to use default http): " PRT
-    if [[ "$SYS" == "linux" ]]; then SYS=$(ps --no-headers -o comm 1); fi
-    case $SYS in
-        systemd)
-            systemctl -q --now disable $EXE
-            while read line; do
-                case $line in
-                    WorkingDirectory=*) echo "WorkingDirectory=$DIR";;
-                    ExecStart=*) echo "ExecStart=$DIR/$EXE -t $PRT";;
-                    *) echo "$line"
-                esac
-            done < <(curl -L -s $URI/$EXE.service) > /etc/systemd/system/$EXE.service
-            systemctl daemon-reload
-            systemctl --now enable $EXE
-            ;;
-        *) echo "Your service system '$SYS' is not supported at this time!" && exit 1;;
-    esac
-fi
+SYS=($(ps -c -o comm 1)) && SYS=$SYS[1] || exit
+case $SYS in
+    systemd)
+        ARC=/etc/systemd/system/$EXE.service
+        systemctl -q --now disable $EXE
+        Download $EXE.service $ARC && systemctl daemon-reload && systemctl --now enable $EXE || exit
+        ;;
+    init)
+        ARC=/etc/init.d/$EXE
+        /etc/init.d/$EXE stop >/dev/null
+        Download $EXE.sh $ARC && chmod +x $ARC && service $EXE start || exit
+        ;;
+    launchd)
+        ARC=/Library/LaunchDaemons/damiva.$EXE.plist
+        launchctl unload -w $ARC >/dev/null
+        Download $EXE.plist$ARC && launchctl load -w $ARC || exit
+        ;;
+    *) echo "Your service system '$SYS' is not supported at this time!" && exit 1;;
+esac
 
 echo Done!

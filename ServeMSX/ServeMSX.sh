@@ -11,8 +11,6 @@
 name=`basename $0`
 dir=/opt/$name
 cmd=$name
-opt=""
-
 fpid="/var/run/$name.pid"
 flog="/var/log/$name.log"
 
@@ -30,7 +28,7 @@ case $1 in
     else
         echo "Starting $name"
         cd "$dir"
-        sudo $cmd $opt 2>> "$flog" &
+        sudo $cmd 2>> "$flog" &
         echo $! > "$fpid"
         if ! is_running; then
             echo "Unable to start, see log ($flog)"
