@@ -27,7 +27,7 @@ Download $SYS.$ARC $DIR/$EXE && chmod +x $DIR/$EXE || exit
 
 read -p "Would you like to install $EXE as a service? [Y/n]: " -n 1 -r && [[ $REPLY =~ ^[Nn]$ ]] && exit 0
 
-SYS=($(ps -c -o comm 1)) && SYS=$SYS[1] || exit
+SYS=($(ps -c -o comm 1)) && SYS=${SYS[1]} || exit
 case $SYS in
     systemd)
         ARC=/etc/systemd/system/$EXE.service
