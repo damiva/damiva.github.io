@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Media Station X for TorrServer</title>
+        <meta charset="UTF-8" />
+        <meta name="author" content="damiva" />
+        <meta name="copyright" content="damiva" />
+        <link type="image/png" rel="shortcut icon" href="https://msx.benzac.de/img/icon.png" /> 
+        <link type="image/png" rel="apple-touch-icon" href="https://msx.benzac.de/img/icon.png" />
+        <style>
+            html, body {height: 100%; margin: 0; padding: 0; overflow: hidden;}
+            body {font-family: Arial, Helvetica, sans-serif; display: grid; grid-template: max-content / max-content auto min-content;}
+            header {font-weight: bold; text-align: center; background: url(https://msx.benzac.de/img/icon.png) no-repeat contain;}
+        </style>
+        <script src="https://damiva.github.io/msx/assets.js"></script>
+        <script>
+            var S = null;
+            function ts(f, u, d){
+                var x = new XMLHttpRequest();
+                x.responseType = "json"
+                x.onload = f;
+                x.onerror = function(){alert(x.status + " " + x.statusText)};
+                x.open(d ? "POST" : "GET", "/msx" + u);
+                if(d) x.overrideMimeType = "application/json; charset=UTF-8";
+                s.send(d);
+            }
+            function inf(){
+
+            }
+            function lang(l){
+                if(l.value == "en"){
+                    l.value = "ru";
+                    l.innerHTML = "🇷🇺";
+                }else{
+                    l.value = "en";
+                    l.innerHTML = "🇺🇸";
+                }
+                document.querySelectorAll("[lang]").forEach(e => e.hidden = e.lang != l.value);
+            }
+            function show(){
+                var h = window.location.hash.substring(1);
+                if(h == "msx") ts(function(){
+                    window.location.href = window.location.protocol + "//msx.benzac.de/?start=" + encodeURIComponent(
+                        this.response.parameter
+                        .replace("{PREFIX}", window.location.protocol + "//")
+                        .replace("{SERVER}", window.location.host)
+                    );
+                }, "/start.json");
+                else if(document.querySelectorAll("main > *").filter(e => !(e.hidden = e.id != h)).length == 0) 
+                    document.getElementById("man").hidden = false;
+            }
+            window.onhashchange = show;
+            window.onload = function(){
+                var s = 0;
+                S = document.getElementById("src");
+                for(var i = 0; i < S.options.length; i++) if(window.location.hash == S.options[i].value){
+                    s = i;
+                    break;
+                }
+                S.options.selectedIndex = s;
+                show();
+            };
+        </script>
+    </head>
+    <body>
+        <header>
+            <img src="/logo.png">
+            Media Station X <span lang="en">for</span><span lang="ru">для</span> TorrServer
+            <button style="float: right;" onclick="lang(this)" value="ru">🇷🇺</button>
+        </header>
+        <main>
+            <b lang="en">TV-set instalation</b><b lang="ru">Установка на телевизор</b>:
+            <ol>
+                <li>
+                    <span lang="en">On yuor TVset install and launch the</span>
+                    <span lang="ru">На телевизоре установите и запустите приложение</span>
+                    <b>Media Station X</b> <span lang="en">application</span>
+                </li>
+                <li>
+                    <span lang="en">Navigate to</span><span lang="ru">Перейдите к</span>:
+                    <b>Settings ⇒ Start Parameter ⇒ Setup</b>
+                </li>
+                <li>
+                    <span lang="en">Enter the address of</span><span lang="ru">Введите адрес</span>
+                    TorrServer: <b id="host">?</b>
+                </li>
+                <li>
+                    <span lang="en">Press</span><span lang="ru">Нажмите</span>
+                    <b>Yes</b> <span lang="en">on</span><span lang="ru">в</span>
+                    <b>Complete the setup</b>
+                </li>
+                <li>
+                    <span lang="en">Enjoy your content</span><span lang="ru">Наслождайтесь просмотром</span>
+                </li>
+            </ol>
+            <b lang="ru">Настройка функциональности</b><b lang="ru">Functionality settings</b>:
+            <ul>
+                <li>
+                    <span lang="en">To enable "Search torrents", "Turn on torrents search by RuTor" in the "TorrServer settings</span>
+                    <span lang="ru"> Чтобы включить "<b>Поиск торрентов</b>", включите "<b>Включить поиск по RuTor</b>" в "<b>ПРО-режим</b>е" в <b>Расширенных настройках</b>"</span>
+                    <a href="/">TorrServer</a>
+                </li>
+                <li>
+                    <span lang="en">Change Media Station X language select the translation:</span>
+                    <span lang="ru">Для смены языка Media Station X, выберите перевод:</span>
+                    <select id="dic"></select>
+                </li>
+                <li>
+                    <span lang="en">To set the backgound upload the jpg file:</span>
+                    <span lang="en">Для установки обоев, загрузите файл jpg:</span>
+                    <input id="back" type="file">
+                </li>
+                <li>
+                    <span lang="en">To play local media files on the server set the folder:</span>
+                    <span lang="en">Для просмотре локальных файлов на сервере задайте папку:</span>
+                    <input id="media">
+                </li>
+            </ul>
+        </main>
+        <footer>© damiva 2024</footer>
+    </body>
+</html>
