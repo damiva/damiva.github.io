@@ -94,29 +94,29 @@
                     <span lang="en">Enjoy your content</span><span lang="ru">Наслождайтесь просмотром</span>
                 </li>
             </ol>
-            <b lang="ru">Настройка функциональности</b><b lang="ru">Functionality settings</b>:
-            <ul>
-                <li>
-                    <span lang="en">To enable "Search torrents", "Turn on torrents search by RuTor" in the "TorrServer settings</span>
-                    <span lang="ru"> Чтобы включить "<b>Поиск торрентов</b>", включите "<b>Включить поиск по RuTor</b>" в "<b>ПРО-режим</b>е" в <b>Расширенных настройках</b>"</span>
-                    <a href="/">TorrServer</a>
-                </li>
-                <li>
-                    <span lang="en">Change Media Station X language select the translation:</span>
-                    <span lang="ru">Для смены языка Media Station X, выберите перевод:</span>
-                    <select id="dic"></select>
-                </li>
-                <li>
-                    <span lang="en">To set the backgound upload the jpg file:</span>
-                    <span lang="en">Для установки обоев, загрузите файл jpg:</span>
-                    <input id="back" type="file">
-                </li>
-                <li>
-                    <span lang="en">To play local media files on the server set the folder:</span>
-                    <span lang="en">Для просмотре локальных файлов на сервере задайте папку:</span>
-                    <input id="media">
-                </li>
-            </ul>
+            <form id="sets">
+                <table>
+                    <caption>Media Station X settings:</caption>
+                    <tr><td colspan="2">
+                        <i lang="en">To enable "Search torrents", "Turn on torrents search by RuTor" in the "PRO-mode" of "Additional settings" in</i>
+                        <i lang="ru"> Чтобы включить "Поиск торрентов", необходимо "Включить поиск по RuTor" в "ПРО-режиме" в "Расширенных настройках" в</b>"</i>
+                        <a href="/">TorrServer</a>
+                    </td></tr>
+                    <tr><td>
+                        <label for="dic" lang="en">Dictionary:</label>
+                        <label for="dic" lang="ru">Перевод:</label>
+                    </td><td><select id="dic"></select></td></tr>
+                    <tr><td>
+                        <label for="media" lang="en">Media files folder:</label>
+                        <label for="media" lang="ru">Папка с файлами:</label>
+                    </td><td><input id="media"></td></tr>
+                    <tr><td>
+                        <label for="back" lang="en">Wallpaper:</label>
+                        <label for="back" lang="ru">Обои:</label>
+                    </td><td><input id="back" type="file"></td></tr>
+                    <tr><th colspan="2"><button><b lang="en">Set</b><b lang="ru">Задать</b></button></th></tr>
+                </table>
+            </form>
         </main>
         <footer>© damiva 2024</footer>
     </body>
