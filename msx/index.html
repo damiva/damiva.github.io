@@ -7,11 +7,6 @@
         <meta name="copyright" content="damiva" />
         <link type="image/png" rel="shortcut icon" href="https://msx.benzac.de/img/icon.png" /> 
         <link type="image/png" rel="apple-touch-icon" href="https://msx.benzac.de/img/icon.png" />
-        <style>
-            body    {font-family: Arial, Helvetica, sans-serif; margin: 0 auto; max-width: 300px;}
-            header  {background-color: black; color: white;}
-            main    {overflow: auto; border: 1px solid black;}
-        </style>
         <script>
             function files(l){
                 var x = new XMLHttpRequest(), s = document.getElementById("stg");
@@ -56,13 +51,13 @@
             };
         </script>
     </head>
-    <body>
-        <header>
+    <body style="font-family: Arial, Helvetica, sans-serif; margin: 0 auto; max-width: 300px;">
+        <header style="background-color: black; color: white; font-size: larger;">
             <img src="https://msx.benzac.de/img/icon.png" style="height:1em;">
             TorrServer <span lang="en">on</span><span lang="ru">на</span> Media Station X
             <button style="float: right;" id="lang"></button>
         </header>
-        <main>
+        <main style="border: 1 px solid black;">
             <b lang="en">TV-set instalation</b><b lang="ru">Установка на телевизор</b>:
             <ol>
                 <li>
@@ -101,6 +96,6 @@
                 </label><button id="send">OK</button>
             </fieldset>
         </main>
-        <footer style="text-align: center;">© damiva 2024</footer>
+        <footer style="text-align: right; font-size: smaller;">© damiva 2024</footer>
     </body>
 </html>
