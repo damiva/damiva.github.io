@@ -26,27 +26,24 @@
                 x.open(l ? "POST" : "GET", "/files");
                 x.send(l ? JSON.stringify(l) : null);
             }
+            function change(e){
+                document.getElementById("send").disabled = e.value == e.defaultValue
+            }
+            function send(e){
+                if(this.files.value != this.files.defaultValue) files(this.value);
+            }
+            function lang(e){
+                var l = e.value = "ru" ? "en" : "ru";
+                document.querySelectorAll("[lang]").forEach(e => e.hidden = e.lang != l);
+            }
             window.onload = function(){
-                var e = document.getElementById("lang");
-                e.onclick = function(){
-                    var l = this.value;
-                    this.value = l == "ru" ? "en" : "ru";
-                    document.querySelectorAll("[lang]").forEach(e => e.hidden = e.lang != l);
-                };
-                e.onclick();
-                e = document.getElementById("msx");
+                var e = document.getElementById("msx");
+                document.getElementById("lang").onclick();
                 if(!(e.hidden = window.location.hostname == "damiva.github.io")){
                     e.href = e.href.replace("{ORIG}", window.location.origin);
                     document.getElementById("addr").innerText = window.location.host;
                     document.getElementById("stg").hidden = false;
                     files();
-                    document.getElementById("files").onchange = function(){
-                        document.getElementById("send").disabled = this.value == this.defaultValue
-                    };
-                    document.getElementById("send").onclick = function(){
-                        if(this.files.value != this.files.defaultValue) files(this.value);
-                        return false;
-                    };
                 }
             };
         </script>
@@ -55,7 +52,7 @@
         <header style="background-color: black; color: white; font-size: larger;">
             <img src="https://msx.benzac.de/img/icon.png" style="height:1em;">
             TorrServer <span lang="en">on</span><span lang="ru">на</span> Media Station X
-            <button style="float: right;" id="lang"></button>
+            <input style="float: right;" id="lang" type="button" onclick="lang(this)">
         </header>
         <main style="border: 1 px solid black;">
             <b lang="en">TV-set instalation</b><b lang="ru">Установка на телевизор</b>:
@@ -92,8 +89,8 @@
                 <b id="error"></b>
                 <label>
                     <i lang="en">Path to the folder</i><i lang="ru">Путь к папке</i>:
-                    <input id="files">
-                </label><button id="send">OK</button>
+                    <input id="files" onchange="change(this)">
+                </label><input id="send" type="button" value="OK" onclick="send(this)">
             </fieldset>
         </main>
         <footer style="text-align: right; font-size: smaller;">© damiva 2024</footer>
