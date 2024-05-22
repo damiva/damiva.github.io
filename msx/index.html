@@ -16,32 +16,31 @@
             }
             header, footer  {background-color: steelblue; color: white;}
             main            {overflow: auto;}
-            button          {width: 2em;}
-            input, button   {height: 2em;}
-            #error          {color: red;}
-            #error:empty    {display: none;}
-            #error::before  {content: "⚠ ";}
         </style>
         <script>
-            function ajax(u, f, d){
-                var x = new XMLHttpRequest(), v = typeof f == "string", s = document.getElementById("stg");
-                e.disabled = true;
+            function files(l){
+                var x = new XMLHttpRequest(), s = document.getElementById("stg");
+                s.disabled = true;
                 x.responseType = "json";
                 x.onloadend = function(){
-                    var e = document.getElementById("files");
-                    e.value = e.defaultValue = x.response.files || "";
-                    document.getElementById("error").innerText = x.status != 200 ? (x.statusText + ": " + x.responseText) : (f["error"] || "");
-                    document.getElementById("files").disabled = true;
-                    if(v || x.status == 200) e.disabled = false;
+                    s.disabled = false;
+                    if(x.status == 200){
+                        if(!l) {
+                            s = document.getElementById("files");
+                            s.value = s.defaultValue = x.response;
+                        }
+                    }else{
+                        alert(x.status + ": " + x.responseText);
+                    }
                 }
-                x.open("GET", u + (v ? ("files=" + encodeURIComponent(f)) : ""));
-                s.send();
+                x.open(l ? "POST" : "GET", "/files");
+                x.send(l ? JSON.stringify(l) : null);
             }
             window.onload = function(){
                 var e = document.getElementById("lang");
                 e.onclick = function(){
                     var l = this.value;
-                    this.value = l == "🇷🇺" ? "🇬🇧" : "🇷🇺";
+                    this.value = l == "ru" ? "en" : "ru";
                     document.querySelectorAll("[lang]").forEach(e => e.hidden = e.lang != l);
                 };
                 e.onclick();
@@ -49,16 +48,17 @@
                 if(!(e.hidden = window.location.hostname == "damiva.github.io")){
                     e.href = e.href.replace("{ORIG}", window.location.origin);
                     document.getElementById("addr").innerText = window.location.host;
-                    e = document.forms[0];
-                    e.hidden = false;
-                    ajax();
-                    e.files.onchange = function(){document.getElementById("send").disabled = this.value == this.defaultValue};
-                    e.onsubmit = function(){
-                        if(this.files.value != this.files.defaultValue) ajax(this.files.value);
+                    document.getElementById("stg").hidden = false;
+                    files();
+                    document.getElementById("files").onchange = function(){
+                        document.getElementById("send").disabled = this.value == this.defaultValue
+                    };
+                    document.getElementById("send").onclick = function(){
+                        if(this.files.value != this.files.defaultValue) files(this.value);
                         return false;
                     };
                 }
-            }
+            };
         </script>
     </head>
     <body>
@@ -95,7 +95,7 @@
             <a id="msx" href="//msx.benzac.de/?start=menu:{ORIG}/msx/plugin.html">
                 <b lang="en">Run MSX in web-browser</b><b lang="ru">Запуск MSX в веб-браузере</b>
             </a>
-            <fieldset id="stg" style="width: msx-content;">
+            <fieldset id="stg" style="width: max-content;">
                 <legend>
                     <b lang="en">Playing "My files" from the server</b><b lang="ru">Просмотр "Моих фалов" с сервера</b>:
                 </legend>
@@ -103,7 +103,7 @@
                 <label>
                     <i lang="en">Path to the folder</i><i lang="ru">Путь к папке</i>:
                     <input id="files">
-                </label><button id="send">✅</button>
+                </label><button id="send">OK</button>
             </fieldset>
         </main>
         <footer style="text-align: center;">© damiva 2024</footer>
