@@ -26,15 +26,15 @@
                 x.open(l ? "POST" : "GET", "/files");
                 x.send(l ? JSON.stringify(l) : null);
             }
-            function change(e){
+            function chn(e){
                 document.getElementById("send").disabled = e.value == e.defaultValue
             }
-            function send(e){
+            function snd(e){
                 if(this.files.value != this.files.defaultValue) files(this.value);
             }
-            function lang(e){
-                var l = e.value = "ru" ? "en" : "ru";
-                document.querySelectorAll("[lang]").forEach(e => e.hidden = e.lang != l);
+            function lng(e){
+                e.value = "ru" ? "en" : "ru";
+                document.querySelectorAll("[lang]").forEach(i => i.hidden = i.lang != e.value);
             }
             window.onload = function(){
                 var e = document.getElementById("msx");
@@ -52,7 +52,7 @@
         <header style="background-color: black; color: white; font-size: larger;">
             <img src="https://msx.benzac.de/img/icon.png" style="height:1em;">
             TorrServer <span lang="en">on</span><span lang="ru">на</span> Media Station X
-            <input style="float: right;" id="lang" type="button" onclick="lang(this)">
+            <input style="float: right;" id="lang" type="button" onclick="lng(this)">
         </header>
         <main style="border: 1 px solid black;">
             <b lang="en">TV-set instalation</b><b lang="ru">Установка на телевизор</b>:
@@ -89,8 +89,8 @@
                 <b id="error"></b>
                 <label>
                     <i lang="en">Path to the folder</i><i lang="ru">Путь к папке</i>:
-                    <input id="files" onchange="change(this)">
-                </label><input id="send" type="button" value="OK" onclick="send(this)">
+                    <input id="files" onchange="chn(this)">
+                </label><input id="send" type="button" value="OK" onclick="snd(this)">
             </fieldset>
         </main>
         <footer style="text-align: right; font-size: smaller;">© damiva 2024</footer>
