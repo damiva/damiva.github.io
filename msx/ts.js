@@ -105,7 +105,7 @@ function plug(){
                                             data: {action: "rem", hash: "{context:id}"}
                                         }, {
                                             icon: "msx-yellow:stop", label: "{dic:drop|Drop the torrent}", key: "yellow",
-                                            data: {action: "drop", hash: "{context:id"}, display: t.stat
+                                            data: {action: "drop", hash: "{context:id"}
                                         }]
                                     } : null,    
                                 },
