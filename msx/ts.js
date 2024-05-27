@@ -41,11 +41,8 @@ function init(b){
         main.menu[i].data.items[0].label = "Switch to english";
     }
     TVXServices.ajax.get("/msx/start.json", {
-        success: function(d){
-            main.menu[i].data.underlay.items[1].headline += d.name + " " + d.version;
-            b.stop();
-        },
-        error: function(){b.stop()}
+        success: function(d){main.menu[i].data.underlay.items[1].headline += d.name + " " + d.version},
+        complete: function(){b.stop(); console.log("got: start.json")}
     });
 }
 function menu(f){
@@ -58,6 +55,7 @@ function menu(f){
                 error: function(){main.menu[2].display = false},
                 complete: function(){f(main)}
             });
+            console.log("got: menu")
         }
     })
 }
@@ -115,7 +113,7 @@ function sets(d){
 TVXPluginTools.onReady(function() {
     TVXInteractionPlugin.setupHandler({
         busy: new TVXBusyService(),
-        init: function(){
+        ready: function(){
             init(this.busy);
         },
         handleData: function(d){
