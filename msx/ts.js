@@ -1,117 +1,135 @@
-var init = {name: "TorrServer Plugin", version: "0.1.133", reference: "request:interaction:menu@" + window.location.href};
-var sets = {
-    type: "list", reuse: false,
-    ready: {action: "interaction:load:" + window.location.href, data: ""},
-    template: {type: "control", layout: "0,0,7,1", action: "interaction:commit", data: "{context:id}"},
-    items: [
-        {type: "space", headline: init.name + " " + init.version},
-        {type: "space"},
-        {type: "space"},
-        {id: "russian", icon: "translate", label: "Перевести на русский", extensionIcon: "msx-red:refresh"},
-        {id: "folders", icon: "folder", label: "{dic:folder|Show folders in torrent}", extensionIcon: ""},
-        {id: "refocus", icon: "history", label: "{dic:refocus|Focus on last viwed file", extensionIcon: ""}
-    ]
+var info = {name: "TorrServer Plugin", version: "0.1.133", reference: "request:interaction:menu@" + window.location.href};
+var main = {logo: window.location.origin + "/logo.png", menu: [
+    {icon: "bookmarks", label: "{dic:trns|My torrents}",    data: "request:interaction:trns@" + window.location.href},
+    {icon: "search",    label: "{dic:srch|Search torrents}",data: "request:interaction:init@" + window.location.origin + "/msx/tss"},
+    {icon: "folder",    label: "{dic:files|My files}",      data: "request:interaction:access:" + window.location.host + "@" + window.location.protocol + "//nb.msx.benzac.de/interaction"},
+    {type: "separator"},
+    {id: "settings", icon: "settings", label: "{dic:label:settings|Settings}", data: {
+        type: "list", reuse: false,
+        ready: {action: "interaction:load:" + window.location.href, data: ""},
+        underlay: {items:[
+            {type: "space", headline: info.name + " " + info.version, layout: "0,0,4,1"},
+            {type: "space", layout: "4,0,4,1"},
+            {type: "space", layout: "8,0,4,1"},
+        ]},
+        template: {type: "control", layout: "0,0,7,1", action: "interaction:commit", data: "{context:id}", area: "0,1,7,5"},
+        items: [
+            {id: "russian", icon: "translate", label: "Перевести на русский", extensionIcon: "msx-red:refresh"},
+            {id: "folders", icon: "folder", label: "{dic:folder|Show folders in torrent}", extensionIcon: ""},
+            {id: "refocus", icon: "history", label: "{dic:refocus|Focus on last viwed file", extensionIcon: ""},
+            {type: "space", imageWidth: 1, icon: "msx-blue:info", text: "{dic:searchInfo|To enable Search torrents Turn on torrents search by RuTor in the Additional Settings by browsing to}: {col:msx-white}" + window.location.origin},
+            {type: "space", imageWidth: 1, icon: "msx-blue:info", text: "{dic:filesInfo|To enable My files set path to server's folder by browsing to}: {col:msx-white}" + window.location.origin + "/msx/"}
+        ]
+    }}
+]};
+function stor(k, c){
+    var v = TVXServices.storage.getBool("ts:" + k, k == "russian");
+    if(c) TVXServices.storage.set("ts:" + k, v = !v);
+    return v;
+}
+function size(s){
+    var i = s == 0 ? 0 : Math.floor(Math.log(s) / Math.log(1024));
+    return (s / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'KB', 'MB', 'GB', 'TB'][i];
 };
-var menu = {
-    logo: window.location.origin + "/logo.png", menu: [
-        {icon: "bookmarks", label: "{dic:trns|My torrents}",    data: "request:interaction:trns@" + window.location.href},
-        {icon: "search",    label: "{dic:srch|Search torrents}",data: "request:interaction:init@" + window.location.origin + "/msx/tss"},
-        {icon: "folder",    label: "{dic:files|My files}",      data: "request:interaction:access:" + window.location.host + "@http://nb.msx.benzac.de/interaction"},
-        {type: "separator"},
-        {icon: "settings", label: "{dic:label:settings|Settings}", data: sets}
-    ],
-};
-function plug(){
-    var W = new TVXBusyService(),
-        S = function(k, c){
-            var v = TVXServices.storage.getBool(k = "ts:" + k, false);
-            if(c) TVXServices.storage.set(k, v = !v);
-            return v;
-        },
-        I = function(v){return v ? "msx-white:toggle-on" : "toggle-off"};
-    this.ready = function(){
-        W.start();
-        if(S("russian")){
-            init.dictionary = window.location.origin + "/msx/russian.json";
-            sets.items[3].label = "Switch to english";
-        }
-        TVXInteractionPlugin.requestData("info:application", function(d){
-            sets.items[2].headline = d.data.info.application.name + " " + d.data.info.appliction.version;
-            TVXServices.ajax.get("/msx/start.json", {
-                success: function(d){
-                    sets.items[1].headline + d.name + " " + d.version;
-                },
-                complete: function(){
-                    W.stop();
-                }
-            })
-        })
-    };
-    this.handleData = function(d){
-        W.onReady(function(){
-            if(d.data){
-                var v = S(d.data, c);
-                if(d.data == "russian") TVXInteractionPlugin.executeAction("reload");
-                else TVXInteractionPlugin.executeAction("update:content:" + d.data, {extensionIcon: I(v)});
-            }else ["folders", "refocus"].forEach(function(k){
-                TVXInteractionPlugin.executeAction("update:content:" + k, {extensionIcon: I(S(k))});
-            });
-        });    
-    };
-    this.handleRequest = function(i, _, f){
-        W.onReady(function(){
-            var e = function(m){TVXInteractionPlugin.error(m); f();};
-            switch(i){
-                case "init": f(init); break;
-                case "menu": 
-                    TVXBusyService.ajax.get("/files", {
-                        success: function(d){menu.menu[2].display = d ? true : false},
-                        error: function(){menu.menu[2].display = false},
-                        complete: function(){f(menu)}
-                    });
-                    break;
-                case "trns":
-                    TVXServices.ajax.post("/torrents", '{"action":"list"}', {success: function(d){
-                        f({
-                            type: "list", cache: false, reuse: false, restore: false, extension: "{ico:msx-white:bookmarks} " + d.length,
-                            template: {
-                                layout: d.length ? "0,0,6,2" : "0,0,1,12", imageWidth: 1.4, imageFiller: "height",
-                                action: "execute:request:interaction:trn@" + window.location.origin + "/msx/tst", data: {link: "{context:id}"},
-                                options: {
-                                    headline: "{dic:caption:options|Opts}:",
-                                    caption: "{dic:caption:options|Opts}:{tb}{ico:msx-red:stop} {dic:rem|Remove the torrent}{tb}{ico:msx-yellow} {dic:drop|Drop the torrent}",
-                                    template: {enumerate: false, layout: "0,0,8,1", type: "control", action: "execute:request:interaction:trnt"},
-                                    items: [
-                                        {icon: "msx-red:stop", key: "red", label: "{dic:rem|Remove the torrent}", data: {action: "rem", hash: "{context:id}"}},
-                                        {icon: "msx-yellow:stop", key: "yellow", label: "{dic:drop|Drop the torrent}", data: {action: "drop", hash: "{context:id}"}},
-                                    ]
-                                }
-                            },
-                            items: !d.length ? [{icon: "refresh", label: "{dic:empty:Nothing found}", action: "reload:content"}] : d.map(function(t){return {
-                                id: t.hash,
-                                headline: t.title,
-                                image: t.poster,
-                                icon: t.poster ? "" : "msx-white-soft:bookmark",
-                                group: t.category,
-                                titleFooter: size(t.torrent_size),
-                                live: t.stat < 5 ? {type: "setup", action: "execute:" + window.location.origin + "/msx/torrent", data: "update:content:" + t.hash} : null
-                            }})
-                        });
-                    }, error: e});
-                    break;
-                case "trnt": if(d && d.data){
-                    TVXServices.ajax.post("/torrents", JSON.stringify(d.data), {
-                        success: function(){f({action: "[reload:content|success]"})},
-                        error: function(e){f({action: "error:" + e})}
-                    }, {dataType: "text"})
-                    break;
-                }
-                default: e("wrong request: " + i);
-            }
-        });
+function init(b){
+    b.start();
+    var i = main.menu.length - 1;
+    if(stor("russian")){
+        info.dictionary = window.location.origin + "/msx/russian.json";
+        main.menu[i].items[0].label = "Switch to english";
     }
-};
+    TVXInteractionPlugin.requestData("info:application", function(d){
+        main.menu[i].underlay.items[2].headline = d.data.info.application.name + " " + d.data.info.application.version;
+        TVXServices.ajax.get("/msx/start.json", {
+            success: function(d){main.menu[i].underlay.items[1].headline = d.name + " " + d.version},
+            complete: function(){b.stop()}
+        })
+    })
+}
+function menu(f){
+    TVXServices.ajax.post("/settings", '{"action":"get"}', {
+        success: function(d){main.menu[1].display = d.EnableRutorSearch},
+        error: function(){main.menu[1].display = false},
+        complete: function(){
+            TVXServices.ajax.get("/files", {
+                success: function(d){main.menu[2].display = d ? true : false},
+                error: function(){main.menu[2].display = false},
+                complete: function(){f(main)}
+            });
+        }
+    })
+}
+function trns(f){
+    TVXServices.ajax.post("/torrents", '{"action":"list"}', {
+        success: function(d){
+            f({
+                type: "list", cache: false, reuse: false, restore: false, extension: "{ico:msx-white:bookmarks} " + d.length,
+                template: {
+                    layout: d.length ? "0,0,6,2" : "0,0,12,1", imageWidth: 1.3, imageFiller: "height", 
+                    action: "request:interaction:init@" + window.location.origin + "/msx/tst", data: "{context:id}"
+                },
+                items: d.length ? d.map(function(t){return {
+                    id: t.hash,
+                    image: t.poster,
+                    icon: t.poster ? "" : "msx-white-soft:bookmark",
+                    headline: t.title,
+                    titleFooter: "{ico:msx-white:attach-file} " + size(t.torrent_size),
+                    live: (t.stat = t.stat) < 5 ? {type: "setup", action: "execute:" + window.location.origin + "/msx/torrent", data: "update:content:" + t.hash} : null,
+                    options: {
+                        headline: "{dic:caption:options|Opts}:", 
+                        caption: "{dic:caption:options|Opts}:{tb}{ico:msx-red:stop} {dic:rem}Remove the torrent}" + (t.stat ? "{tb}{ico:msx-yellow:stop} {dic:drop|Drop the torrent}" : ""),
+                        template: {enumerate: false, layout: "0,0,8,1", type: "control", action: "interaction:load"},
+                        items: [
+                            {icon: "msx-red:stop", label: "{dic:rem|Remove the torrent}", key: "red", data: {action: "rem", hash: "{context:id}"}},
+                            {icon: "msx-yellow:stop", label: "{dic:drop|Drop the torrent}", key: "yellow", data: {action: "drop", hash: "{context:id"}, display: t.stat}
+                        ]
+                    }
+                }}) : [{icon: "refresh", label: "{dic:empty|Nothing found}", action: "reload:content"}]
+            });
+        },
+        error: function(e){
+            TVXInteractionPlugin.error(e);
+            f();
+        }
+    })
+}
+function sets(d){
+    var a = function(k, v){
+        TVXInteractionPlugin.executeAction("update:content:" + k, {extensionIcon: v ? "msx-white:toggle-on" : "toggle-off"});
+    };
+    if(!d) ["folders", "refocus"].forEach(function(d){a(d, stor(d))});
+    else if(typeof d == "object") TVXServices.ajax.post("/torrents", JSON.stringify(d), {
+        success: function(){TVXInteractionPlugin.executeAction("[cleanup|reload:content|success]")},
+        error: TVXInteractionPlugin.error,
+        dataType: "text"
+    });
+    else {
+        var v = stor(d, true)
+        if(d == "russian") TVXInteractionPlugin.executeAction("reload");
+        else a(d, v);
+    }
+}
+
 TVXPluginTools.onReady(function() {
-    TVXInteractionPlugin.setupHandler(new plug());
+    TVXInteractionPlugin.setupHandler({
+        busy: new TVXBusyService(),
+        init: function(){
+            init(this.busy);
+        },
+        handleData: function(d){
+            this.busy.onReady(function(){
+                sets(d.data);
+            });
+        },
+        handleRequest: function(i, _, f){
+            this.busy.onReady(function(){
+                switch(i){
+                    case "menu": menu(f); break;
+                    case "trns": trns(f); break;
+                    default: f(info);
+                }
+            });
+        }
+    });
     TVXInteractionPlugin.init();
 });
