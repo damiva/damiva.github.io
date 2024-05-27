@@ -2,25 +2,23 @@ var info = {name: "TorrServer Plugin", version: "0.1.133", reference: "request:i
 var main = {logo: window.location.origin + "/logo.png", cache: false, reuse: false, restore: false, menu: [
     {icon: "bookmarks", label: "{dic:trns|My torrents}",    data: "request:interaction:trns@" + window.location.href},
     {icon: "search",    label: "{dic:srch|Search torrents}",data: "request:interaction:init@" + window.location.origin + "/msx/tss"},
-    {icon: "folder",    label: "{dic:files|My files}",      data: "request:interaction:access:" + window.location.host + "@" + window.location.protocol + "//nb.msx.benzac.de/interaction"},
+    {icon: "folder",    label: "{dic:fls|My files}",      data: "request:interaction:access:" + window.location.host + "@" + window.location.protocol + "//nb.msx.benzac.de/interaction"},
     {type: "separator"},
     {id: "settings", icon: "settings", label: "{dic:label:settings|Settings}", data: {
         type: "list", reuse: false,
         ready: {action: "interaction:load:" + window.location.href, data: ""},
         underlay: {items:[
-            {
-                layout: "0,0,3,1", type: "space", imageWidth: 1, imageFiller: "height", image: window.location.origin + "/logo.png",
-                headline: "{col:msx-white-soft}{dic:label:application|Application}:{br}{dic:label:content_server|Server}:"
-            },{
-                layout: "3,0,4,1", type: "space", headline: info.name + " " + info.version + "{br}"
-            }]},
-        template: {type: "control", layout: "0,0,7,1", action: "interaction:commit", data: "{context:id}", area: "0,1,7,5"},
+            {layout: "0,0,2,1", headline: "{col:msx-white-soft}{dic:label:application|Application}:{br}{dic:label:content_server|Server}:"},
+            {layout: "2,0,3,1", type: "space", headline: info.name + "{br}", alignment: "center"},
+            {layout: "5,0,2,1", type: "space", headline: info.version + "{br}", alignmetn: "right"}
+        ]},
+        template: {type: "control", layout: "0,0,7,1", action: "interaction:commit", data: "{context:id}", area: "0,1,7,5", centration: "text"},
         items: [
             {id: "russian", icon: "translate", label: "Перевести на русский", extensionIcon: "msx-red:refresh"},
-            {id: "folders", icon: "folder", label: "{dic:folder|Show folders in torrent}", extensionIcon: ""},
-            {id: "refocus", icon: "history", label: "{dic:refocus|Focus on last viwed file", extensionIcon: ""},
-            {type: "space", text: "{icomsx-blue:info} {dic:searchInfo|To enable Search torrents Turn on torrents search by RuTor in the Additional Settings by browsing to}: {col:msx-white}" + window.location.origin},
-            {type: "space", text: "{icomsx-blue:info} {dic:filesInfo|To enable My files set path to server's folder by browsing to}: {col:msx-white}" + window.location.origin + "/msx/"}
+            {id: "folders", icon: "folder", label: "{dic:folders|Show folders in torrent}", extensionIcon: ""},
+            {id: "refocus", icon: "history", label: "{dic:refocus|Focus on last viwed item}", extensionIcon: ""},
+            {type: "space", text: '{ico:msx-blue:info} {dic:search|To enable "Search torrents" set "Turn on torrents search by RuTor" in the "Additional Settings" by browsing to}: {col:msx-white}' + window.location.origin},
+            {type: "space", text: '{ico:msx-blue:info} {dic:files|To enable "My files" set "Path to the folder" by browsing to}: {col:msx-white}' + window.location.origin + "/msx/"}
         ]
     }}
 ]};
@@ -46,7 +44,8 @@ function plug(){
         b.start();
         TVXServices.ajax.get(u + "/msx/start.json", {
             success: function(d){
-                main.menu[i].data.underlay.items[1].headline += d.name + " " + d.versionж
+                main.menu[i].data.underlay.items[1].headline += d.name;
+                main.menu[i].data.underlay.items[2].headline += d.version;
                 b.stop();
             },
             error: function(){b.stop()}
