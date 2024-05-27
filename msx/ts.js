@@ -10,7 +10,7 @@ var main = {logo: window.location.origin + "/logo.png", cache: false, reuse: fal
         underlay: {items:[
             {layout: "0,0,2,1", type: "space", headline: "{col:msx-white-soft}{dic:label:application|Application}:{br}{dic:label:content_server|Server}:"},
             {layout: "2,0,3,1", type: "space", headline: info.name + "{br}", alignment: "center"},
-            {layout: "5,0,2,1", type: "space", headline: info.version + "{br}", alignmetn: "right"}
+            {layout: "5,0,2,1", type: "space", headline: info.version + "{br}", alignment: "right"}
         ]},
         template: {type: "control", layout: "0,0,7,1", action: "interaction:commit", data: "{context:id}", area: "0,1,7,5", centration: "text"},
         items: [
