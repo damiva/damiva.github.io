@@ -74,7 +74,7 @@ function plug(){
                     TVXServices.ajax.post(u + "/settings", '{"action":"get"}', {
                         success: function(d){
                             main.menu[1].display = d.EnableRutorSearch
-                            TVXServices.ajax.get("/files", {
+                            TVXServices.ajax.get(u + "/files", {
                                 success: function(d){
                                     main.menu[2].display = d ? true : false;
                                     f(main);
