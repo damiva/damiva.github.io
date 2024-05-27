@@ -72,15 +72,20 @@ function plug(){
             switch(i){
                 case "menu":
                     TVXServices.ajax.post(u + "/settings", '{"action":"get"}', {
-                        success: function(d){main.menu[1].display = d.EnableRutorSearch},
-                        error: function(){main.menu[1].display = false},
-                        complete: function(){
+                        success: function(d){
+                            main.menu[1].display = d.EnableRutorSearch
                             TVXServices.ajax.get("/files", {
-                                success: function(d){main.menu[2].display = d ? true : false},
-                                error: function(){main.menu[2].display = false},
-                                complete: function(){f(main)}
+                                success: function(d){
+                                    main.menu[2].display = d ? true : false;
+                                    f(main);
+                                },
+                                error: function(){
+                                    main.menu[2].display = false;
+                                    f(main);
+                                }
                             });
-                        }
+                        },
+                        error: function(e){TVXInteractionPlugin.error(e); f();}
                     });                
                     break;
                 case "trns":
