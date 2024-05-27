@@ -1,5 +1,5 @@
 var info = {name: "TorrServer Plugin", version: "0.1.133", reference: "request:interaction:menu@" + window.location.href};
-var main = {logo: window.location.origin + "/logo.png", menu: [
+var main = {logo: window.location.origin + "/logo.png", cache: false, reuse: false, restore: false, menu: [
     {icon: "bookmarks", label: "{dic:trns|My torrents}",    data: "request:interaction:trns@" + window.location.href},
     {icon: "search",    label: "{dic:srch|Search torrents}",data: "request:interaction:init@" + window.location.origin + "/msx/tss"},
     {icon: "folder",    label: "{dic:files|My files}",      data: "request:interaction:access:" + window.location.host + "@" + window.location.protocol + "//nb.msx.benzac.de/interaction"},
