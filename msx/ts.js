@@ -8,10 +8,12 @@ var main = {logo: window.location.origin + "/logo.png", cache: false, reuse: fal
         type: "list", reuse: false,
         ready: {action: "interaction:load:" + window.location.href, data: ""},
         underlay: {items:[
-            {type: "space", headline: info.name + " " + info.version, layout: "0,0,4,1"},
-            {type: "space", layout: "4,0,4,1"},
-            {type: "space", layout: "8,0,4,1"},
-        ]},
+            {
+                layout: "0,0,3,1", type: "space", imageWidth: 1, image: window.location.origin + "/logo.png",
+                headline: "{col:msx-white-soft}{dic:label:application|Application}:{br}{dic:label:content_server|Server}:"
+            },{
+                layout: "0,0,4,1", type: "space", headline: info.name + " " + info.version + "{br}"
+            }]},
         template: {type: "control", layout: "0,0,7,1", action: "interaction:commit", data: "{context:id}", area: "0,1,7,5"},
         items: [
             {id: "russian", icon: "translate", label: "Перевести на русский", extensionIcon: "msx-red:refresh"},
@@ -38,13 +40,10 @@ function init(b){
         info.dictionary = window.location.origin + "/msx/russian.json";
         main.menu[i].data.items[0].label = "Switch to english";
     }
-    TVXInteractionPlugin.requestData("info", function(d){
-        main.menu[i].data.underlay.items[2].headline = d.info.application.name + " " + d.info.application.version;
-        TVXServices.ajax.get("/msx/start.json", {
-            success: function(d){main.menu[i].data.underlay.items[1].headline = d.name + " " + d.version},
-            complete: function(){b.stop()}
-        })
-    })
+    TVXServices.ajax.get("/msx/start.json", {
+        success: function(d){main.menu[i].data.underlay.items[1].headline += d.name + " " + d.version},
+        complete: function(){b.stop()}
+    });
 }
 function menu(f){
     TVXServices.ajax.post("/settings", '{"action":"get"}', {
