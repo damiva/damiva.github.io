@@ -38,7 +38,7 @@ function init(b){
         info.dictionary = window.location.origin + "/msx/russian.json";
         main.menu[i].data.items[0].label = "Switch to english";
     }
-    TVXInteractionPlugin.requestData("info:application", function(d){
+    TVXInteractionPlugin.requestData("info", function(d){
         main.menu[i].data.underlay.items[2].headline = d.data.info.application.name + " " + d.data.info.application.version;
         TVXServices.ajax.get("/msx/start.json", {
             success: function(d){main.menu[i].data.underlay.items[1].headline = d.name + " " + d.version},
