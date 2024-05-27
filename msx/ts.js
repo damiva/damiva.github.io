@@ -36,7 +36,7 @@ function size(s){
 function plug(){
     var a = function(k, v){TVXInteractionPlugin.executeAction("update:content:" + k, {extensionIcon: v ? "msx-white:toggle-on" : "toggle-off"})},
         b = new TVXBusyService();
-    this.init = function(){
+    this.ready = function(){
         var i = main.menu.length - 1;
         if(stor("russian")){
             info.dictionary = window.location.origin + "/msx/russian.json";
