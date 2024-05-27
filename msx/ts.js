@@ -32,7 +32,7 @@ function stor(k, c){
 function size(s){
     var i = s == 0 ? 0 : Math.floor(Math.log(s) / Math.log(1024));
     return (s / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'KB', 'MB', 'GB', 'TB'][i];
-};
+}
 function init(b){
     b.start();
     var i = main.menu.length - 1;
@@ -40,9 +40,9 @@ function init(b){
         info.dictionary = window.location.origin + "/msx/russian.json";
         main.menu[i].data.items[0].label = "Switch to english";
     }
-    TVXServices.ajax.get("/msx/start.json", {
+    TVXServices.ajax.get("start.json", {
         success: function(d){main.menu[i].data.underlay.items[1].headline += d.name + " " + d.version},
-        complete: function(){b.stop(); console.log("got: start.json")}
+        complete: function(){b.stop()}
     });
 }
 function menu(f){
@@ -55,7 +55,6 @@ function menu(f){
                 error: function(){main.menu[2].display = false},
                 complete: function(){f(main)}
             });
-            console.log("got: menu")
         }
     })
 }
