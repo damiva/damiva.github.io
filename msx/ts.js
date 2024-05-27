@@ -39,7 +39,7 @@ function init(b){
         main.menu[i].data.items[0].label = "Switch to english";
     }
     TVXInteractionPlugin.requestData("info:application", function(d){
-        main.menu[i].data.underlay.items[2].headline = d.info.application.name + " " + d.info.application.version;
+        main.menu[i].data.underlay.items[2].headline = d.data.info.application.name + " " + d.data.info.application.version;
         TVXServices.ajax.get("/msx/start.json", {
             success: function(d){main.menu[i].data.underlay.items[1].headline = d.name + " " + d.version},
             complete: function(){b.stop()}
