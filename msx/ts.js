@@ -8,7 +8,7 @@ var main = {logo: window.location.origin + "/logo.png", cache: false, reuse: fal
         type: "list", reuse: false,
         ready: {action: "interaction:load:" + window.location.href, data: ""},
         underlay: {items:[
-            {layout: "0,0,2,1", headline: "{col:msx-white-soft}{dic:label:application|Application}:{br}{dic:label:content_server|Server}:"},
+            {layout: "0,0,2,1", type: "space", headline: "{col:msx-white-soft}{dic:label:application|Application}:{br}{dic:label:content_server|Server}:"},
             {layout: "2,0,3,1", type: "space", headline: info.name + "{br}", alignment: "center"},
             {layout: "5,0,2,1", type: "space", headline: info.version + "{br}", alignmetn: "right"}
         ]},
