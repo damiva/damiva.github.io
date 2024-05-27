@@ -35,26 +35,27 @@ function size(s){
 }
 function plug(){
     var a = function(k, v){TVXInteractionPlugin.executeAction("update:content:" + k, {extensionIcon: v ? "msx-white:toggle-on" : "toggle-off"})},
+        u = TVXServices.urlParams.get("addr", window.location.origin);
         b = new TVXBusyService();
-/*    this.ready = function(){
+    this.ready = function(){
         var i = main.menu.length - 1;
         if(stor("russian")){
-            info.dictionary = window.location.origin + "/msx/russian.json";
+            info.dictionary = u + "/msx/russian.json";
             main.menu[i].data.items[0].label = "Switch to english";
         }
         b.start();
-        TVXServices.ajax.get("start.json", {
+        TVXServices.ajax.get(u + "/msx/start.json", {
             success: function(d){
                 main.menu[i].data.underlay.items[1].headline += d.name + " " + d.versionж
                 b.stop();
             },
             error: function(){b.stop()}
         });    
-    };*/
+    };
     this.handleData = function(d){
         b.onReady(function(){
             if(!(d = d && d.data)) ["folders", "refocus"].forEach(function(d){a(d, stor(d))});
-            else if(typeof d == "object") TVXServices.ajax.post("/torrents", JSON.stringify(d), {
+            else if(typeof d == "object") TVXServices.ajax.post(u + "/torrents", JSON.stringify(d), {
                 success: function(){TVXInteractionPlugin.executeAction("[cleanup|reload:content|success]")},
                 error: TVXInteractionPlugin.error,
                 dataType: "text"
@@ -70,7 +71,7 @@ function plug(){
         b.onReady(function(){
             switch(i){
                 case "menu":
-                    TVXServices.ajax.post("/settings", '{"action":"get"}', {
+                    TVXServices.ajax.post(u + "/settings", '{"action":"get"}', {
                         success: function(d){main.menu[1].display = d.EnableRutorSearch},
                         error: function(){main.menu[1].display = false},
                         complete: function(){
@@ -83,7 +84,7 @@ function plug(){
                     });                
                     break;
                 case "trns":
-                    TVXServices.ajax.post("/torrents", '{"action":"list"}', {
+                    TVXServices.ajax.post(u + "/torrents", '{"action":"list"}', {
                         success: function(d){
                             f({
                                 type: "list", cache: false, reuse: false, restore: false, extension: "{ico:msx-white:bookmarks} " + d.length,
