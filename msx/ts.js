@@ -41,8 +41,11 @@ function init(b){
         main.menu[i].data.items[0].label = "Switch to english";
     }
     TVXServices.ajax.get("/msx/start.json", {
-        success: function(d){main.menu[i].data.underlay.items[1].headline += d.name + " " + d.version},
-        complete: function(){b.stop()}
+        success: function(d){
+            main.menu[i].data.underlay.items[1].headline += d.name + " " + d.version;
+            b.stop();
+        },
+        error: function(){b.stop()}
     });
 }
 function menu(f){
