@@ -36,7 +36,7 @@ function size(s){
 function plug(){
     var a = function(k, v){TVXInteractionPlugin.executeAction("update:content:" + k, {extensionIcon: v ? "msx-white:toggle-on" : "toggle-off"})},
         b = new TVXBusyService();
-    this.ready = function(){
+/*    this.ready = function(){
         var i = main.menu.length - 1;
         if(stor("russian")){
             info.dictionary = window.location.origin + "/msx/russian.json";
@@ -50,7 +50,7 @@ function plug(){
             },
             error: function(){b.stop()}
         });    
-    };
+    };*/
     this.handleData = function(d){
         b.onReady(function(){
             if(!(d = d && d.data)) ["folders", "refocus"].forEach(function(d){a(d, stor(d))});
