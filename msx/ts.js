@@ -9,18 +9,18 @@ var main = {logo: window.location.origin + "/logo.png", cache: false, reuse: fal
         ready: {action: "interaction:load:" + window.location.href, data: ""},
         underlay: {items:[
             {
-                layout: "0,0,3,1", type: "space", imageWidth: 1, image: window.location.origin + "/logo.png",
+                layout: "0,0,3,1", type: "space", imageWidth: 1, imageFiller: "height", image: window.location.origin + "/logo.png",
                 headline: "{col:msx-white-soft}{dic:label:application|Application}:{br}{dic:label:content_server|Server}:"
             },{
-                layout: "0,0,4,1", type: "space", headline: info.name + " " + info.version + "{br}"
+                layout: "3,0,4,1", type: "space", headline: info.name + " " + info.version + "{br}"
             }]},
         template: {type: "control", layout: "0,0,7,1", action: "interaction:commit", data: "{context:id}", area: "0,1,7,5"},
         items: [
             {id: "russian", icon: "translate", label: "Перевести на русский", extensionIcon: "msx-red:refresh"},
             {id: "folders", icon: "folder", label: "{dic:folder|Show folders in torrent}", extensionIcon: ""},
             {id: "refocus", icon: "history", label: "{dic:refocus|Focus on last viwed file", extensionIcon: ""},
-            {type: "space", imageWidth: 1, icon: "msx-blue:info", text: "{dic:searchInfo|To enable Search torrents Turn on torrents search by RuTor in the Additional Settings by browsing to}: {col:msx-white}" + window.location.origin},
-            {type: "space", imageWidth: 1, icon: "msx-blue:info", text: "{dic:filesInfo|To enable My files set path to server's folder by browsing to}: {col:msx-white}" + window.location.origin + "/msx/"}
+            {type: "space", text: "{icomsx-blue:info} {dic:searchInfo|To enable Search torrents Turn on torrents search by RuTor in the Additional Settings by browsing to}: {col:msx-white}" + window.location.origin},
+            {type: "space", text: "{icomsx-blue:info} {dic:filesInfo|To enable My files set path to server's folder by browsing to}: {col:msx-white}" + window.location.origin + "/msx/"}
         ]
     }}
 ]};
