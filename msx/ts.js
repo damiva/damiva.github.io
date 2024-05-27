@@ -44,8 +44,11 @@ function plug(){
         }
         b.start();
         TVXServices.ajax.get("start.json", {
-            success: function(d){main.menu[i].data.underlay.items[1].headline += d.name + " " + d.version},
-            complete: function(){b.stop()}
+            success: function(d){
+                main.menu[i].data.underlay.items[1].headline += d.name + " " + d.versionж
+                b.stop();
+            },
+            error: function(){b.stop()}
         });    
     };
     this.handleData = function(d){
