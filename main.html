@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MSX Plugin for TorrServer</title>
+        <meta charset="UTF-8" />
+        <meta name="author" content="damiva" />
+        <meta name="copyright" content="damiva" />
+        <script type="text/javascript" src="http://msx.benzac.de/js/tvx-plugin.min.js"></script>
+        <script type="text/javascript" src="js/menu.js"></script>
+        <script type="text/javascript" src="js/torrents.js"></script>
+        <script type="text/javascript" src="js/torrent.js"></script>
+        <script>
+            TVXPluginTools.onReady(function() {
+                TVXInteractionPlugin.setupHandler(new function(){
+                    var ps = [menu, torrents, torrent].map(function(f){return new f()});
+                    this.handleData = function(d){
+                        for(var i = 0; i < ps.length; i++){
+                            if(ps[i].handleData && ps[i].handleData(d)) break;
+                        }
+                    };
+                    this.handleRequest = function(i, d, f){
+                        var ok = false;
+                        for(var i = 0; i < ps.length; i++){
+                            if(ok = ps[i].handleRequest && ps[i].handleRequest(i, d, f)) break;
+                        }
+                        if(!ok){
+                            TVXInteractionPlugin.error("wrong request");
+                            f();
+                        }
+                    };
+                });
+                TVXInteractionPlugin.init();
+            });
+        </script>
+    </head>
+    <body></body>
+</html>
