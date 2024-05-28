@@ -52,7 +52,7 @@
                                     data: "request:interaction:trns@" + p
                                 },{
                                     icon: "search", label: "{dic:srch|Search torrents}", display: s,
-                                    data: window.location.origin + (s.russian ? "/ru.json" : "/en.json")
+                                    data: window.location.origin + (r ? "/ru.json" : "/en.json")
                                 },{
                                     icon: "folder", label: "{dic:fsl|My files}", display: f,
                                     data: "request:interaction:access:" + i + "@" + window.location.protocol + "//nb.msx.benzac.de/interaction"
