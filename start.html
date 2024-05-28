@@ -14,7 +14,7 @@
                         TVXInteractionPlugin.executeAction("reload");
                     },
                     handleRequest: function(i, _, f){
-                        if(!i){
+                        if(i){
                             var p = window.location.origin + "/main.html",
                                 u = window.location.protocol + "//" + i,
                                 r = TVXServices.storage.getBool("ts:russian", true),
