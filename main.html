@@ -12,7 +12,12 @@
         <script>
             TVXPluginTools.onReady(function() {
                 TVXInteractionPlugin.setupHandler(new function(){
-                    var ps = [menu, torrents, torrent].map(function(f){return new f()});
+                    var s = TVXServices.storage.getFullStr("ts:server", ""),
+                        r = TVXServices.storage.getBool("ts:russian", true),
+                        ps = [menu, torrents, torrent].map(function(f){return new f(s, r)});
+                    this.init = function(){
+                        if(!s) TVXInteractionPlugin.error("The server is not set!");
+                    };
                     this.handleData = function(d){
                         for(var i = 0; i < ps.length; i++){
                             if(ps[i].handleData && ps[i].handleData(d)) break;
