@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MSX Plugin for TorrServer</title>
+        <meta charset="UTF-8" />
+        <meta name="author" content="damiva" />
+        <meta name="copyright" content="damiva" />
+        <script type="text/javascript" src="http://msx.benzac.de/js/tvx-plugin.min.js"></script>
+        <script type="text/javascript">
+            TVXPluginTools.onReady(function() {
+                TVXInteractionPlugin.setupHandler({
+                    handleData : function(d){
+                        TVXServices.storage.set("ts:russian", !d.data);
+                        TVXInteractionPlugin.executeAction("reload");
+                    },
+                    handleRequest: function(i, _, f){
+                        if(i){
+                            var p = window.location.origin + "/main.html",
+                                u = window.location.protocol + "//" + i,
+                                r = TVXServices.storage.getBool("ts:russian", true);
+                            TVXServices.storage.set("ts:server", i);
+                            f({
+                                name: "TorrServer Plugin", version: "0.1.133", logo: u + "/logo.png",
+                                dictionary: r ? (window.location.origin + "/russian.json") : null,
+                                options: {
+                                    haedline: "{dic:caption:options|Opts}:",
+                                    caption: "{dic:caption:options|Opts}:{tb}{ico:msx-red:stop}" + (r ? "Switch to english": "Перевести на русский") + "{tb}{ico:msx-yellow:stop}{ico:refresh}",
+                                    template: {enumerate: false, layout: "0,0,8,1", type: "control"},
+                                    items: [
+                                        {icon: "msx-red:stop", key: "red", label: r ? "Switch to english": "Перевести на русский", action: "interaction:load:" + window.location.href, data: r},
+                                        {icon: "msx-yellow:stop", key: "yellow", label: "{dic:label:reload|Reload}", action: "reload"},
+                                        {type: "space"},
+                                        {icon: "logout", label: "{dic:label:exit}", action: "exit"}
+                                    ]
+                                },
+                                menu: [{
+                                    icon: "bookmarks", label: "{dic:trns|My torrents}",
+                                    data: "request:interaction:trns@" + p
+                                },{
+                                    icon: "search", label: "{dic:srch|Search torrents}",
+                                    data: window.location.origin + (s.russian ? "/ru.json" : "/en.json")
+                                },{
+                                    icon: "folder", label: "{dic:fsl|My files}", 
+                                    data: "request:interaction:access:" + i + "@" + window.location.protocol + "//nb.msx.benzac.de/interaction"
+                                }]
+                            });
+                        }else{
+                            TVXInteractionPlugin.error("wrong request: server is not set");
+                            f();
+                        }
+                    }
+                });
+                TVXInteractionPlugin.init();
+            });
+        </script>
+    </head>
+    <body style="text-align: center;">
+        <a href="https://github.com/YouROK/TorrServer">TorrServer</a>
+        Plugin for
+        <a href="https://msx.benzac.de/info/">Media Station X</a>
+    </body>
+</html>
