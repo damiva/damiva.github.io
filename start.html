@@ -17,9 +17,22 @@
                         if(i){
                             var p = window.location.origin + "/main.html",
                                 u = window.location.protocol + "//" + i,
-                                r = TVXServices.storage.getBool("ts:russian", true);
+                                r = TVXServices.storage.getBool("ts:russian", true),
+                                b = new TVXBusyService(),
+                                s = false, f = false;
                             TVXServices.storage.set("ts:server", i);
-                            f({
+                            b.start();
+                            TVXServices.ajax.post(u + "/settings", '{"action":"get"}', {
+                                success: function(d){
+                                    s = d.EnableRutorSearch;
+                                    TVXServices.ajax.get(u + "/files", {
+                                        success: function(d){f = d ? true : false; b.stop()},
+                                        error: function(){b.stop()}
+                                    });
+                                },
+                                error: function(e){TVXInteractionPlugin.error(e);f();}
+                            });
+                            b.onReady(function(){f({
                                 name: "TorrServer Plugin", version: "0.1.133", logo: u + "/logo.png",
                                 dictionary: r ? (window.location.origin + "/russian.json") : null,
                                 options: {
@@ -37,15 +50,15 @@
                                     icon: "bookmarks", label: "{dic:trns|My torrents}",
                                     data: "request:interaction:trns@" + p
                                 },{
-                                    icon: "search", label: "{dic:srch|Search torrents}",
+                                    icon: "search", label: "{dic:srch|Search torrents}", display: s,
                                     data: window.location.origin + (s.russian ? "/ru.json" : "/en.json")
                                 },{
-                                    icon: "folder", label: "{dic:fsl|My files}", 
+                                    icon: "folder", label: "{dic:fsl|My files}", display: f,
                                     data: "request:interaction:access:" + i + "@" + window.location.protocol + "//nb.msx.benzac.de/interaction"
                                 }]
-                            });
+                            })});
                         }else{
-                            TVXInteractionPlugin.error("wrong request: server is not set");
+                            TVXInteractionPlugin.error("server is not set");
                             f();
                         }
                     }
