@@ -14,50 +14,49 @@
                         TVXInteractionPlugin.executeAction("reload");
                     },
                     handleRequest: function(i, _, f){
-                        if(i){
+                        if(!i){
                             var p = window.location.origin + "/main.html",
                                 u = window.location.protocol + "//" + i,
                                 r = TVXServices.storage.getBool("ts:russian", true),
-                                b = new TVXBusyService(),
                                 s = false,
                                 f = false;
                             TVXServices.storage.set("ts:server", i);
-                            b.start();
                             TVXServices.ajax.post(u + "/settings", '{"action":"get"}', {
                                 success: function(d){
                                     s = d.EnableRutorSearch;
                                     TVXServices.ajax.get(u + "/files", {
-                                        success: function(d){f = d ? true : false; b.stop()},
-                                        error: function(){b.stop()}
+                                        success: function(d){f = d ? true : false},
+                                        complete: function(){f({
+                                            name: "TorrServer Plugin", version: "0.1.133", logo: u + "/logo.png",
+                                            dictionary: r ? (window.location.origin + "/russian.json") : null,
+                                            options: {
+                                                haedline: "{dic:caption:options|Opts}:",
+                                                caption: "{dic:caption:options|Opts}:{tb}{ico:msx-red:stop}" 
+                                                    + (r ? "Switch to english": "Перевести на русский") 
+                                                    + "{tb}{ico:msx-yellow:stop}{ico:refresh}",
+                                                template: {enumerate: false, layout: "0,0,8,1", type: "control"},
+                                                items: [
+                                                    {icon: "msx-red:stop", key: "red", label: r ? "Switch to english": "Перевести на русский", action: "interaction:load:" + window.location.href, data: r},
+                                                    {icon: "msx-yellow:stop", key: "yellow", label: "{dic:label:reload|Reload}", action: "reload"},
+                                                    {type: "space"},
+                                                    {icon: "logout", label: "{dic:label:exit}", action: "exit"}
+                                                ]
+                                            },
+                                            menu: [{
+                                                icon: "bookmarks", label: "{dic:trns|My torrents}",
+                                                data: "request:interaction:trns@" + p
+                                            },{
+                                                icon: "search", label: "{dic:srch|Search torrents}", display: s,
+                                                data: window.location.origin + (r ? "/ru.json" : "/en.json")
+                                            },{
+                                                icon: "folder", label: "{dic:fsl|My files}", display: f,
+                                                data: "request:interaction:access:" + i + "@" + window.location.protocol + "//nb.msx.benzac.de/interaction"
+                                            }]
+                                        })}
                                     });
                                 },
                                 error: function(e){TVXInteractionPlugin.error(e);f();}
                             });
-                            b.onReady(function(){f({
-                                name: "TorrServer Plugin", version: "0.1.133", logo: u + "/logo.png",
-                                dictionary: r ? (window.location.origin + "/russian.json") : null,
-                                options: {
-                                    haedline: "{dic:caption:options|Opts}:",
-                                    caption: "{dic:caption:options|Opts}:{tb}{ico:msx-red:stop}" + (r ? "Switch to english": "Перевести на русский") + "{tb}{ico:msx-yellow:stop}{ico:refresh}",
-                                    template: {enumerate: false, layout: "0,0,8,1", type: "control"},
-                                    items: [
-                                        {icon: "msx-red:stop", key: "red", label: r ? "Switch to english": "Перевести на русский", action: "interaction:load:" + window.location.href, data: r},
-                                        {icon: "msx-yellow:stop", key: "yellow", label: "{dic:label:reload|Reload}", action: "reload"},
-                                        {type: "space"},
-                                        {icon: "logout", label: "{dic:label:exit}", action: "exit"}
-                                    ]
-                                },
-                                menu: [{
-                                    icon: "bookmarks", label: "{dic:trns|My torrents}",
-                                    data: "request:interaction:trns@" + p
-                                },{
-                                    icon: "search", label: "{dic:srch|Search torrents}", display: s,
-                                    data: window.location.origin + (r ? "/ru.json" : "/en.json")
-                                },{
-                                    icon: "folder", label: "{dic:fsl|My files}", display: f,
-                                    data: "request:interaction:access:" + i + "@" + window.location.protocol + "//nb.msx.benzac.de/interaction"
-                                }]
-                            })});
                         }else{
                             TVXInteractionPlugin.error("server is not set");
                             f();
