@@ -19,7 +19,8 @@
                                 u = window.location.protocol + "//" + i,
                                 r = TVXServices.storage.getBool("ts:russian", true),
                                 b = new TVXBusyService(),
-                                s = false, f = false;
+                                s = false,
+                                f = false;
                             TVXServices.storage.set("ts:server", i);
                             b.start();
                             TVXServices.ajax.post(u + "/settings", '{"action":"get"}', {
@@ -67,9 +68,5 @@
             });
         </script>
     </head>
-    <body style="text-align: center;">
-        <a href="https://github.com/YouROK/TorrServer">TorrServer</a>
-        Plugin for
-        <a href="https://msx.benzac.de/info/">Media Station X</a>
-    </body>
+    <body></body>
 </html>
