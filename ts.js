@@ -91,7 +91,7 @@ function trns(A){
         l = h ? F(l, c) : B(l);
         return {
             type: "list", cache: h ? true : false, reuse: h ? true : false, restore: h ? true : false,
-            headline: h ? ("{ico:search} " + h) : "", extension: (h ? "{ico:search} " : "{ico:bookmarks} ") + l.length,
+            headline: h ? ("{ico:search} " + h) : "", extension: (h ? "{ico:msx-white:search} " : "{ico:msx-white:bookmarks} ") + l.length,
             template: {
                 layout: l.length ? "0,0,6,2" : "0,0,12,1", imageWidth: 1.3, imageFiller: "height", 
                 action: "execute:request:interaction:trn@" + window.location.href, 
@@ -191,7 +191,7 @@ function find(R){
         }
     };
     this.request = function(_, f){f({
-        type: "list", extension: "rutor", items: R ? r : e, reuse: false, wrap: true,
+        type: "list", extension: "{ico:msx-white:search}", items: R ? r : e, reuse: false, wrap: true,
         ready: {action: "interaction:load:" + window.location.href, data: ""},
         underlay: {items: [{id: "find", layout: "0,0,12,1", type: "space", color: "msx-black-soft", label: ""}]},
         template: {
