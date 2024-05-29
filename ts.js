@@ -34,15 +34,9 @@ function menu(S, A, R){
             success: function(d){
                 M.menu[1].display = d.EnableRutorSearch;
                 TVXServices.ajax.get(A + "/files", {
-                    success: function(d){
-                        M.menu[2].display = d ? true : false;
-                        f(M);
-                    },
-                    error: function(e){
-                        M.menu[2].display = false;
-                        TVXInteractionPlugin.error(e)
-                        f(M);
-                    }
+                    success: function(d){M.menu[2].display = d ? true : false},
+                    error: function(e){M.menu[2].display = false},
+                    complete: function(){f(M)}
                 })
             },
             error: function(e){TVXInteractionPlugin.error(e);f();}
@@ -212,7 +206,7 @@ function trn(A){
                     return L[k] ? ("&" + k + "=" + encodeURIComponent(L[k])) : "";
                 }).join(""),
                 {success: function(t){
-                    TVXInteractionPlugin.ajax.get(A + "/msx/trn?hash=" + t.hash, {success: function(s){
+                    TVXServices.ajax.get(A + "/msx/trn?hash=" + t.hash, {success: function(s){
                         
                     }, error: e});
                 }, error: e}
