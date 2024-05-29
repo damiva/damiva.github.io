@@ -20,7 +20,7 @@ function opts(h){
 function menu(S, A, R){
     var M = {logo: A + "/logo.png", menu: [
         {icon: "bookmarks", label: "{dic:trns|My torrents}", data: "request:interaction:trns@" + window.location.href},
-        {icon: "search", label: "{dic:srch|Search torrents}", data: window.location.origin + (R ? "/ru.json" : "/en.json")},
+        {icon: "search", label: "{dic:srch|Search torrents}", data: "request:interaction:find@" + window.location.href},
         {icon: "folder", label: "{dic:fls|My files}", data: "request:interaction:access:" + S + "@" + window.location.protocol + "//nb.msx.benzac.de/interaction"},
     ], options: opts(
             "{dic:caption:options|Opts}:",
@@ -49,7 +49,7 @@ function menu(S, A, R){
         });
     };
 }
-function torrents(A){
+function trns(A){
     var B = function(l){return l.map(function(t){return {
         id: t.hash,
         headline: t.title,
@@ -75,15 +75,19 @@ function torrents(A){
         }
         return (qs = qs[q]) ? ("{ico:msx-white:audiotrack} {dic:a" + q + "|" + qs + "}{br}") : "";
     }
-    var F = function(l, c){return l.map(function(t){return {
-        headline: t.Title,
-        image: t.Poster = t.Poster || t.IMDBID && (A + "/msx/imdb/" + t.IMDBID) || "",
-        icon: t.Poster ? "" : "msx-white-soft:search",
-        text: Q(t.AudioQuality),
-        titleFooter: "{ico:msx-whit:attach-file} " + t.Size,
-        stamp: "{ico:north} " + t.Peer + " {ico:south} " + t.Seed,
-        magnet: t.Magnet
-    }})};
+    var F = function(l, c){
+        var r [];
+        l.forEach(function(t){if(!c || c == "All" || t.Categories == c) r.push({
+            headline: t.Title,
+            image: t.Poster = t.Poster || t.IMDBID && (A + "/msx/imdb/" + t.IMDBID) || "",
+            icon: t.Poster ? "" : "msx-white-soft:search",
+            text: Q(t.AudioQuality),
+            titleFooter: "{ico:msx-whit:attach-file} " + t.Size,
+            stamp: "{ico:north} " + t.Peer + " {ico:south} " + t.Seed,
+            magnet: t.Magnet
+        });
+        return r;
+    })};
     var L = function(l, h, c){
         l = h ? F(l, c) : B(l);
         return {
@@ -93,13 +97,14 @@ function torrents(A){
                 layout: l.length ? "0,0,6,2" : "0,0,12,1", imageWidth: 1.3, imageFiller: "height", 
                 action: "execute:request:interaction:trn@" + window.location.href, 
                 data: h ? {link: "{context:magnet}", title: "{context:headline}", poster: "{context:image}", category: "{context:category}"} : "{content:id}",
-                options: h ? null : opts(
+                options: h || !l.length ? null : opts(
                     "{dic:caption:options|Opts}:",
                     {key: "red", label: "{dic:rem|Remove the torrent}", action: "request:interaction:trns@" + window.location.href, data: {action: "rem", hash: "{context:id"}},
                     {key: "green", label: "{dic:drop|Drop the torrent}", action: "request:interaction:trns@" + window.location.href, data: {action: "drop", hash: "{context:id"}},
                     {key: "yellow", label: "{dic:label:reload|Reload} {dic:label:content|Content}", action: "[cleanup|reload:content]"}
                 )
             },
+            items: l.length ? l : [{icon: h ? "west" : "refresh", label: "{dic:empty|Nothing found}", action: h ? "back" : "reload:content"}]
         }
     };
     this.request = function(d, f){
@@ -119,7 +124,7 @@ function torrents(A){
         });
     };
 }
-function search(R){
+function find(R){
     var S = TVXServices.storage.getFullStr("ts:search"), C = "All",
         e = [
             ["q","w","e","r","t","y","u","i","o","p","bracket_open","bracket_close"],
@@ -193,7 +198,7 @@ function search(R){
         template: {type: "button", layout: "0,0,1,1", area: R ? "0,1,12,5" : "1,1,10,5", action: "interaction:commit", data: "{context:label}"},
     })};
 }
-function torrent(A){
+function trn(A){
     var L = {};
     this.request = function(d, f){
         if(!d){
@@ -218,9 +223,9 @@ TVXPluginTools.onReady(function() {
             r = TVXServices.storage.getBool("ts:russian", true),
             p = {
                 menu: new menu(s, s = window.location.protocol + "//" + s, r),
-                srch: new search(r),
-                trns: new torrents(s),
-                trn: new torrent(s)
+                find: new find(r),
+                trns: new trns(s),
+                trn: new trn(s)
             };
         this.handleData = p.srch.data;
         this.handleRequest = function(i, d, f){
