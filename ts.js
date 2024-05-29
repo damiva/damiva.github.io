@@ -18,7 +18,7 @@ function opts(h){
     return o.items.length ? o : null;
 }
 function menu(S, A, R){
-    var M = {logo: A + "/logo.png", bacground: window.location.origin + "/background.jpg", menu: [
+    var M = {logo: A + "/logo.png", background: window.location.origin + "/background.jpg", menu: [
         {icon: "bookmarks", label: "{dic:trns|My torrents}", data: "request:interaction:trns@" + window.location.href},
         {icon: "search", label: "{dic:srch|Search torrents}", data: "request:interaction:find@" + window.location.href},
         {icon: "folder", label: "{dic:fls|My files}", data: "request:interaction:access:" + S + "@" + window.location.protocol + "//nb.msx.benzac.de/interaction"},
