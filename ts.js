@@ -76,7 +76,7 @@ function trns(A){
         return (qs = qs[q]) ? ("{ico:msx-white:audiotrack} {dic:a" + q + "|" + qs + "}{br}") : "";
     }
     var F = function(l, c){
-        var r [];
+        var r = [];
         l.forEach(function(t){if(!c || c == "All" || t.Categories == c) r.push({
             headline: t.Title,
             image: t.Poster = t.Poster || t.IMDBID && (A + "/msx/imdb/" + t.IMDBID) || "",
