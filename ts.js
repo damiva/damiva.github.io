@@ -30,7 +30,7 @@ function menu(S, A, R){
     };
     this.request = function(d, f){
         if(d) TVXServices.storage.set("ts:russian", !R);
-        else TVXServices.ajax.post(A + "/settings", '{"action":"get"', {
+        else TVXServices.ajax.post(A + "/settings", '{"action":"get"}', {
             success: function(d){
                 M.menu[1].display = d.EnableRutorSearch;
                 TVXServices.ajax.get(A + "/files", {
