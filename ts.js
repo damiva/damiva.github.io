@@ -18,7 +18,7 @@ function opts(h){
     return o.items.length ? o : null;
 }
 function menu(S, A, R){
-    var M = {logo: A + "/logo.png", menu: [
+    var M = {logo: A + "/logo.png", bacground: window.location.origin + "/background.jpg", menu: [
         {icon: "bookmarks", label: "{dic:trns|My torrents}", data: "request:interaction:trns@" + window.location.href},
         {icon: "search", label: "{dic:srch|Search torrents}", data: "request:interaction:find@" + window.location.href},
         {icon: "folder", label: "{dic:fls|My files}", data: "request:interaction:access:" + S + "@" + window.location.protocol + "//nb.msx.benzac.de/interaction"},
@@ -92,11 +92,11 @@ function trns(A){
         l = h ? F(l, c) : B(l);
         return {
             type: "list", cache: h ? true : false, reuse: h ? true : false, restore: h ? true : false,
-            headline: h ? ("{ico:search} " + s) : "", extension: (h ? "{ico:search} " : "{ico:bookmarks} ") + l.length,
+            headline: h ? ("{ico:search} " + h) : "", extension: (h ? "{ico:search} " : "{ico:bookmarks} ") + l.length,
             template: {
                 layout: l.length ? "0,0,6,2" : "0,0,12,1", imageWidth: 1.3, imageFiller: "height", 
                 action: "execute:request:interaction:trn@" + window.location.href, 
-                data: h ? {link: "{context:magnet}", title: "{context:headline}", poster: "{context:image}", category: "{context:category}"} : "{content:id}",
+                data: h ? {link: "{context:magnet}", title: "{context:headline}", poster: "{context:image}", category: "{context:category}"} : "{context:id}",
                 options: h || !l.length ? null : opts(
                     "{dic:caption:options|Opts}:",
                     {key: "red", label: "{dic:rem|Remove the torrent}", action: "request:interaction:trns@" + window.location.href, data: {action: "rem", hash: "{context:id"}},
@@ -188,13 +188,13 @@ function find(R){
             case "bs":
                 S = S ? S.substr(0, S.length - 1) : "";
                 d.data = "";
-            default: a("update:content:underlay:find", {label: (S += d.data) ? (S + "{txt:msx-white-sfot:_") : "{txt:msx-white-soft:dic:input|Enter the word(s) to search}"});
+            default: a("update:content:underlay:find", {label: (S += d.data) ? (S + "{txt:msx-white-sfot:_}") : "{txt:msx-white-soft:dic:input|Enter the word(s) to search}"});
         }
     };
     this.request = function(_, f){f({
         type: "list", extension: "rutor", items: R ? r : e, reuse: false, wrap: true,
         ready: {action: "interaction:load:" + window.location.href, data: ""},
-        underlay: {items: [{id: "find", layout: "0,0,12,1", type: "space", color: "msc-black-soft", label: ""}]},
+        underlay: {items: [{id: "find", layout: "0,0,12,1", type: "space", color: "msx-black-soft", label: ""}]},
         template: {
             type: "button", enumerate: false,
             layout: "0,0,1,1", area: R ? "0,1,12,5" : "1,1,10,5", 
@@ -208,7 +208,9 @@ function trn(A){
         if(!d){
             var e = function(m){TVXInteractionPlugin.error(e);f();};
             TVXServices.ajax.get(
-                A + "/stream/?stat&" + ["link", "title", "poster", "category"].map(function(k){return k + "=" + encodeURIComponent(L[k])}).join("&"),
+                A + "/stream/?stat" + ["link", "title", "poster", "category"].map(function(k){
+                    return L[k] ? ("&" + k + "=" + encodeURIComponent(L[k])) : "";
+                }).join(""),
                 {success: function(t){
                     TVXInteractionPlugin.ajax.get(A + "/msx/trn?hash=" + t.hash, {success: function(s){
                         
