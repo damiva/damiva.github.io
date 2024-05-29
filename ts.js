@@ -227,7 +227,7 @@ TVXPluginTools.onReady(function() {
                 trns: new trns(s),
                 trn: new trn(s)
             };
-        this.handleData = p.srch.data;
+        this.handleData = p.find.data;
         this.handleRequest = function(i, d, f){
             if(p[i]) p[i].request(d, f);
             else {
