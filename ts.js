@@ -192,7 +192,7 @@ function find(R){
         }
     };
     this.request = function(_, f){f({
-        type: "list", extension: "rutor", items: R ? r : e,
+        type: "list", extension: "rutor", items: R ? r : e, reuse: false, wrap: true,
         ready: {action: "interaction:load:" + window.location.href, data: ""},
         underlay: {items: [{id: "find", layout: "0,0,12,1", type: "space", color: "msc-black-soft", label: ""}]},
         template: {
