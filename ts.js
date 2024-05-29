@@ -188,14 +188,18 @@ function find(R){
             case "bs":
                 S = S ? S.substr(0, S.length - 1) : "";
                 d.data = "";
-            default: a("update:content:underlay:s", {label: (S += d.data) ? (S + "{txt:msx-white-sfot:_") : "{txt:msx-white-soft:dic:input|Enter the word(s) to search}"});
+            default: a("update:content:underlay:find", {label: (S += d.data) ? (S + "{txt:msx-white-sfot:_") : "{txt:msx-white-soft:dic:input|Enter the word(s) to search}"});
         }
     };
     this.request = function(_, f){f({
         type: "list", extension: "rutor", items: R ? r : e,
         ready: {action: "interaction:load:" + window.location.href, data: ""},
-        underlay: {items: [{id: "s", type: "space", color: "msc-black-soft", label: ""}]},
-        template: {type: "button", layout: "0,0,1,1", area: R ? "0,1,12,5" : "1,1,10,5", action: "interaction:commit", data: "{context:label}"},
+        underlay: {items: [{id: "find", layout: "0,0,12,1", type: "space", color: "msc-black-soft", label: ""}]},
+        template: {
+            type: "button", enumerate: false,
+            layout: "0,0,1,1", area: R ? "0,1,12,5" : "1,1,10,5", 
+            action: "interaction:commit", data: "{context:label}"
+        },
     })};
 }
 function trn(A){
