@@ -226,7 +226,7 @@ TVXPluginTools.onReady(function() {
         this.handleRequest = function(d, f){
             if(p[i]) p[i].request(d, f);
             else {
-                TVXInteractionPlugin.errror("wrong request id: " + i);
+                TVXInteractionPlugin.error("wrong request id: " + i);
                 f();
             }
         };
