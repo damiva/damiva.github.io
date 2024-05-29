@@ -2,19 +2,19 @@ function size(s){
     var i = s == 0 ? 0 : Math.floor(Math.log(s) / Math.log(1024));
     return (s / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'KB', 'MB', 'GB', 'TB'][i];
 }
-function opts(h){
+function opts(h, os){
     var o = {headline: h, caption: h, template: {layout: "0,0,8,1", type: "control", enumerate: false}, items: []};
-    for(i = 1; i < arguments.length; i++) if(arguments[i]){
-        if(arguments[i].key){
-            arguments[i].icon = "msx-" + arguments[i].key + ":stop";
-            o.caption += "{tb}{ico:" + arguments[i].icon + "} " + (arguments[i].key == "yellow" ? "{ico:refresh}" : arguments[i].label);
-        }else if(arguments[i].enable === false){
-            o.caption += " " + arguments[i].label;
+    os.forEach(function(i){if(i){
+        if(i.key){
+            i.icon = "msx-" + i.key + ":stop";
+            o.caption += "{tb}{ico:" + i.icon + "} " + (i.key == "yellow" ? "{ico:refresh}" : i.label);
+        }else if(i.enable === false){
+            o.caption += " " + i.label;
             o.template.type = "button";
-            o.template.enumerate = true;
+            o.template.enumerate = false;
         }
-        o.items.push(arguments[i]);
-    }
+        o.items.push(i);
+    }});
     return o.items.length ? o : null;
 }
 function menu(S, A, R){
@@ -22,11 +22,10 @@ function menu(S, A, R){
         {icon: "bookmarks", label: "{dic:trns|My torrents}", data: "request:interaction:trns@" + window.location.href},
         {icon: "search", label: "{dic:srch|Search torrents}", data: "request:interaction:find@" + window.location.href},
         {icon: "folder", label: "{dic:fls|My files}", data: "request:interaction:access:" + S + "@" + window.location.protocol + "//nb.msx.benzac.de/interaction"},
-    ], options: opts(
-            "{dic:caption:options|Opts}:",
+    ], options: opts("{dic:caption:options|opts}:", [
             {key: "red", label: R ? "Switch to english" : "Перевести на русский", action: "[execute:request:interaction:menu@" + window.location.href + "|reload]"},
             {key: "yellow", label: "{dic:label:reload|Reload} {dic:caption:menu|menu}", action: "[cleanup|reload:menu]"}
-        )
+        ])
     };
     this.request = function(d, f){
         if(d) TVXServices.storage.set("ts:russian", !R);
@@ -96,12 +95,11 @@ function trns(A){
                 layout: l.length ? "0,0,6,2" : "0,0,12,1", imageWidth: 1.3, imageFiller: "height", 
                 action: "execute:request:interaction:trn@" + window.location.href, 
                 data: h ? {link: "{context:magnet}", title: "{context:headline}", poster: "{context:image}", category: "{context:category}"} : "{context:id}",
-                options: h || !l.length ? null : opts(
-                    "{dic:caption:options|Opts}:",
+                options: h || !l.length ? null : opts("{dic:caption:options|opts}:", [
                     {key: "red", label: "{dic:rem|Remove the torrent}", action: "request:interaction:trns@" + window.location.href, data: {action: "rem", hash: "{context:id"}},
                     {key: "green", label: "{dic:drop|Drop the torrent}", action: "request:interaction:trns@" + window.location.href, data: {action: "drop", hash: "{context:id"}},
                     {key: "yellow", label: "{dic:label:reload|Reload} {dic:label:content|Content}", action: "[cleanup|reload:content]"}
-                )
+                ])
             },
             items: l.length ? l : [{icon: h ? "west" : "refresh", label: "{dic:empty|Nothing found}", action: h ? "back" : "reload:content"}]
         }
@@ -118,7 +116,7 @@ function trns(A){
             dataType: d.hash ? "text" : "json"
         });
         else TVXServices.ajax.get(A + "/search/?query=" + encodeURIComponent(d.find), {
-            success: function(l){f(L(l, d.find, f.cat))},
+            success: function(l){f(L(l, d.find, d.cat))},
             error: function(e){f({action: "error:" + e})}
         });
     };
@@ -158,7 +156,7 @@ function find(R){
         if(K) k.push({type: "space"});
         k.push(
             {label: "{ico:clear}", titleFooter: "{ico:skip-previous}", key: "home", data: "cl", offset: "0,0,1,0"}, {type: "space"},
-            {label: "{ico:space-bar}", titleFooter: "{ico:fast-forward}", key: "insert|yellow", data: " ", progress: 1, progressColor: "msx-yellow", offset: "0,0,1,0"}, {type: "space"},
+            {label: "{ico:space-bar}", titleFooter: "{ico:fast-forward}", key: "space|insert|yellow", data: " ", progress: 1, progressColor: "msx-yellow", offset: "0,0,1,0"}, {type: "space"},
             {label: "{ico:language}", titleFooter: "{ico:skip-next}", key: "tab|end", data: "ck", offset: "0,0,1,0", id: "lang"}, {type: "space"}, {type: "space"}
         );
         if(K) k.push({type: "space"});
@@ -199,6 +197,9 @@ function find(R){
             layout: "0,0,1,1", area: R ? "0,1,12,5" : "1,1,10,5", 
             action: "interaction:commit", data: "{context:label}"
         },
+        options: opts("{dic:cat|Category}:", ["All","Movie","Series","DocMovie","DocSeries","TVShow","CartoonMovie","CartoonSeries","Anime"].map(function(c){
+            return {label: "{dic:" + c + "|" + c + "}", action: "interaction:commit", data: C, enable: c != C};
+        }))
     })};
 }
 function trn(A){
