@@ -125,7 +125,7 @@ function trns(A){
     };
 }
 function find(R){
-    var S = TVXServices.storage.getFullStr("ts:search"), C = "All",
+    var S = TVXServices.storage.getFullStr("ts:search", ""), C = "All",
         e = [
             ["q","w","e","r","t","y","u","i","o","p","bracket_open","bracket_close"],
             ["a","s","d","f","g","h","j","k","l","semicolon","quote"],

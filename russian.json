@@ -3,8 +3,8 @@
    "author":"damiva",
    "version":"0.13",
    "properties":{
-      "caption:menu":"Меню",
-      "caption:options":"Опции",
+      "caption:menu":"меню",
+      "caption:options":"опции",
       "caption:player":"Плеер",
       "format:date":"dd/mm/yy",
       "format:day":"D dd/mm",
