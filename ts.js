@@ -223,7 +223,7 @@ TVXPluginTools.onReady(function() {
                 trn: new torrent(s)
             };
         this.handleData = p.srch.data;
-        this.handleRequest = function(d, f){
+        this.handleRequest = function(i, d, f){
             if(p[i]) p[i].request(d, f);
             else {
                 TVXInteractionPlugin.error("wrong request id: " + i);
