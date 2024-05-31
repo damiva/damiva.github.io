@@ -93,7 +93,7 @@ function torrents(){
             ? ("{ico:msx-white:filter-list} {dic:cat|Category}: " + "{dic:" + c + "|" + c + "}")
             : ("{ico:msx-white:" + (h ? "search" : "bookmarks") + "} " + l.length),
         template: {
-            layout: "0,0,6,2", imageWidth: 1.3, imageFiller: "height", action: "execute:request:interaction:trns",
+            layout: "0,0,6,2", imageWidth: 1.3, imageFiller: "height", action: "execute:request:interaction:trnt",
             data: h ? {link: "{context:magnet}", title: "{context:headline}", poster: "{context:image}", category: "{context:cat}"} : {link: "{context:id}"},
             options: h ? null : opts("", [
                 {key: "red", label: "{dic:label:caontent|Content}", action: "[cleanup|reload:content]"},
