@@ -27,8 +27,7 @@ function opts(h, o){
             else r.caption += " " + i.label;
         }else if(i.enable === false){
             r.caption += " " + i.label;
-            r.template.enumerate = true;
-            r.template.type = "buton";
+            r.template = {type: "button", layout: "0,0,4,1", area: "0,1,8,5", action: "interaction:commit"};
         }
         r.items.push(i);
     }});
@@ -192,8 +191,10 @@ function search(K){
         template: {
             type: "button", layout: "0,0,1,1", area: K ? "0,1,12,5" : "1,1,10,5",
             action: "interaction:commit", data: "{context:label}", enumerate: false,
-        }, options: opts("{dic:cat|Category}:", ["All","Movie","Series","DocMovie","DocSeries","TVShow","CartoonMovie","CartoonSeries","Anime"].map(function(c){
-            return {label: "{dic:" + c + "|" + c + "}", action: "interaction:commit", data: C, enable: c != C};
+        }, options: opts("{dic:cat|Category}:", ["All","","Movie","Series","DocMovie","DocSeries","TVShow","CartoonMovie","CartoonSeries","Anime"].map(function(c,i){
+            return !c 
+                ? {type: "space"}
+                : {label: "{dic:" + c + "|" + c + "}", data: c, enable: c != C, offset: i ? undefined : "0,-.5,4,0"};
         }))
     })};
 }
