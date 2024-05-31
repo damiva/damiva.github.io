@@ -21,9 +21,11 @@ function opts(h, o){
     }
     o.forEach(function(i){if(i){
         if(i.key){
-            i.icon = "msx-" + i.key + ":" + (i.icon || "refresh");
-            r.caption += "{tb}{ico:" + i.icon + "}";
-            if(i.key == "red") i.label = "{dic:label:reload} " + i.label;
+            i.progress = 1;
+            i.progressColor = "msx-" + i.key;
+            if(!i.icon) i.icon = "refresh";
+            r.caption += "{tb}{col:" + i.progressColor + "}{ico:" + i.icon + "}";
+            if(i.key == "red") i.label = "{dic:label:reload|Reload} " + i.label;
             else r.caption += " " + i.label;
         }else if(i.enable === false){
             r.caption += " " + i.label;
@@ -83,7 +85,7 @@ function torrents(){
         headline: h ? ("{ico:search} " + h) : "",
         extension: c
             ? ("{ico:msx-white:filter-list} {dic:cat|Category}: " + "{dic:" + c + "|" + c + "}")
-            : ("ico:msx-white:" + (h ? "search" : "bookmarks") + "} " + l.length),
+            : ("{ico:msx-white:" + (h ? "search" : "bookmarks") + "} " + l.length),
         template: {
             layout: "0,0,6,2", imageWidth: 1.3, imageFiller: "height", action: "execute:request:interaction:trns",
             data: h ? {link: "{context:magnet}", title: "{context:headline}", poster: "{context:image}", category: "{context:cat}"} : "{context:id}",
@@ -104,7 +106,7 @@ function torrents(){
         );
         else if (!d.find) f({action: "warn:{dic:empty|Nothing found}"});
         else ajax(
-            "/search/?query=" + encodeURIComponent(d.data.find),
+            "/search/?query=" + encodeURIComponent(d.find),
             function(l){
                 l = F(l, d.cat = d.cat == "All" ? "" : d.cat);
                 f(l.length
