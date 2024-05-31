@@ -218,7 +218,7 @@ function torrent(){
     this.handleRequest = function(d, f){
         if(!d || !d.data) ajax(
             "/stream/?stat" + ["link", "title", "poster", "category"].map(function(k){
-                return D[k] ? ("&" + k + "=" + encodeURIComponent(k)) : "";
+                return D[k] ? ("&" + k + "=" + encodeURIComponent(D[k])) : "";
             }).join(""),
             function(t){ajax("/msx/trn?hash=" + t.hash, function(s){
                 var ds = [], fs = [], sf = stor("folders"), cm = stor("compress"),
