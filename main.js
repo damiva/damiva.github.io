@@ -50,9 +50,14 @@ function torrents(){
         id: t.hash,
         headline: t.title,
         image: t.poster || "", icon: t.poster ? "" : "msx-white-soft:bookmark",
-        titleFooter: "{msx-white:attach-file} " + size(t.torrent_size),
+        titleFooter: "{ico:msx-white:attach-file} " + size(t.torrent_size),
         group: "{ico:" + (t.category == "movie" ? "movie" : t.category == "tv" ? "live-tv" : t.category == "music" ? "audiotrack" : "more-horiz") + "}",
-        live: t.stat < 5 ? {type: "setup", action: "execute:" + addr + "/msx/trn", data: "update:content:" + t.hash} : null
+        live: t.stat < 5 ? {type: "setup", action: "execute:" + addr + "/msx/trn", data: "update:content:" + t.hash} : null,
+        options: opts("", [
+            {key: "red", label: "{dic:label:caontent|Content}", action: "[cleanup|reload:content]"},
+            t.stat > 4 ? null : {key: "green", icon: "stop", label: "{dic:drop|Drop the torrent}", data: {action: "drop", hash: "{context:id}"}, action: "execute:request:interaction:trns@" + window.location.href},
+            {key: "yellow", icon: "delete", label: "{dic:rem|Remove the torrent}", data: {action: "rem", hash: "{context:id}"}, action: "execute:request:interaction:trns@" + window.location.href},
+        ])
     }})};
     var Q = function(q){
         var qs = {
@@ -78,7 +83,7 @@ function torrents(){
             image: t.Poster = t.Poster || t.IMDBID && (addr + "/msx/imdb/" + t.IMDBID) || "",
             icon: t.Poster ? "" : "msx-white-soft:search",
             text: Q(t.AudioQuality),
-            titleFooter: "{msx-white:attach-file} " + t.Size,
+            titleFooter: "{ico:msx-white:attach-file} " + t.Size,
             stamp: "{ico:north} " + t.Peer + " {ico:south} " + t.Seed,
             magnet: t.Magnet,
             group: "{dic:" + t.Categories + "|" + t.Categories + "}",
@@ -94,13 +99,11 @@ function torrents(){
             : ("{ico:msx-white:" + (h ? "search" : "bookmarks") + "} " + l.length),
         template: {
             layout: "0,0,6,2", imageWidth: 1.3, imageFiller: "height", action: "execute:request:interaction:trnt",
-            data: h ? {link: "{context:magnet}", title: "{context:headline}", poster: "{context:image}", category: "{context:cat}"} : {link: "{context:id}"},
-            options: opts("", h ? [{key: "yellow", icon: "arrow-back", label: "{dic:label:cancel|Cancel}", action: "[cleanup|back]"}] : [
-                {key: "red", label: "{dic:label:caontent|Content}", action: "[cleanup|reload:content]"},
-                {key: "green", icon: "stop", label: "{dic:drop|Drop the torrent}", data: {action: "drop", hash: "{context:id}"}, action: "execute:request:interaction:trns@" + window.location.href},
-                {key: "yellow", icon: "delete", label: "{dic:rem|Remove the torrent}", data: {action: "rem", hash: "{context:id}"}, action: "execute:request:interaction:trns@" + window.location.href},
-            ])
+            data: h 
+                ? {link: "{context:magnet}", title: "{context:headline}", poster: "{context:image}", category: "{context:cat}"}
+                : {link: "{context:id}"},
         },
+        options: h ? opts("", [{key: "yellow", icon: "arrow-back", label: "{dic:label:cancel|Cancel}", action: "[cleanup|back]"}]) : null
     }};
     this.handleRequest = function(d, f){
         var r = !d || !d.data;
