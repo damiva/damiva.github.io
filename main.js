@@ -67,7 +67,7 @@ function torrents(){
     };
     var F = function(l, c){
         var r = [];
-        l.forEach(function(t){if(!c || l.Categories == c) r.push({
+        l.forEach(function(t){if(!c || t.Categories == c) r.push({
             headline: t.Title,
             image: t.Poster = t.Poster || t.IMDBID && (addr + "/msx/imdb/" + t.IMDBID) || "",
             icon: t.Poster ? "" : "msx-white-soft:search",
