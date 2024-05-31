@@ -34,7 +34,7 @@ function opts(h, o){
     }});
     return r.items.length ? r : null;
 }
-function size(){
+function size(s){
     var i = s == 0 ? 0 : Math.floor(Math.log(s) / Math.log(1024));
     return (s / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'KB', 'MB', 'GB', 'TB'][i];
 }
