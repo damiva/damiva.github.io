@@ -1,6 +1,6 @@
 var addr = "";
 function ajax(){
-    var u = "//" + addr, d = null, s = {};
+    var u = addr, d = null, s = {};
     for(var i = 1; i < arguments.length; i++) switch(typeof arguments[i]){
         case "object": d = arguments[i]; break;
         case "string": u += arguments[i]; break;
@@ -191,7 +191,7 @@ function torrent(){
                 return D[k] ? (k + "=" + encodeURIComponent(k)) : "";
             }),
             function(d){
-                
+
             },
             function(e){
                 TVXInteractionPlugin.error(e);
@@ -213,7 +213,7 @@ TVXPluginTools.onReady(function() {
         ], options: opts("", [
             {key: "red", label: "{dic:caption:menu|menu}", action: "[cleanup|reload:menu]"},
             {key: "yellow", icon: "translate", label: R ? "Switch to english" : "Перевести на русский", action: "execute:request:interaction:menu@" + window.location.href}
-        ]), logo: (addr = window.location.protocol + "//" + addr) + "/logo.png"};
+        ]), logo: (addr = "//" + addr) + "/logo.png"};
         this.handleData = P.find.handleData;
         this.handleRequest = function(i, d, f){
             if (P[i] ){
@@ -223,7 +223,7 @@ TVXPluginTools.onReady(function() {
                 f({action: "rload"});
             } else ajax("/settings", {action: "get"}, function(d){
                 M.menu[1].enable = d.EnableRutorSearch === true;
-                if(typeof d == "string") TVXInteractionPlugin.error(e);
+                if(typeof d == "string") TVXInteractionPlugin.error(d);
                 ajax("/files", function(d){
                     M.menu[2].display = d ? true : false;
                     f(M);
