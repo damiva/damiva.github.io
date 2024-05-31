@@ -53,6 +53,7 @@ function torrents(){
         titleFooter: "{ico:msx-white:attach-file} " + size(t.torrent_size),
         group: "{ico:" + (t.category == "movie" ? "movie" : t.category == "tv" ? "live-tv" : t.category == "music" ? "audiotrack" : "more-horiz") + "}",
         live: t.stat < 5 ? {type: "setup", action: "execute:" + addr + "/msx/trn", data: "update:content:" + t.hash} : null,
+        stamp: "", stampColor: "",
         options: opts("", [
             {key: "red", label: "{dic:label:caontent|Content}", action: "[cleanup|reload:content]"},
             t.stat > 4 ? null : {key: "green", icon: "stop", label: "{dic:drop|Drop the torrent}", data: {action: "drop", hash: "{context:id}"}, action: "execute:request:interaction:trns@" + window.location.href},
@@ -259,9 +260,9 @@ function torrent(){
                     action: "execute:request:interaction:trns@" + window.location.href, data: {
                         action: "add", save_to_db: true, poster: t.poster, title: t.title, category: t.category
                     }
-                })
-                O.unshift({key: "red", label: "{dic:label:content|Content}", action: "[cleanup|reload:content]"})
-                return {
+                });
+                O.unshift({key: "red", label: "{dic:label:content|Content}", action: "[cleanup|reload:content]"});
+                f({
                     type: "list", headline: t.title, compress: cm, items: fs,
                     ready: fs.length > 1 && stor("viewed") ? {action: "execute:request:interaction:trnt@" + window.location.href, data: t.hash} : null,
                     overlay: {items: {id: t.hash, type: "space", color: "none", stamp: "", stampColor: "", live: {
@@ -273,8 +274,9 @@ function torrent(){
                         "control:type": "extended",
                         "resume:key": "url",
                         "trigger:complete": "[player:auto:next|resume:cancel]"
-                    }}
-                }
+                    }},
+                    options: opts("", O)
+                });
             })},
             function(e){
                 TVXInteractionPlugin.error(e);
