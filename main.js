@@ -303,7 +303,7 @@ TVXPluginTools.onReady(function() {
         ], options: opts("", [
             {key: "red", label: "{dic:caption:menu|menu}", action: "[cleanup|reload:menu]"},
             {key: "yellow", icon: "translate", label: R ? "Switch to english" : "Перевести на русский", action: "[execute:request:interaction:menu@" + window.location.href + "|reload]", data: "russian"}
-        ]), logo: (addr = "//" + addr) + "/logo.png"};
+        ]), logo: (addr = window.location.protocol + "//" + addr) + "/logo.png"};
         this.handleData = P.find.handleData;
         this.handleRequest = function(i, d, f){
             if (P[i] ) P[i].handleRequest(d, f);
