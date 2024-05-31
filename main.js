@@ -279,7 +279,12 @@ function torrent(){
                 f();    
             }
         );
-        else if(d.link){
+        else if(typeof d.data == "string") ajax("/viewed", {action: "list", hash: d.data}, function(l){
+            var i = 1;
+            if(typeof l == "object") l.forEach(function(f){if(f.file_index > i) i = f.file_index});
+            f({action: "focus:" + i});
+        });
+        else if(d.data.link){
             D = d.data;
             f({action: "content:request:interaction:trnt"});
         }else f({action: "request link is not set"});
