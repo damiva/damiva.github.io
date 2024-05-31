@@ -265,9 +265,11 @@ function torrent(){
                 f({
                     type: "list", headline: t.title, compress: cm, items: fs,
                     ready: fs.length > 1 && stor("viewed") ? {action: "execute:request:interaction:trnt@" + window.location.href, data: t.hash} : null,
-                    overlay: {items: {id: t.hash, type: "space", color: "none", stamp: "", stampColor: "", live: {
-                        type: "setup", action: "execute:" + addr + "/msx/trn", data: "update:content:overlay:" + t.hash
-                    }}},
+                    overlay: {compress: false, items: [
+                        {id: t.hash, layout: "9,0,3,1", offset: "0,-1,0,0", type: "space", color: "none", stamp: "", stampColor: "", live: {
+                            type: "setup", action: "execute:" + addr + "/msx/trn", data: "update:content:overlay:" + t.hash
+                        }}
+                    ]},
                     template: {layout: cm ? "0,0,16,1" : "0,0,12,1", type: "control", progress: -1, playerLabel: t.title, properties: {
                         "info:text": "{context:folder}{ico:{context:icon}} {context:label}",
                         "info:image": d.poster || "default",
@@ -298,7 +300,7 @@ function torrent(){
 TVXPluginTools.onReady(function() {
     TVXInteractionPlugin.setupHandler(new function(){
         addr = TVXServices.storage.getFullStr("ts:server", "");
-        var R = TVXServices.storage.getBool("ts:russian");
+        var R = stor("russian");
         var P = {trns: new torrents(), find: new search(R), trnt: new torrent()};
         var M = {menu: [
             {icon: "bookmarks", label: "{dic:trns|My torrents}", data: "request:interaction:trns@" + window.location.href},
