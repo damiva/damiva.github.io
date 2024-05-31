@@ -95,7 +95,7 @@ function torrents(){
         template: {
             layout: "0,0,6,2", imageWidth: 1.3, imageFiller: "height", action: "execute:request:interaction:trnt",
             data: h ? {link: "{context:magnet}", title: "{context:headline}", poster: "{context:image}", category: "{context:cat}"} : {link: "{context:id}"},
-            options: opts("", h ? [{key: "yellow", icon: "arrow-back", label: "{dic:label:cancel|Cancel}", action: "back"}] : [
+            options: opts("", h ? [{key: "yellow", icon: "arrow-back", label: "{dic:label:cancel|Cancel}", action: "[cleanup|back]"}] : [
                 {key: "red", label: "{dic:label:caontent|Content}", action: "[cleanup|reload:content]"},
                 {key: "green", icon: "stop", label: "{dic:drop|Drop the torrent}", data: {action: "drop", hash: "{context:id}"}, action: "execute:request:interaction:trns@" + window.location.href},
                 {key: "yellow", icon: "delete", label: "{dic:rem|Remove the torrent}", data: {action: "rem", hash: "{context:id}"}, action: "execute:request:interaction:trns@" + window.location.href},
@@ -233,8 +233,8 @@ function torrent(){
                     if(t < 0 || t > 1) return;
                     f.path = f.path.split("/");
                     f.name = f.path.pop();
-                    f.shift();
-                    if((f.path = f.path.join("/")) && (!ds.length || ds[ds.length - 1].label != f.path)){
+                    if(f.path.length > 0) f.path.shift();
+                    if((f.path = f.path.length ? f.path.join("/") : "") && (!ds.length || ds[ds.length - 1].label != f.path)){
                         ds.push({label: f.path, action: "[cleanup|focus:" + f.id + "]"});
                         if(sf) fs.push({type: "space", label: "{col:msx-yellow}" + f.path})
                     }
