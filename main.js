@@ -82,9 +82,8 @@ function torrents(){
             headline: t.Title,
             image: t.Poster = t.Poster || t.IMDBID && (addr + "/msx/imdb/" + t.IMDBID) || "",
             icon: t.Poster ? "" : "msx-white-soft:search",
-            text: Q(t.AudioQuality),
-            titleFooter: "{ico:msx-white:attach-file} " + t.Size,
-            stamp: "{ico:north} " + t.Peer + " {ico:south} " + t.Seed,
+            titleFooter: Q(t.AudioQuality),
+            stamp: "{ico:attach-file} " + t.Size + "{tb}{ico:north} " + t.Peer + " {ico:south} " + t.Seed,
             magnet: t.Magnet,
             group: "{dic:" + t.Categories + "|" + t.Categories + "}",
             cat: t.Categories == "Movie" ? "movie" : t.Categories == "Series" || t.Categories == "TVShow" ? "tv" : t.Categories
