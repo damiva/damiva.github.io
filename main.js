@@ -16,7 +16,7 @@ function ajax(){
 }
 function opts(h, o){
     var r = {
-        headline: h = h || "{dic:caption:options|opt/menu}:", caption: h,
+        headline: h = h || "{dic:caption:options|opt/menu}", caption: h + ":",
         template: {layout: "0,0,8,1", type: "control", enumerate: false}, items: []
     }
     o.forEach(function(i){if(i){
@@ -39,6 +39,12 @@ function size(s){
     var i = s == 0 ? 0 : Math.floor(Math.log(s) / Math.log(1024));
     return (s / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'KB', 'MB', 'GB', 'TB'][i];
 }
+function stor(k, c){
+    var v = TVXServices.storage.getBool(k = "ts:" + k, false);
+    if(c) TVXServices.storage.set(k, v = !v);
+    return v;
+}
+function icon(v){return v ? "msx-white:check-box" : "check-box-outline-blank"}
 function torrents(){
     var B = function(l){return l.map(function(t){return {
         id: t.hash,
@@ -88,7 +94,7 @@ function torrents(){
             : ("{ico:msx-white:" + (h ? "search" : "bookmarks") + "} " + l.length),
         template: {
             layout: "0,0,6,2", imageWidth: 1.3, imageFiller: "height", action: "execute:request:interaction:trns",
-            data: h ? {link: "{context:magnet}", title: "{context:headline}", poster: "{context:image}", category: "{context:cat}"} : "{context:id}",
+            data: h ? {link: "{context:magnet}", title: "{context:headline}", poster: "{context:image}", category: "{context:cat}"} : {link: "{context:id}"},
             options: h ? null : opts("", [
                 {key: "red", label: "{dic:label:caontent|Content}", action: "[cleanup|reload:content]"},
                 {key: "green", icon: "stop", label: "{dic:drop|Drop the torrent}", data: {action: "drop", hash: "{context:id}"}, action: "execute:request:interaction:trns@" + window.location.href},
@@ -201,29 +207,84 @@ function search(K){
     })};
 }
 function torrent(){
+    var X = [
+        ["3g2","3gp","aaf","asf","avchd","avi","drc","flv","m2ts","ts","m2v","m4p","m4v","mkv","mng","mov","mp2","mp4","mpe","mpeg","mpg","mpv","mxf","nsv","ogg","ogv","qt","rm","rmvb","roq","svi",".vob","webm","wmv","yuv"],
+        ["aac","aiff","ape","au","flac","gsm","it","m3u","m4a","mid","mod","mp3","mpa","pls","ra","s3m","sid","wav","wma","xm"]
+    ];
     var D = null;
+    var O = [["compress", "compress", "List"], ["folders", "folder-open"], "Show", ["viewed", "last-page", "Autofocus last"]].map(function(k){return {
+        icon: k[1], label: "{dic:" + k[0] + "|" + k[2] + " " + k[0] + "}", data: k[0], action: "execute:request:interaction:menu@" + window.location.href
+    }});
     this.handleRequest = function(d, f){
-        if (d && D.data) {
-            if(typeof d.data == "string") D = {link: d.data};
-            else if(d.data.link) D = d.data;
-            else D = null;
-            TVXInteractionPlugin.executeAction(D ? "content:request:interaction:trnt" : "error:no torrent link set");
-        } else if (!D) {
-            TVXInteractionPlugin.error("no torrent link set");
-            f();
-        } else ajax(
+        if(!d || !d.data) ajax(
             "/stream/?stat&" + ["link", "title", "poster", "category"].map(function(k){
                 return D[k] ? (k + "=" + encodeURIComponent(k)) : "";
             }),
-            function(d){
-
-            },
+            function(t){ajax("/msx/trn?hash=" + t.hash, function(s){
+                var ds = [], fs = [], sf = stor("folders"), cm = stor("compress"),
+                    u = addr + "/stream/?play&link=" + encodeURIComponent(D.link) + "&index=";
+                t.file_stats.forEach(function(f){
+                    var t = f.path.lastIndexOf(".");
+                    if(t >= 0){
+                        var x = f.path.substr(t + 1).toLowerCase();
+                        if(x) for(t = 0; t < X.length; t++) if(X[t].indexOf(x) >= 0) break;
+                        else t = -1;
+                    }
+                    if(t < 0 || t > 1) return;
+                    f.path = f.path.split("/");
+                    f.name = f.path.pop();
+                    f.shift();
+                    if((f.path = f.path.join("/")) && (!ds.length || ds[ds.length - 1].label != f.path)){
+                        ds.push({label: f.path, action: "[cleanup|focus:" + f.id + "]"});
+                        if(sf) fs.push({type: "space", label: "{col:msx-yellow}" + f.path})
+                    }
+                    fs.push({
+                        id: TVXTools.strValue(f.id),
+                        icon: t ? "audiotrack" : "movie",
+                        label: f.path[0],
+                        group: "{ico:" + (t ? "audiotrack}" : "movie}"),
+                        folder: f.path ? ("{ico:msx-yellow:folder} " + f.path + "{br}") : "",
+                        extensionLabel: size(f.length),
+                        action: t ? ("audio:" + u + f.id) : ("video:resolve:request:interaction:" + u + f.id + "@http://msx.benzac.de/interaction/play.html")
+                    });
+                });
+                if(ds.length > 1) O.unshift({icon: "folder", key: "yellow", label: "{dic:folder|Select folder}", action: "panel:data", data: {
+                    type: "list", headline: "{dic:folder|To folder}:", compress: true, items: ds,
+                    template: {layout: "0,0,10,1", type: "control", icon: "msx-yellow:folder"}
+                }});
+                if(s !== true) O.unshift({
+                    icon: "bookmark-add", key: "green", label: "{dic:save|Save the torrent}",
+                    action: "execute:request:interaction:trns@" + window.location.href, data: {
+                        action: "add", save_to_db: true, poster: t.poster, title: t.title, category: t.category
+                    }
+                })
+                O.unshift({key: "red", label: "{dic:label:content|Content}", action: "[cleanup|reload:content]"})
+                return {
+                    type: "list", headline: t.title, compress: cm, items: fs,
+                    ready: fs.length > 1 && stor("viewed") ? {action: "execute:request:interaction:trnt@" + window.location.href, data: t.hash} : null,
+                    overlay: {items: {id: t.hash, type: "space", color: "none", stamp: "", stampColor: "", live: {
+                        type: "setup", action: "execute:" + addr + "/msx/trn", data: "update:content:overlay:" + t.hash
+                    }}},
+                    template: {layout: cm ? "0,0,16,1" : "0,0,12,1", type: "control", progress: -1, playerLabel: t.title, properties: {
+                        "info:text": "{context:folder}{ico:{context:icon}} {context:label}",
+                        "info:image": d.poster || "default",
+                        "control:type": "extended",
+                        "resume:key": "url",
+                        "trigger:complete": "[player:auto:next|resume:cancel]"
+                    }}
+                }
+            })},
             function(e){
                 TVXInteractionPlugin.error(e);
                 f();    
             }
         );
+        else if(d.link){
+            D = d.data;
+            f({action: "content:request:interaction:trnt"});
+        }else f({action: "request link is not set"});
     };
+    ["last", "compress", "folders"].forEach(function(k){S[k] = TVXServices.storage.getBool("ts:" + k, false)});
 }
 //initial menu:
 TVXPluginTools.onReady(function() {
@@ -237,16 +298,13 @@ TVXPluginTools.onReady(function() {
             {icon: "folder", label: "{dic:fls|My files}", data: "request:interaction:access:" + addr + "@" + window.location.protocol + "//nb.msx.benzac.de/interaction"}
         ], options: opts("", [
             {key: "red", label: "{dic:caption:menu|menu}", action: "[cleanup|reload:menu]"},
-            {key: "yellow", icon: "translate", label: R ? "Switch to english" : "Перевести на русский", action: "execute:request:interaction:menu@" + window.location.href, data: "russian"}
+            {key: "yellow", icon: "translate", label: R ? "Switch to english" : "Перевести на русский", action: "[execute:request:interaction:menu@" + window.location.href + "|reload]", data: "russian"}
         ]), logo: (addr = "//" + addr) + "/logo.png"};
         this.handleData = P.find.handleData;
         this.handleRequest = function(i, d, f){
-            if (P[i] ){
-                P[i].handleRequest(d, f);
-            } else if(d && d.data) {
-                TVXServices.storage.set("ts:russian", !R);
-                f({action: "rload"});
-            } else ajax("/settings", {action: "get"}, function(d){
+            if (P[i] ) P[i].handleRequest(d, f);
+            else if(d && d.data) stor(d.data, true);
+            else ajax("/settings", {action: "get"}, function(d){
                 M.menu[1].enable = d.EnableRutorSearch === true;
                 if(typeof d == "string") TVXInteractionPlugin.error(d);
                 ajax("/files", function(d){
