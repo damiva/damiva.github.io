@@ -18,7 +18,7 @@
                             name: "TorrServer Plugin",
                             version: "0.1.133",
                             reference: "request:interaction:init@" + window.location.origin + "/main.html",
-                            dictionary: TVXServices.storage.getBool("ts:russian", true) ? (window.location.origin + "/russian.json") : null
+                            dictionary: TVXServices.storage.getBool("ts:russian", false) ? (window.location.origin + "/russian.json") : null
                         });
                     }
                 }});
