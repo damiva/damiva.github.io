@@ -74,14 +74,14 @@ function torrents(){
         },
     }};
     this.handleRequest = function(d, f){
-        var r = !d;
+        var r = !d || !d.data;
         d = r ? {action: "list"} : d.data;
         if (d.action) ajax(
-            "/torrenst", {action: "list"}, !r,
+            "/torrents", {action: "list"}, !r,
             r ? function(l){f(H(B(l)))} : function(){f({action: "[cleanup|reload:content|success]"})},
             r ? function(e){TVXInteractionPlugin.error(e); f()} : function(e){f({action: "error:" + e})}
         );
-        else if (!d || !d.find) f({action: "warn:{dic:empty|Nothing found}"});
+        else if (!d.find) f({action: "warn:{dic:empty|Nothing found}"});
         else ajax(
             "/search/?query=" + encodeURIComponent(d.data.find),
             function(l){
@@ -159,7 +159,7 @@ function search(K){
                 d.data = "";
             default: TVXInteractionPlugin.executeAction(
                 "update:content:underlay:search",
-                {label: (S += d.data) ? (S + "{txt:msx-white-soft:_") : "{txt:msx-white-soft:dic:input|Enter the word(s) to search}"}
+                {label: (S += d.data) ? (S + "{txt:msx-white-soft:_}") : "{txt:msx-white-soft:dic:input|Enter the word(s) to search}"}
             );
         }
     };
@@ -176,13 +176,11 @@ function search(K){
 function torrent(){
     var D = null;
     this.handleRequest = function(d, f){
-        if (d) {
-            D = null;
-            if(!d.data) f({action: "error: empty request data"});
-            else if(typeof d.data == "string") D = {link: d.data};
-            else if(!d.data.link) f({action: "error: empty request data.link"});
-            else D = d.data;
-            if(D) f({action: "content:request:interaction:trnt"});
+        if (d && D.data) {
+            if(typeof d.data == "string") D = {link: d.data};
+            else if(d.data.link) D = d.data;
+            else D = null;
+            TVXInteractionPlugin.executeAction(D ? "content:request:interaction:trnt" : "error:no torrent link set");
         } else if (!D) {
             TVXInteractionPlugin.error("no torrent link set");
             f();
@@ -209,16 +207,16 @@ TVXPluginTools.onReady(function() {
         var M = {menu: [
             {icon: "bookmarks", label: "{dic:trns|My torrents}", data: "request:interaction:trns@" + window.location.href},
             {icon: "search", label: "{dic:srch|Search torrents}", data: "request:interaction:find@" + window.location.href},
-            {icon: "folder", label: "{dic:fls|My files", data: "request:interaction:access:" + addr + "@" + window.location.protocol + "//nb.msx.benzac.de/interaction"}
+            {icon: "folder", label: "{dic:fls|My files}", data: "request:interaction:access:" + addr + "@" + window.location.protocol + "//nb.msx.benzac.de/interaction"}
         ], options: opts("", [
             {key: "red", label: "{dic:caption:menu|menu}", action: "[cleanup|reload:menu]"},
-            {key: "yellow", icon: "translate", label: R ? "Switch to english" : "Перевести на русский", action: "execute:request:interaction:menu@" + window.location.href}
+            {key: "yellow", icon: "translate", label: R ? "Switch to english" : "Перевести на русский", action: "execute:request:interaction:menu@" + window.location.href, data: "russian"}
         ]), logo: (addr = "//" + addr) + "/logo.png"};
         this.handleData = P.find.handleData;
         this.handleRequest = function(i, d, f){
             if (P[i] ){
                 P[i].handleRequest(d, f);
-            } else if(d) {
+            } else if(d && d.data) {
                 TVXServices.storage.set("ts:russian", !R);
                 f({action: "rload"});
             } else ajax("/settings", {action: "get"}, function(d){
