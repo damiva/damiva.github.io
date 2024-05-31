@@ -34,6 +34,10 @@ function opts(h, o){
     }});
     return r.items.length ? r : null;
 }
+function size(){
+    var i = s == 0 ? 0 : Math.floor(Math.log(s) / Math.log(1024));
+    return (s / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'KB', 'MB', 'GB', 'TB'][i];
+}
 function torrents(){
     var B = function(l){return l.map(function(t){return {
         id: t.hash,
@@ -43,6 +47,23 @@ function torrents(){
         group: "{ico:" + (t.category == "movie" ? "movie" : t.category == "tv" ? "live-tv" : t.category == "music" ? "audiotrack" : "more-horiz") + "}",
         live: t.stat < 5 ? {type: "setup", action: "execute:" + addr + "/msx/trn", data: "update:content:" + t.hash} : null
     }})};
+    var Q = function(q){
+        var qs = {
+            0:    "",
+            1:    "Author's}",
+            100:  "Amateur one voice",
+            101:  "Amateur two voices",
+            102:  "Amateur many voices",
+            103:  "Amateur studio",
+            200:  "Prof. one voice",
+            201:  "Prof. two voices",
+            202:  "Prof. many voices",
+            203:  "Prof. studio",
+            300:  "Official",
+            301:  "License"
+        }
+        return (qs = qs[q]) ? ("{ico:msx-white:audiotrack} {dic:a" + q + "|" + qs + "}{br}") : "";
+    };
     var F = function(l, c){
         var r = [];
         l.forEach(function(t){if(!c || l.Categories == c) r.push({
@@ -50,6 +71,7 @@ function torrents(){
             image: t.Poster = t.Poster || t.IMDBID && (addr + "/msx/imdb/" + t.IMDBID) || "",
             icon: t.Poster ? "" : "msx-white-soft:search",
             text: Q(t.AudioQuality),
+            titleFooter: "{msx-white:attach-file} " + t.Size,
             stamp: "{ico:north} " + t.Peer + " {ico:south} " + t.Seed,
             magnet: t.Magnet,
             group: "{dic:" + t.Categories + "|" + t.Categories + "}",
@@ -164,13 +186,15 @@ function search(K){
         }
     };
     this.handleRequest = function(_, f){f({
-        type: "list", reuse: false, wrap: true, extension: "{ico:msx-white:search} rutor",
-        ready: {action: "interaction:load:" + window.location.href},
+        type: "list", reuse: false, wrap: true, extension: "{ico:msx-white:search} rutor", items: X(),
+        ready: {action: "interaction:load:" + window.location.href, data: ""},
         underlay: {items:[{id: "search", type: "space", layout: "0,0,12,1", color: "msx-black-soft", label: ""}]},
         template: {
             type: "button", layout: "0,0,1,1", area: K ? "0,1,12,5" : "1,1,10,5",
-            action: "interaction:commit", data: "{context:label}"
-        }, items: X()
+            action: "interaction:commit", data: "{context:label}", enumerate: false,
+        }, options: opts("{dic:cat|Category}:", ["All","Movie","Series","DocMovie","DocSeries","TVShow","CartoonMovie","CartoonSeries","Anime"].map(function(c){
+            return {label: "{dic:" + c + "|" + c + "}", action: "interaction:commit", data: C, enable: c != C};
+        }))
     })};
 }
 function torrent(){
