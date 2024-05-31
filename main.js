@@ -16,7 +16,7 @@ function ajax(){
 }
 function opts(h, o){
     var r = {
-        headline: h = h || "{dic:caption:options|opt/menu}", caption: h + ":",
+        caption: h = h || "{dic:caption:options|opt/menu}", headline: h + ":",
         template: {layout: "0,0,8,1", type: "control", enumerate: false}, items: []
     }
     o.forEach(function(i){if(i){
@@ -28,7 +28,7 @@ function opts(h, o){
             if(i.key == "red") i.label = "{dic:label:reload|Reload} " + i.label;
             else r.caption += " " + i.label;
         }else if(i.enable === false){
-            r.caption += " " + i.label;
+            r.caption += ": " + i.label;
             r.template = {type: "button", layout: "0,0,4,1", area: "0,1,8,5", action: "interaction:commit"};
         }
         r.items.push(i);
@@ -95,7 +95,7 @@ function torrents(){
         template: {
             layout: "0,0,6,2", imageWidth: 1.3, imageFiller: "height", action: "execute:request:interaction:trnt",
             data: h ? {link: "{context:magnet}", title: "{context:headline}", poster: "{context:image}", category: "{context:cat}"} : {link: "{context:id}"},
-            options: h ? null : opts("", [
+            options: opts("", h ? [{key: "yellow", icon: "arrow-back", label: "{dic:label:cancel|Cancel}", action: "back"}] : [
                 {key: "red", label: "{dic:label:caontent|Content}", action: "[cleanup|reload:content]"},
                 {key: "green", icon: "stop", label: "{dic:drop|Drop the torrent}", data: {action: "drop", hash: "{context:id}"}, action: "execute:request:interaction:trns@" + window.location.href},
                 {key: "yellow", icon: "delete", label: "{dic:rem|Remove the torrent}", data: {action: "rem", hash: "{context:id}"}, action: "execute:request:interaction:trns@" + window.location.href},
@@ -199,7 +199,7 @@ function search(K){
         template: {
             type: "button", layout: "0,0,1,1", area: K ? "0,1,12,5" : "1,1,10,5",
             action: "interaction:commit", data: "{context:label}", enumerate: false,
-        }, options: opts("{dic:cat|Category}:", ["All","","Movie","Series","DocMovie","DocSeries","TVShow","CartoonMovie","CartoonSeries","Anime"].map(function(c,i){
+        }, options: opts("{dic:cat|Category}", ["All","","Movie","Series","DocMovie","DocSeries","TVShow","CartoonMovie","CartoonSeries","Anime"].map(function(c,i){
             return !c 
                 ? {type: "space"}
                 : {label: "{dic:" + c + "|" + c + "}", data: c, enable: c != C, offset: i ? undefined : "0,-.5,4,0"};
@@ -217,9 +217,9 @@ function torrent(){
     }});
     this.handleRequest = function(d, f){
         if(!d || !d.data) ajax(
-            "/stream/?stat&" + ["link", "title", "poster", "category"].map(function(k){
-                return D[k] ? (k + "=" + encodeURIComponent(k)) : "";
-            }),
+            "/stream/?stat" + ["link", "title", "poster", "category"].map(function(k){
+                return D[k] ? ("&" + k + "=" + encodeURIComponent(k)) : "";
+            }).join(""),
             function(t){ajax("/msx/trn?hash=" + t.hash, function(s){
                 var ds = [], fs = [], sf = stor("folders"), cm = stor("compress"),
                     u = addr + "/stream/?play&link=" + encodeURIComponent(D.link) + "&index=";
