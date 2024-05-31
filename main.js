@@ -284,7 +284,6 @@ function torrent(){
             f({action: "content:request:interaction:trnt"});
         }else f({action: "request link is not set"});
     };
-    ["last", "compress", "folders"].forEach(function(k){S[k] = TVXServices.storage.getBool("ts:" + k, false)});
 }
 //initial menu:
 TVXPluginTools.onReady(function() {
