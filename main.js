@@ -1,7 +1,7 @@
 var addr = "";
 function ajax(){
     var u = addr, d = null, s = {};
-    for(var i = 1; i < arguments.length; i++) switch(typeof arguments[i]){
+    for(var i = 0; i < arguments.length; i++) switch(typeof arguments[i]){
         case "object": d = arguments[i]; break;
         case "string": u += arguments[i]; break;
         case "boolean": s.dataType = arguments[i] ? "text" : "json"; break;
