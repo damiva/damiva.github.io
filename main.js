@@ -246,8 +246,8 @@ function torrent(){
         return {
             type: "list", headline: t.title, compress: c, items: fs, cache: false, reuse: false, restore: false,
             ready: fs.length > 1 && stor("viewed") ? {action: "execute:request:interaction:trnt@" + window.location.href, data: t.hash} : null,
-            overlay: {compress: false, items: [
-                {id: t.hash, layout: "9,0,3,1", offset: "0,-1,0,0", type: "space", color: "none", stamp: "", stampColor: "", live: {
+            overlay: {items: [
+                {id: t.hash, layout: (c ? 13 : 9) + ",0,3,1", offset: "0,-1,0,0", type: "space", color: "none", stamp: "", stampColor: "", live: {
                     type: "setup", action: "execute:" + addr + "/msx/trn", data: "update:content:overlay:" + t.hash
                 }}
             ]},
