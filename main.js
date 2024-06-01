@@ -218,15 +218,17 @@ function torrent(){
     var L = function(t, s){
         var ds = [], fs = [], sf = stor("folders"), c = stor("compress"),
             u = addr + "/stream/?play&link=" + encodeURIComponent(D.link) + "&index=";
-        TVXInteractionPlugin.debug("files in torrent: " + t.file_stats.length);
+        TVXInteractionPlugin.debug("files in the torrent: " + t.file_stats.length);
         t.file_stats.forEach(function(f){
             var t = f.path.lastIndexOf(".");
+            TVXInteractionPlugin.debug("file: " + f.id);
             if(t >= 0){
                 var x = f.path.substr(t + 1).toLowerCase();
                 if(x) for(t = 0; t < X.length; t++) if(X[t].indexOf(x) >= 0) break;
                 else t = -1;
             }
             if(t < 0 || t > 1) return;
+            TVXInteractionPlugin.debug("added");
             f.path = f.path.split("/");
             f.name = f.path.pop();
             if(f.path.length > 0) f.path.shift();
