@@ -220,7 +220,6 @@ function torrent(){
             u = addr + "/stream/?play&link=" + encodeURIComponent(D.link) + "&index=";
         t.file_stats.forEach(function(f){
             var t = f.path.lastIndexOf(".");
-            TVXInteractionPlugin.debug("file: " + f.id + " " + f.path);
             if(t >= 0){
                 var x = f.path.substr(t + 1).toLowerCase();
                 if(!x) t = -1
