@@ -216,9 +216,6 @@ function torrent(){
         ["aac","aiff","ape","au","flac","gsm","it","m3u","m4a","mid","mod","mp3","mpa","pls","ra","s3m","sid","wav","wma","xm"]
     ];
     var D = null;
-    var O = [["compress", "compress", "List"], ["folders", "folder-open"], "Show", ["viewed", "last-page", "Autofocus last"]].map(function(k){return {
-        icon: k[1], label: "{dic:" + k[0] + "|" + k[2] + " " + k[0] + "}", data: k[0], action: "execute:request:interaction:menu@" + window.location.href
-    }});
     var L = function(t, s){
         var ds = [], fs = [], sf = stor("folders"), cm = stor("compress"),
             u = addr + "/stream/?play&link=" + encodeURIComponent(D.link) + "&index=",
@@ -255,9 +252,7 @@ function torrent(){
             key: "red", label: "{dic:label:content|Content}", action: "[cleanup|reload:content]"
         }, s ? {
             icon: "bookmark-add", key: "green", label: "{dic:save|Save the torrent}",
-            action: "execute:request:interaction:trns@" + window.location.href, data: {
-                action: "add", save_to_db: true, poster: t.poster, title: t.title, category: t.category
-            }
+            action: "execute:request:interaction:trns@" + window.location.href, data: true
         } : null, s.length > 1 ? {
             icon: "folder", key: "yellow", label: "{dic:folder|Select folder}", action: "panel:data", data: {
                 type: "list", headline: "{dic:folder|To folder}:", compress: true, items: ds,
@@ -290,7 +285,19 @@ function torrent(){
             function(t){ajax("/msx/trn?hash=" + t.hash, function(s){f(L(t, s !== true))})},
             function(e){TVXInteractionPlugin.error(e);f();}
         );
-        else if(typeof d.data == "string") ajax("/viewed", {action: "list", hash: d.data}, function(l){
+        else if(d.data === true){
+            var a = {action: "execute:request:interaction:trns", data: D}
+            D.action = "add";
+            D.save_to_db = true;
+            if(D.poster.indexOf(addr + "/msx/imdb/") < 0) f(a);
+            else ajax("/msx/imdb/" + D.poster(D.poster.lastIndexOf("/") + 1) + ".json", function(i){
+                D.poster = i || ""
+                f(a);
+            }, function(){
+                D.poster = "";
+                f(a);
+            });
+        }else if(typeof d.data == "string") ajax("/viewed", {action: "list", hash: d.data}, function(l){
             var i = 1;
             if(typeof l == "object") l.forEach(function(f){if(f.file_index > i) i = f.file_index});
             f({action: "focus:" + i});
