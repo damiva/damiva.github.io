@@ -217,11 +217,8 @@ function torrent(){
     var D = null;
     var L = function(t, s){
         var ds = [], fs = [], sf = stor("folders"), c = stor("compress"),
-            u = addr + "/stream/?play&link=" + encodeURIComponent(D.link) + "&index=",
-            o = [["compress", "compress", "List"], ["folders", "folder-open", "Show"], ["viewed", "last-page", "Autofocus last"]].map(function(k){return {
-                icon: k[1], label: "{dic:" + k[0] + "|" + k[2] + " " + k[0] + "}", 
-                data: k[0], action: "execute:request:interaction:menu@" + window.location.href
-            }});
+            u = addr + "/stream/?play&link=" + encodeURIComponent(D.link) + "&index=";
+        TVXInteractionPlugin.debug("files in torrent: " + t.file_stats.length);
         t.file_stats.forEach(function(f){
             var t = f.path.lastIndexOf(".");
             if(t >= 0){
@@ -247,18 +244,7 @@ function torrent(){
                 action: t ? ("audio:" + u + f.id) : ("video:resolve:request:interaction:" + u + f.id + "@http://msx.benzac.de/interaction/play.html")
             });
         });
-        o.unshift({
-            key: "red", label: "{dic:label:content|Content}", action: "[cleanup|reload:content]"
-        }, s ? {
-            icon: "bookmark-add", key: "green", label: "{dic:save|Save the torrent}",
-            action: "execute:request:interaction:trns@" + window.location.href, data: true
-        } : null, s.length > 1 ? {
-            icon: "folder", key: "yellow", label: "{dic:folder|Select folder}", action: "panel:data", data: {
-                type: "list", headline: "{dic:folder|To folder}:", compress: true, items: ds,
-                template: {layout: "0,0,10,1", type: "control", icon: "msx-yellow:folder"}
-            }
-        } : null);
-        TVXInteractionPlugin.debug(o.length);
+        TVXInteractionPlugin.debug("list items: " + fs.length);
         return {
             type: "list", headline: t.title, compress: c, items: fs,
             ready: fs.length > 1 && stor("viewed") ? {action: "execute:request:interaction:trnt@" + window.location.href, data: t.hash} : null,
@@ -278,7 +264,26 @@ function torrent(){
                     "trigger:complete": "[player:auto:next|resume:cancel]"
                 }
             },
-            options: opts("", o)
+            options: opts("", [{
+                key: "red", label: "{dic:label:content|Content}", action: "[cleanup|reload:content]"
+            }, s ? {
+                icon: "bookmark-add", key: "green", label: "{dic:save|Save the torrent}",
+                action: "execute:request:interaction:trns@" + window.location.href, data: true
+            } : null, s.length > 1 ? {
+                icon: "folder", key: "yellow", label: "{dic:folder|Select folder}", action: "panel:data", data: {
+                    type: "list", headline: "{dic:folder|To folder}:", compress: true, items: ds,
+                    template: {layout: "0,0,10,1", type: "control", icon: "msx-yellow:folder"}
+                }
+            } : null, {
+                icon: "compress", label: "{dic:compress|Small list}", extensionIcon: icon(stor("compress")), 
+                data: "compress", action: "execute:request:interaction:menu@" + window.location.href
+            }, {
+                icon: "last-page", label: "{dic:viewed|Autofocus on last viewed}", extensionIcon: icon(stor("viewed")), 
+                data: "viewed", action: "execute:request:interaction:menu@" + window.location.href
+            }, {
+                icon: "folders", label: "{dic:floders|Show folders}", extensionIcon: icon(stor("folders")), 
+                data: "folders", action: "execute:request:interaction:menu@" + window.location.href
+            }])
         };
     };
     this.handleRequest = function(d, f){
