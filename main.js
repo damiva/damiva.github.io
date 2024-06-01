@@ -235,7 +235,7 @@ function torrent(){
             if(f.path.length > 0) f.path.shift();
             if((f.path = f.path.length ? f.path.join("/") : "") && (!ds.length || ds[ds.length - 1].label != f.path)){
                 ds.push({label: f.path, action: "[cleanup|focus:" + f.id + "]"});
-                if(sf) fs.push({type: "space", label: "{col:msx-yellow}{ico:folder} " + f.path, imageWidth: 1})
+                if(sf) fs.push({type: "space", label: "{col:msx-yellow}{ico:folder} " + f.path})
             }
             fs.push({
                 id: TVXTools.strValue(f.id),
