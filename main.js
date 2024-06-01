@@ -244,7 +244,7 @@ function torrent(){
             });
         });
         return {
-            type: "list", headline: t.title, compress: c, items: fs, cache: false, reuse: false, restore: false,
+            type: "list", headline: t.title, compress: c, items: fs, cache: false, reuse: false, restore: false, extension: " ",
             ready: fs.length > 1 && stor("viewed") ? {action: "execute:request:interaction:trnt@" + window.location.href, data: t.hash} : null,
             overlay: {items: [
                 {id: t.hash, layout: (c ? 13 : 9) + ",0,3,1", offset: "0,-1,0,0", type: "space", color: "none", stamp: "", stampColor: "", live: {
@@ -269,7 +269,7 @@ function torrent(){
             }, s ? {
                 icon: "bookmark-add", key: "green", label: "{dic:save|Save the torrent}",
                 action: "execute:request:interaction:trns@" + window.location.href, data: true
-            } : null, s.length > 1 ? {
+            } : null, ds.length > 1 ? {
                 icon: "folder", key: "yellow", label: "{dic:folder|Select folder}", action: "panel:data", data: {
                     type: "list", headline: "{dic:folder|To folder}:", compress: true, items: ds,
                     template: {layout: "0,0,10,1", type: "control", icon: "msx-yellow:folder"}
