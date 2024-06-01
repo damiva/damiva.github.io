@@ -52,7 +52,7 @@ function torrents(){
         image: t.poster || "", icon: t.poster ? "" : "msx-white-soft:bookmark",
         titleFooter: "{ico:msx-white:attach-file} " + size(t.torrent_size),
         group: "{ico:" + (t.category == "movie" ? "movie" : t.category == "tv" ? "live-tv" : t.category == "music" ? "audiotrack" : "more-horiz") + "}",
-        stamp: t.stat < 5 ? ("{ico:north} " + t.active_peers + " / " + t.total_peers + " {icon:south} " + t.connected_seeders) : "", 
+        stamp: t.stat < 5 ? ("{ico:north} " + t.active_peers + " / " + t.total_peers + " {ico:south} " + t.connected_seeders) : "", 
         stampColor: "msx-" + (t.stat > 3 ? "red" : t.stat == 3 ? "green" : "yellow"),
         options: opts("", [
             {key: "red", label: "{dic:label:content|Content}", action: "[cleanup|reload:content]"},
@@ -216,7 +216,7 @@ function torrent(){
     ];
     var D = null;
     var L = function(t, s){
-        var ds = [], fs = [], sf = stor("folders"), cm = stor("compress"),
+        var ds = [], fs = [], sf = stor("folders"), c = stor("compress"),
             u = addr + "/stream/?play&link=" + encodeURIComponent(D.link) + "&index=",
             o = [["compress", "compress", "List"], ["folders", "folder-open"], "Show", ["viewed", "last-page", "Autofocus last"]].map(function(k){return {
                 icon: k[1], label: "{dic:" + k[0] + "|" + k[2] + " " + k[0] + "}", 
@@ -240,7 +240,7 @@ function torrent(){
             fs.push({
                 id: TVXTools.strValue(f.id),
                 icon: t ? "audiotrack" : "movie",
-                label: f.path[0],
+                label: f.name,
                 group: "{ico:" + (t ? "audiotrack}" : "movie}"),
                 folder: f.path ? ("{ico:msx-yellow:folder} " + f.path + "{br}") : "",
                 extensionLabel: size(f.length),
@@ -259,20 +259,24 @@ function torrent(){
             }
         } : null);
         return {
-            type: "list", headline: t.title, compress: cm, items: fs,
+            type: "list", headline: t.title, compress: c, items: fs,
             ready: fs.length > 1 && stor("viewed") ? {action: "execute:request:interaction:trnt@" + window.location.href, data: t.hash} : null,
             overlay: {compress: false, items: [
                 {id: t.hash, layout: "9,0,3,1", offset: "0,-1,0,0", type: "space", color: "none", stamp: "", stampColor: "", live: {
                     type: "setup", action: "execute:" + addr + "/msx/trn", data: "update:content:overlay:" + t.hash
                 }}
             ]},
-            template: {layout: cm ? "0,0,16,1" : "0,0,12,1", type: "control", progress: -1, playerLabel: t.title, properties: {
-                "info:text": "{context:folder}{ico:{context:icon}} {context:label}",
-                "info:image": t.poster || "default",
-                "control:type": "extended",
-                "resume:key": "url",
-                "trigger:complete": "[player:auto:next|resume:cancel]"
-            }, centration: "text"},
+            template: {
+                layout: c ? "0,0,16,1" : "0,0,12,1", type: "control", playerLabel: t.title, centration: "text", 
+                progress: -1, live: {type: "playback", action: "player:show"},
+                properties: {
+                    "info:text": "{context:folder}{ico:{context:icon}} {context:label}",
+                    "info:image": t.poster || "default",
+                    "control:type": "extended",
+                    "resume:key": "url",
+                    "trigger:complete": "[player:auto:next|resume:cancel]"
+                }
+            },
             options: opts("", o)
         };
     };
@@ -281,9 +285,14 @@ function torrent(){
             "/stream/?stat" + ["link", "title", "poster", "category"].map(function(k){
                 return D[k] ? ("&" + k + "=" + encodeURIComponent(D[k])) : "";
             }).join(""),
-            function(t){ajax("/msx/trn?hash=" + t.hash, function(s){f(L(t, s !== true))})},
+            function(t){ajax("/msx/trn?hash=", t.hash, function(s){f(L(t, s !== true))})},
             function(e){TVXInteractionPlugin.error(e);f();}
         );
+        else if(typeof d.data == "string") ajax("/viewed", {action: "list", hash: d.data}, function(l){
+            var i = 1;
+            if(typeof l == "object") l.forEach(function(f){if(f.file_index > i) i = f.file_index});
+            f({action: "focus:" + i});
+        });
         else if(d.data === true){
             var a = {action: "execute:request:interaction:trns", data: D}
             D.action = "add";
@@ -296,15 +305,10 @@ function torrent(){
                 D.poster = "";
                 f(a);
             });
-        }else if(typeof d.data == "string") ajax("/viewed", {action: "list", hash: d.data}, function(l){
-            var i = 1;
-            if(typeof l == "object") l.forEach(function(f){if(f.file_index > i) i = f.file_index});
-            f({action: "focus:" + i});
-        });
-        else if(d.data.link){
+        } else if(d.data.link){
             D = d.data;
             f({action: "content:request:interaction:trnt"});
-        }else f({action: "request link is not set"});
+        } else f({action: "request link is not set"});
     };
 }
 //initial menu:
