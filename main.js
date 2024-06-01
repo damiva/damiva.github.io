@@ -221,32 +221,32 @@ function torrent(){
         TVXInteractionPlugin.debug("files in the torrent: " + t.file_stats.length);
         t.file_stats.forEach(function(f){
             var t = f.path.lastIndexOf(".");
-            TVXInteractionPlugin.debug("file: " + f.id);
+            TVXInteractionPlugin.debug("file: " + f.id + " " + f.path);
             if(t >= 0){
                 var x = f.path.substr(t + 1).toLowerCase();
                 if(x) for(t = 0; t < X.length; t++) if(X[t].indexOf(x) >= 0) break;
                 else t = -1;
             }
-            if(t < 0 || t > 1) return;
-            TVXInteractionPlugin.debug("added");
-            f.path = f.path.split("/");
-            f.name = f.path.pop();
-            if(f.path.length > 0) f.path.shift();
-            if((f.path = f.path.length ? f.path.join("/") : "") && (!ds.length || ds[ds.length - 1].label != f.path)){
-                ds.push({label: f.path, action: "[cleanup|focus:" + f.id + "]"});
-                if(sf) fs.push({type: "space", text: "{col:msx-yellow}{ico:folder} " + f.path})
+            if(t >= 0 && t <= 1){
+                TVXInteractionPlugin.debug("added");
+                f.path = f.path.split("/");
+                f.name = f.path.pop();
+                if(f.path.length > 0) f.path.shift();
+                if((f.path = f.path.length ? f.path.join("/") : "") && (!ds.length || ds[ds.length - 1].label != f.path)){
+                    ds.push({label: f.path, action: "[cleanup|focus:" + f.id + "]"});
+                    if(sf) fs.push({type: "space", text: "{col:msx-yellow}{ico:folder} " + f.path})
+                }
+                fs.push({
+                    id: TVXTools.strValue(f.id),
+                    icon: t ? "audiotrack" : "movie",
+                    label: f.name,
+                    group: "{ico:" + (t ? "audiotrack}" : "movie}"),
+                    folder: f.path ? ("{ico:msx-yellow:folder} " + f.path + "{br}") : "",
+                    extensionLabel: size(f.length),
+                    action: t ? ("audio:" + u + f.id) : ("video:resolve:request:interaction:" + u + f.id + "@http://msx.benzac.de/interaction/play.html")
+                });
             }
-            fs.push({
-                id: TVXTools.strValue(f.id),
-                icon: t ? "audiotrack" : "movie",
-                label: f.name,
-                group: "{ico:" + (t ? "audiotrack}" : "movie}"),
-                folder: f.path ? ("{ico:msx-yellow:folder} " + f.path + "{br}") : "",
-                extensionLabel: size(f.length),
-                action: t ? ("audio:" + u + f.id) : ("video:resolve:request:interaction:" + u + f.id + "@http://msx.benzac.de/interaction/play.html")
-            });
         });
-        TVXInteractionPlugin.debug("list items: " + fs.length);
         return {
             type: "list", headline: t.title, compress: c, items: fs,
             ready: fs.length > 1 && stor("viewed") ? {action: "execute:request:interaction:trnt@" + window.location.href, data: t.hash} : null,
