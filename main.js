@@ -217,7 +217,11 @@ function torrent(){
     var D = null;
     var L = function(t, s){
         var ds = [], fs = [], sf = stor("folders"), c = stor("compress"),
-            u = addr + "/stream/?play&link=" + encodeURIComponent(D.link) + "&index=";
+            u = addr + "/stream/?play&link=" + encodeURIComponent(D.link) + "&index=",
+            o = [["folders", "Show", "folder"], ["viewed", "Autofocus on last", "last-page"], ["compress", "Font", "compress"]].map(function(i){return {
+                icon: i[3], label: "{dic:" + i[0] + "|" + i[1] + " " + i[0] + "}", 
+                data: {set: i[0]}, action: "[cleanup|interaction:load:" + window.location.href + "|reload:content]"
+            }})
         t.file_stats.forEach(function(f){
             var t = f.path.lastIndexOf(".");
             if(t >= 0){
@@ -243,6 +247,17 @@ function torrent(){
                 action: t ? ("audio:" + u + f.id) : ("video:resolve:request:interaction:" + u + f.id + "@http://msx.benzac.de/interaction/play.html")
             });
         });
+        o.unshift({
+            key: "red", label: "{dic:list|list}", action: "[cleanup|reload:content]"
+        }, s ? {
+            icon: "bookmark-add", key: "green", label: "{dic:save|Save the torrent}",
+            action: "execute:request:interaction:trns@" + window.location.href, data: true
+        } : null, ds.length > 1 ? {
+            icon: "folder", key: "yellow", label: "{dic:folder|Select folder}", action: "panel:data", data: {
+                type: "list", headline: "{dic:folder|To folder}:", compress: true, items: ds,
+                template: {layout: "0,0,10,1", type: "control", icon: "msx-yellow:folder"}
+            }
+        } : null);
         return {
             type: "list", headline: t.title, compress: c, items: fs, cache: false, reuse: false, restore: false, extension: " ",
             ready: fs.length > 1 && stor("viewed") ? {action: "execute:request:interaction:trnt@" + window.location.href, data: t.hash} : null,
@@ -264,26 +279,7 @@ function torrent(){
                     "trigger:complete": "[player:auto:next|resume:cancel]"
                 }
             },
-            options: opts("", [{
-                key: "red", label: "{dic:list|list}", action: "[cleanup|reload:content]"
-            }, s ? {
-                icon: "bookmark-add", key: "green", label: "{dic:save|Save the torrent}",
-                action: "execute:request:interaction:trns@" + window.location.href, data: true
-            } : null, ds.length > 1 ? {
-                icon: "folder", key: "yellow", label: "{dic:folder|Select folder}", action: "panel:data", data: {
-                    type: "list", headline: "{dic:folder|To folder}:", compress: true, items: ds,
-                    template: {layout: "0,0,10,1", type: "control", icon: "msx-yellow:folder"}
-                }
-            } : null, {
-                icon: "compress", label: "{dic:compress|Smaller font}", extensionIcon: icon(stor("compress")), 
-                data: "compress", action: "execute:request:interaction:menu@" + window.location.href
-            }, {
-                icon: "last-page", label: "{dic:viewed|Autofocus on last viewed}", extensionIcon: icon(stor("viewed")), 
-                data: "viewed", action: "execute:request:interaction:menu@" + window.location.href
-            }, {
-                icon: "folder", label: "{dic:folders|Show folders}", extensionIcon: icon(stor("folders")), 
-                data: "folders", action: "execute:request:interaction:menu@" + window.location.href
-            }])
+            options: opts("", o)
         };
     };
     this.handleRequest = function(d, f){
@@ -334,15 +330,15 @@ TVXPluginTools.onReady(function() {
             {icon: "folder", label: "{dic:fls|My files}", data: "request:interaction:access:" + addr + "@" + window.location.protocol + "//nb.msx.benzac.de/interaction"}
         ], options: opts("", [
             {key: "red", label: "{dic:caption:menu|menu}", action: "[cleanup|reload:menu]"},
-            {key: "yellow", icon: "translate", label: R ? "Switch to english" : "Перевести на русский", action: "execute:request:interaction:menu@" + window.location.href, data: "russian"}
+            {key: "yellow", icon: "translate", label: R ? "Switch to english" : "Перевести на русский", action: "[interaction:load" + window.location.href + "|reload]", data: {set: "russian"}}
         ]), logo: (addr = window.location.protocol + "//" + addr) + "/logo.png"};
-        this.handleData = P.find.handleData;
+        this.handleData = function(d){
+            if(d.data && d.data.set) stor(d.data.set, true);
+            else P.find.handleData(d);
+        };
         this.handleRequest = function(i, d, f){
             if (P[i]) P[i].handleRequest(d, f);
-            else if(d && d.data){
-                stor(d.data, true);
-                f({action: d.data == "russian" ? "reload" : "[cleanup|reload:content]"});
-            }else ajax("/settings", {action: "get"}, function(d){
+            else ajax("/settings", {action: "get"}, function(d){
                 M.menu[1].enable = d.EnableRutorSearch === true;
                 if(typeof d == "string") TVXInteractionPlugin.error(d);
                 ajax("/files", function(d){
