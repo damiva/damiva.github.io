@@ -226,7 +226,7 @@ function torrent(){
                 if(!x) t = -1
                 else for(t = 0; t < X.length; t++) if(X[t].indexOf(x) >= 0) break;
             }
-            if(t >= 0 && t <= 1) return;
+            if(t < 0 || t > 1) return;
             f.path = f.path.split("/");
             f.name = f.path.pop();
             if(f.path.length > 0) f.path.shift();
