@@ -54,7 +54,6 @@ function torrents(){
         group: "{ico:" + (t.category == "movie" ? "movie" : t.category == "tv" ? "live-tv" : t.category == "music" ? "audiotrack" : "more-horiz") + "}",
         stamp: t.stat < 5 ? ("{ico:north} " + t.active_peers + " / " + t.total_peers + " {icon:south} " + t.connected_seeders) : "", 
         stampColor: "msx-" + (t.stat > 3 ? "red" : t.stat == 3 ? "green" : "yellow"),
-        stamp: "", stampColor: "",
         options: opts("", [
             {key: "red", label: "{dic:label:content|Content}", action: "[cleanup|reload:content]"},
             t.stat > 4 ? null : {key: "green", icon: "stop", label: "{dic:drop|Drop the torrent}", data: {action: "drop", hash: "{context:id}"}, action: "execute:request:interaction:trns@" + window.location.href},
