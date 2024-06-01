@@ -231,7 +231,7 @@ function torrent(){
             if(f.path.length > 0) f.path.shift();
             if((f.path = f.path.length ? f.path.join("/") : "") && (!ds.length || ds[ds.length - 1].label != f.path)){
                 ds.push({label: f.path, action: "[cleanup|focus:" + f.id + "]"});
-                if(sf) fs.push({type: "space", text: "{col:msx-yellow}{ico:folder} " + f.path})
+                if(sf) fs.push({type: "space", imageWidth: 1, icon: "folder", label: f.path})
             }
             fs.push({
                 id: TVXTools.strValue(f.id),
@@ -252,7 +252,7 @@ function torrent(){
                 }}
             ]},
             template: {
-                layout: c ? "0,0,16,1" : "0,0,12,1", type: "control", playerLabel: t.title, centration: "text", 
+                layout: c ? "0,0,16,1" : "0,0,12,1", type: "control", playerLabel: t.title, 
                 progress: -1, live: {type: "playback", action: "player:show"},
                 properties: {
                     "info:text": "{context:folder}{ico:{context:icon}} {context:label}",
