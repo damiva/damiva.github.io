@@ -222,6 +222,7 @@ function torrent(){
                 icon: k[1], label: "{dic:" + k[0] + "|" + k[2] + " " + k[0] + "}", 
                 data: k[0], action: "execute:request:interaction:menu@" + window.location.href
             }});
+        TVXInteractionPlugin.debug(t.file_stats.length);
         t.file_stats.forEach(function(f){
             var t = f.path.lastIndexOf(".");
             if(t >= 0){
@@ -247,6 +248,7 @@ function torrent(){
                 action: t ? ("audio:" + u + f.id) : ("video:resolve:request:interaction:" + u + f.id + "@http://msx.benzac.de/interaction/play.html")
             });
         });
+        TVXInteractionPlugin.debug(t.file_stats.length);
         o.unshift({
             key: "red", label: "{dic:label:content|Content}", action: "[cleanup|reload:content]"
         }, s ? {
@@ -258,6 +260,7 @@ function torrent(){
                 template: {layout: "0,0,10,1", type: "control", icon: "msx-yellow:folder"}
             }
         } : null);
+        TVXInteractionPlugin.debug(o.length);
         return {
             type: "list", headline: t.title, compress: c, items: fs,
             ready: fs.length > 1 && stor("viewed") ? {action: "execute:request:interaction:trnt@" + window.location.href, data: t.hash} : null,
