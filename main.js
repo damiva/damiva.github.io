@@ -52,7 +52,8 @@ function torrents(){
         image: t.poster || "", icon: t.poster ? "" : "msx-white-soft:bookmark",
         titleFooter: "{ico:msx-white:attach-file} " + size(t.torrent_size),
         group: "{ico:" + (t.category == "movie" ? "movie" : t.category == "tv" ? "live-tv" : t.category == "music" ? "audiotrack" : "more-horiz") + "}",
-        live: t.stat < 5 ? {type: "setup", action: "execute:" + addr + "/msx/trn", data: "update:content:" + t.hash} : null,
+        stamp: t.stat < 5 ? ("{ico:north} " + t.active_peers + " / " + t.total_peers + " {icon:south} " + t.connected_seeders) : "", 
+        stampColor: "msx-" + (t.stat > 3 ? "red" : t.stat == 3 ? "green" : "yellow"),
         stamp: "", stampColor: "",
         options: opts("", [
             {key: "red", label: "{dic:label:content|Content}", action: "[cleanup|reload:content]"},
@@ -263,7 +264,7 @@ function torrent(){
                 template: {layout: "0,0,10,1", type: "control", icon: "msx-yellow:folder"}
             }
         } : null);
-        f({
+        return {
             type: "list", headline: t.title, compress: cm, items: fs,
             ready: fs.length > 1 && stor("viewed") ? {action: "execute:request:interaction:trnt@" + window.location.href, data: t.hash} : null,
             overlay: {compress: false, items: [
@@ -279,14 +280,14 @@ function torrent(){
                 "trigger:complete": "[player:auto:next|resume:cancel]"
             }, centration: "text"},
             options: opts("", o)
-        });
+        };
     };
     this.handleRequest = function(d, f){
         if(!d || !d.data) ajax(
             "/stream/?stat" + ["link", "title", "poster", "category"].map(function(k){
                 return D[k] ? ("&" + k + "=" + encodeURIComponent(D[k])) : "";
             }).join(""),
-            function(t){ajax("/msx/trn?hash=" + t.hash, function(s){L(t, s !== true)})},
+            function(t){ajax("/msx/trn?hash=" + t.hash, function(s){f(L(t, s !== true))})},
             function(e){TVXInteractionPlugin.error(e);f();}
         );
         else if(typeof d.data == "string") ajax("/viewed", {action: "list", hash: d.data}, function(l){
