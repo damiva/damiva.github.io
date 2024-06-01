@@ -25,7 +25,7 @@ function opts(h, o){
             i.progressColor = "msx-" + i.key;
             if(!i.icon) i.icon = "refresh";
             r.caption += "{tb}{col:" + i.progressColor + "}{ico:" + i.icon + "}";
-            if(i.key == "red") i.label = "{dic:label:reload|Reload} " + i.label;
+            if(i.key == "red") i.label = "{dic:refresh|Refresh} " + i.label;
             else r.caption += " " + i.label;
         }else if(i.enable === false){
             r.caption += ": " + i.label;
@@ -55,7 +55,7 @@ function torrents(){
         stamp: t.stat < 5 ? ("{ico:north} " + t.active_peers + " / " + t.total_peers + " {ico:south} " + t.connected_seeders) : "", 
         stampColor: "msx-" + (t.stat > 3 ? "red" : t.stat == 3 ? "green" : "yellow"),
         options: opts("", [
-            {key: "red", label: "{dic:label:content|Content}", action: "[cleanup|reload:content]"},
+            {key: "red", label: "{dic:list|list}", action: "[cleanup|reload:content]"},
             t.stat > 4 ? null : {key: "green", icon: "stop", label: "{dic:drop|Drop the torrent}", data: {action: "drop", hash: "{context:id}"}, action: "execute:request:interaction:trns@" + window.location.href},
             {key: "yellow", icon: "delete", label: "{dic:rem|Remove the torrent}", data: {action: "rem", hash: "{context:id}"}, action: "execute:request:interaction:trns@" + window.location.href},
         ])
@@ -265,7 +265,7 @@ function torrent(){
                 }
             },
             options: opts("", [{
-                key: "red", label: "{dic:label:content|Content}", action: "[cleanup|reload:content]"
+                key: "red", label: "{dic:list|list}", action: "[cleanup|reload:content]"
             }, s ? {
                 icon: "bookmark-add", key: "green", label: "{dic:save|Save the torrent}",
                 action: "execute:request:interaction:trns@" + window.location.href, data: true
@@ -275,13 +275,13 @@ function torrent(){
                     template: {layout: "0,0,10,1", type: "control", icon: "msx-yellow:folder"}
                 }
             } : null, {
-                icon: "compress", label: "{dic:compress|Small list}", extensionIcon: icon(stor("compress")), 
+                icon: "compress", label: "{dic:compress|Smaller font}", extensionIcon: icon(stor("compress")), 
                 data: "compress", action: "execute:request:interaction:menu@" + window.location.href
             }, {
                 icon: "last-page", label: "{dic:viewed|Autofocus on last viewed}", extensionIcon: icon(stor("viewed")), 
                 data: "viewed", action: "execute:request:interaction:menu@" + window.location.href
             }, {
-                icon: "folders", label: "{dic:floders|Show folders}", extensionIcon: icon(stor("folders")), 
+                icon: "folder", label: "{dic:folders|Show folders}", extensionIcon: icon(stor("folders")), 
                 data: "folders", action: "execute:request:interaction:menu@" + window.location.href
             }])
         };
@@ -334,13 +334,15 @@ TVXPluginTools.onReady(function() {
             {icon: "folder", label: "{dic:fls|My files}", data: "request:interaction:access:" + addr + "@" + window.location.protocol + "//nb.msx.benzac.de/interaction"}
         ], options: opts("", [
             {key: "red", label: "{dic:caption:menu|menu}", action: "[cleanup|reload:menu]"},
-            {key: "yellow", icon: "translate", label: R ? "Switch to english" : "Перевести на русский", action: "[execute:request:interaction:menu@" + window.location.href + "|reload]", data: "russian"}
+            {key: "yellow", icon: "translate", label: R ? "Switch to english" : "Перевести на русский", action: "execute:request:interaction:menu@" + window.location.href, data: "russian"}
         ]), logo: (addr = window.location.protocol + "//" + addr) + "/logo.png"};
         this.handleData = P.find.handleData;
         this.handleRequest = function(i, d, f){
             if (P[i]) P[i].handleRequest(d, f);
-            else if(d && d.data) stor(d.data, true);
-            else ajax("/settings", {action: "get"}, function(d){
+            else if(d && d.data){
+                stor(d.data, true);
+                f({action: d.data == "russian" ? "reload" : "[cleanup|reload:content]"});
+            }else ajax("/settings", {action: "get"}, function(d){
                 M.menu[1].enable = d.EnableRutorSearch === true;
                 if(typeof d == "string") TVXInteractionPlugin.error(d);
                 ajax("/files", function(d){
