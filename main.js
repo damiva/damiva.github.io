@@ -288,7 +288,13 @@ function torrent(){
             "/stream/?stat" + ["link", "title", "poster", "category"].map(function(k){
                 return D[k] ? ("&" + k + "=" + encodeURIComponent(D[k])) : "";
             }).join(""),
-            function(t){ajax("/msx/trn?hash=", t.hash, function(s){f(L(t, s !== true))})},
+            function(t){
+                TVXInteractionPlugin.debug("got torrent: " + t.hash);
+                ajax("/msx/trn?hash=", t.hash, function(s){
+                    TVXInteractionPlugin.debug("got indb: " + s);
+                    f(L(t, s !== true))
+                })
+            },
             function(e){TVXInteractionPlugin.error(e);f();}
         );
         else if(typeof d.data == "string") ajax("/viewed", {action: "list", hash: d.data}, function(l){
