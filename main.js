@@ -218,34 +218,31 @@ function torrent(){
     var L = function(t, s){
         var ds = [], fs = [], sf = stor("folders"), c = stor("compress"),
             u = addr + "/stream/?play&link=" + encodeURIComponent(D.link) + "&index=";
-        TVXInteractionPlugin.debug("files in the torrent: " + t.file_stats.length);
         t.file_stats.forEach(function(f){
             var t = f.path.lastIndexOf(".");
             TVXInteractionPlugin.debug("file: " + f.id + " " + f.path);
             if(t >= 0){
                 var x = f.path.substr(t + 1).toLowerCase();
-                if(x) for(t = 0; t < X.length; t++) if(X[t].indexOf(x) >= 0) break;
-                else t = -1;
+                if(!x) t = -1
+                else for(t = 0; t < X.length; t++) if(X[t].indexOf(x) >= 0) break;
             }
-            if(t >= 0 && t <= 1){
-                TVXInteractionPlugin.debug("added");
-                f.path = f.path.split("/");
-                f.name = f.path.pop();
-                if(f.path.length > 0) f.path.shift();
-                if((f.path = f.path.length ? f.path.join("/") : "") && (!ds.length || ds[ds.length - 1].label != f.path)){
-                    ds.push({label: f.path, action: "[cleanup|focus:" + f.id + "]"});
-                    if(sf) fs.push({type: "space", text: "{col:msx-yellow}{ico:folder} " + f.path})
-                }
-                fs.push({
-                    id: TVXTools.strValue(f.id),
-                    icon: t ? "audiotrack" : "movie",
-                    label: f.name,
-                    group: "{ico:" + (t ? "audiotrack}" : "movie}"),
-                    folder: f.path ? ("{ico:msx-yellow:folder} " + f.path + "{br}") : "",
-                    extensionLabel: size(f.length),
-                    action: t ? ("audio:" + u + f.id) : ("video:resolve:request:interaction:" + u + f.id + "@http://msx.benzac.de/interaction/play.html")
-                });
+            if(t >= 0 && t <= 1) return;
+            f.path = f.path.split("/");
+            f.name = f.path.pop();
+            if(f.path.length > 0) f.path.shift();
+            if((f.path = f.path.length ? f.path.join("/") : "") && (!ds.length || ds[ds.length - 1].label != f.path)){
+                ds.push({label: f.path, action: "[cleanup|focus:" + f.id + "]"});
+                if(sf) fs.push({type: "space", text: "{col:msx-yellow}{ico:folder} " + f.path})
             }
+            fs.push({
+                id: TVXTools.strValue(f.id),
+                icon: t ? "audiotrack" : "movie",
+                label: f.name,
+                group: "{ico:" + (t ? "audiotrack}" : "movie}"),
+                folder: f.path ? ("{ico:msx-yellow:folder} " + f.path + "{br}") : "",
+                extensionLabel: size(f.length),
+                action: t ? ("audio:" + u + f.id) : ("video:resolve:request:interaction:" + u + f.id + "@http://msx.benzac.de/interaction/play.html")
+            });
         });
         return {
             type: "list", headline: t.title, compress: c, items: fs,
