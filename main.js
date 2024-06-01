@@ -110,7 +110,7 @@ function torrents(){
         d = r ? {action: "list"} : d.data;
         if (d.action) ajax(
             "/torrents", {action: "list"}, !r,
-            r ? function(l){f(H(B(l)))} : function(){f({action: "[cleanup|reload:content|success]"})},
+            r ? function(l){f(H(B(l)))} : function(){f({action: "[cleanup|reload:content]"})},
             r ? function(e){TVXInteractionPlugin.error(e); f()} : function(e){f({action: "error:" + e})}
         );
         else if (!d.find) f({action: "warn:{dic:empty|Nothing found}"});
@@ -219,7 +219,7 @@ function torrent(){
         var ds = [], fs = [], sf = stor("folders"), c = stor("compress"),
             u = addr + "/stream/?play&link=" + encodeURIComponent(D.link) + "&index=",
             o = [["folders", "Show", "folder"], ["viewed", "Autofocus on last", "last-page"], ["compress", "Font", "compress"]].map(function(i){return {
-                icon: i[3], label: "{dic:" + i[0] + "|" + i[1] + " " + i[0] + "}", 
+                icon: i[3], label: "{dic:" + i[0] + "|" + i[1] + " " + i[0] + "}", extensionIcon: icon(stor(i[0])),
                 data: {set: i[0]}, action: "[cleanup|interaction:load:" + window.location.href + "|reload:content]"
             }})
         t.file_stats.forEach(function(f){
