@@ -1,4 +1,4 @@
-var addr = "";
+var addr = "", vers = "";
 function ajax(){
     var u = addr, d = null, s = {};
     for(var i = 0; i < arguments.length; i++) switch(typeof arguments[i]){
@@ -221,7 +221,18 @@ function torrent(){
             o = [["folders", "Show", "folder"], ["viewed", "Autofocus on last", "last-page"], ["compress", "Font", "compress"]].map(function(i){return {
                 icon: i[3], label: "{dic:" + i[0] + "|" + i[1] + " " + i[0] + "}", extensionIcon: icon(stor(i[0])),
                 data: {set: i[0]}, action: "[cleanup|interaction:load:" + window.location.href + "|reload:content]"
-            }})
+            }}),
+            p = {
+                "info:text": "{context:folder}{ico:{context:icon}} {context:label}",
+                "info:image": t.poster || "default",
+                "control:type": "extended",
+                "resume:key": "url",
+                "trigger:complete": "[player:auto:next|resume:cancel]"
+            };
+        if(vers > "Matrix.133"){
+            p["trigger:load"] = "execute:" + addr + "/msx/trn?hash=" + t.hash;
+            p["trigger:player"] = p["trigger:load"];
+        }
         t.file_stats.forEach(function(f){
             var t = f.path.lastIndexOf(".");
             if(t >= 0){
@@ -268,16 +279,7 @@ function torrent(){
             ]},
             template: {
                 layout: c ? "0,0,16,1" : "0,0,12,1", type: "control", playerLabel: t.title, 
-                progress: -1, live: {type: "playback", action: "player:show"},
-                properties: {
-                    "info:text": "{context:folder}{ico:{context:icon}} {context:label}",
-                    "info:image": t.poster || "default",
-                    "control:type": "extended",
-                    "resume:key": "url",
-                    "trigger:load" : "execute:" + addr + "/msx/trn?hash=" + t.hash,
-                    "trigger:player" : "execute:" + addr + "/msx/trn?hash=" + t.hash,
-                    "trigger:complete": "[player:auto:next|resume:cancel]"
-                }
+                progress: -1, live: {type: "playback", action: "player:show"}, properties: p
             },
             options: opts("", o)
         };
@@ -322,6 +324,7 @@ function torrent(){
 TVXPluginTools.onReady(function() {
     TVXInteractionPlugin.setupHandler(new function(){
         addr = TVXServices.storage.getFullStr("ts:server", "");
+        var B = new TVXBusyService();
         var R = stor("russian");
         var P = {trns: new torrents(), find: new search(R), trnt: new torrent()};
         var M = {menu: [
@@ -332,11 +335,18 @@ TVXPluginTools.onReady(function() {
             {key: "red", label: "{dic:caption:menu|menu}", action: "[cleanup|reload:menu]"},
             {key: "yellow", icon: "translate", label: R ? "Switch to english" : "Перевести на русский", action: "[interaction:load" + window.location.href + "|reload]", data: {set: "russian"}}
         ]), logo: (addr = window.location.protocol + "//" + addr) + "/logo.png"};
-        this.handleData = function(d){
+        this.ready = function(){
+            B.start();
+            ajax("/msx/start.json", function(d){
+                if(typeof d == "object") vers = d.version;
+                B.stop();
+            });
+        }
+        this.handleData = function(d){B.onReady(function(){
             if(d.data && d.data.set) stor(d.data.set, true);
             else P.find.handleData(d);
-        };
-        this.handleRequest = function(i, d, f){
+        })};
+        this.handleRequest = function(i, d, f){B.onReady(function(){
             if (P[i]) P[i].handleRequest(d, f);
             else ajax("/settings", {action: "get"}, function(d){
                 M.menu[1].enable = d.EnableRutorSearch === true;
@@ -349,7 +359,7 @@ TVXPluginTools.onReady(function() {
                     f(M);
                 });
             });
-        };
+        })};
     });
     TVXInteractionPlugin.init();
 });
