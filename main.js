@@ -109,7 +109,7 @@ function torrents(){
         var r = !d || !d.data;
         d = r ? {action: "list"} : d.data;
         if (d.action) ajax(
-            "/torrents", {action: "list"}, !r,
+            "/torrents", d, !r,
             r ? function(l){f(H(B(l)))} : function(){f({action: "[cleanup|reload:content]"})},
             r ? function(e){TVXInteractionPlugin.error(e); f()} : function(e){f({action: "error:" + e})}
         );
