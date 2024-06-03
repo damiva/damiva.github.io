@@ -1,10 +1,10 @@
 var addr = "", vers = "";
 function ajax(){
-    var u = addr, d = null, s = {};
+    var u = addr, d = null, s = {}, t = null;
     for(var i = 0; i < arguments.length; i++) switch(typeof arguments[i]){
         case "object": d = arguments[i]; break;
         case "string": u += arguments[i]; break;
-        case "boolean": s.dataType = arguments[i] ? "text" : "json"; break;
+        case "boolean": t.dataType = arguments[i] ? "text" : "json"; break;
         case "function": if(s.success){
             s.error = arguments[i];
         }else{
@@ -12,7 +12,7 @@ function ajax(){
             s.error = arguments[i];
         }
     }
-    TVXServices.ajax[d ? "post" : "get"](u, d ? JSON.stringify(d) : s, d ? s : undefined);
+    TVXServices.ajax[d ? "post" : "get"](u, d ? JSON.stringify(d) : s, d ? s : t, d ? t : undefined);
 }
 function opts(h, o){
     var r = {
