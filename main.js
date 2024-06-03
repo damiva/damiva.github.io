@@ -56,8 +56,8 @@ function torrents(){
         stampColor: "msx-" + (t.stat > 3 ? "red" : t.stat == 3 ? "green" : "yellow"),
         options: opts("", [
             {key: "red", label: "{dic:list|list}", action: "[cleanup|reload:content]"},
-            t.stat > 4 ? null : {key: "green", icon: "stop", label: "{dic:drop|Drop the torrent}", data: {action: "drop", hash: "{context:id}"}, action: "execute:request:interaction:trns@" + window.location.href},
-            {key: "yellow", icon: "delete", label: "{dic:rem|Remove the torrent}", data: {action: "rem", hash: "{context:id}"}, action: "execute:request:interaction:trns@" + window.location.href},
+            t.stat > 4 ? null : {key: "green", icon: "stop", label: "{dic:drop|Drop the torrent}", data: {action: "drop", hash: t.hash}, action: "execute:request:interaction:trns@" + window.location.href},
+            {key: "yellow", icon: "delete", label: "{dic:rem|Remove the torrent}", data: {action: "rem", hash: t.hash}, action: "execute:request:interaction:trns@" + window.location.href},
         ])
     }})};
     var Q = function(q){
@@ -316,7 +316,7 @@ function torrent(){
             });
         } else if(d.data.link){
             D = d.data;
-            f({action: "content:request:interaction:trnt"});
+            f({action: "content:request:interaction:trnt@" + window.location.href});
         } else f({action: "request link is not set"});
     };
 }
