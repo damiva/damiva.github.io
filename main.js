@@ -229,7 +229,7 @@ function torrent(){
                 "resume:key": "url",
                 "trigger:complete": "[player:auto:next|resume:cancel]"
             };
-        if(vers > "Matrix.133"){
+        if(vers > "MatriX.133"){
             p["trigger:load"] = "execute:" + addr + "/msx/trn?hash=" + t.hash;
             p["trigger:player"] = p["trigger:load"];
         }
