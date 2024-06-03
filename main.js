@@ -4,7 +4,7 @@ function ajax(){
     for(var i = 0; i < arguments.length; i++) switch(typeof arguments[i]){
         case "object": d = arguments[i]; break;
         case "string": u += arguments[i]; break;
-        case "boolean": t.dataType = arguments[i] ? "text" : "json"; break;
+        case "boolean": if(arguments[i]) t = {dataType: "text"}; break;
         case "function": if(s.success){
             s.error = arguments[i];
         }else{
