@@ -270,7 +270,7 @@ function torrent(){
             }
         } : null);
         return {
-            type: "list", headline: t.title, compress: c, items: fs, cache: false, reuse: false, restore: false, extension: " ",
+            type: "list", headline: t.title, compress: c, items: fs, extension: " ",
             ready: fs.length > 1 && stor("viewed") ? {action: "execute:request:interaction:trnt@" + window.location.href, data: t.hash} : null,
             overlay: {items: [
                 {id: t.hash, layout: (c ? 13 : 9) + ",0,3,1", offset: "0,-1,0,0", type: "space", color: "none", stamp: "", stampColor: "", live: {
