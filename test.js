@@ -42,7 +42,7 @@ function torrents(d){return {
 }}
 function found(d, h){return {
     type: "list", headline: "{ico:search} " + h, extension: "{ico:msx-white:search} " + d.length,
-    template: {layout: "0,0,12,1"}, items: d.map(function(t){return {
+    template: {layout: "0,0,12,1", stampColor: "msx-blue"}, items: d.map(function(t){return {
         headline: t.title,
         iamge: window.location.protocol + "//torrs.ru/img/ico/" + t.trackerName + ".ico",
         group: t.trackerName,
@@ -188,7 +188,7 @@ function main(){
                 if(!d) X("/torrents", {action: "list"}, function(d){f(torrents(d))}, e);
                 else if(!d.data) f({action: "warn:{dic:empty|Nothing found}"});
                 else X(
-                    "/msx/proxy?url=" + encodeURIComponent("http://torrs.ru/search?query=" + encodeURIComponent(d.data)),
+                    "/msx/proxy?accurate&url=" + encodeURIComponent("http://torrs.ru/search?query=" + encodeURIComponent(d.data)),
                     function(j){f({action: "content:data", data: found(j, d.data, S)})},
                     e
                 );
