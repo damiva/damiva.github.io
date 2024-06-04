@@ -40,6 +40,17 @@ function torrents(d){return {
         )
     }})
 }}
+function found(d, h){return {
+    type: "list", headline: "{ico:search} " + h,
+    template: {layout: "0,0,12,1", imageWidth: 0.3, imageFiller: "width-middle"},
+    items: d.map(function(t){return {
+        headline: t.title,
+        iamge: window.location.protocol + "//torrs.ru/img/ico/" + t.trackerName + ".ico",
+        titleFooter: "{tb}{txt:msx-blue:" + t.trackerName + "}{tb}{ico:msx-white} " + t.sizeName,
+        stamp: "{ico:north} " + t.pir + " {ico:south} " + t.sid,
+        action: "content:request:interaction:" + t.magnet + "@" + window.location.href
+    }})
+}}
 function keyboard(K){
     var S = TVXServices.storage.getFullStr("ts:search", "");
     var X = function(){
@@ -117,7 +128,7 @@ function keyboard(K){
         }); 
     }
 }
-function main(T){
+function main(){
     var A = TVXServices.storage.getFullStr("ts:server"),
         S = {
             russian: TVXServices.storage.getBool("ts:russian", false),
@@ -196,3 +207,7 @@ function main(T){
         }
     }
 }
+TVXPluginTools.onReady(function() {
+    TVXInteractionPlugin.setupHandler(new main());
+    TVXInteractionPlugin.init();
+});
