@@ -41,13 +41,12 @@ function torrents(d){return {
     }})
 }}
 function found(d, h){return {
-    type: "list", headline: "{ico:search} " + h,
-    template: {layout: "0,0,12,1", imageWidth: 0.3, imageFiller: "width-middle"},
-    items: d.map(function(t){return {
+    type: "list", headline: "{ico:search} " + h, extension: "{ico:msx-white:search} " + d.length,
+    template: {layout: "0,0,12,1"}, items: d.map(function(t){return {
         headline: t.title,
         iamge: window.location.protocol + "//torrs.ru/img/ico/" + t.trackerName + ".ico",
-        titleFooter: "{tb}{txt:msx-blue:" + t.trackerName + "}{tb}{ico:msx-white} " + t.sizeName,
-        stamp: "{ico:north} " + t.pir + " {ico:south} " + t.sid,
+        group: t.trackerName,
+        stamp: "{ico:attach-file} " + t.sizeName + "{tb}{ico:north} " + t.pir + " {ico:south} " + t.sid,
         action: "content:request:interaction:" + t.magnet + "@" + window.location.href
     }})
 }}
@@ -120,7 +119,7 @@ function keyboard(K){
     };
     this.request = function(f){
         f({
-            type: "list", reuse: false, cache: false, restore: false, wrap: true, items: X(), extension: "{ico:msx-white:search} rutor",
+            type: "list", reuse: false, cache: false, restore: false, wrap: true, items: X(),
             ready: {action: "interaction:commit:message:key", data: ""},
             underlay: {items:[{id: "val", type: "space", layout: "0,0,12,1", color: "msx-black-soft", label: ""}]},
             template: {
@@ -174,15 +173,12 @@ function main(){
         if(i[0] == "/") X("/files" + i, function(d){f(files(d, i, S))}, e, "xml");
         else switch(i){
             case "init":
-                X("/settings", {action: "get"}, function(d){
-                    menu.menu[1].display = d.EnableRutorSearch === true;
-                    X("/files", function(d){
-                        menu.menu[2].display = d ? true : false;
-                        f(menu);
-                    }, function(){
-                        menu.menu[2].display = false;
-                        f(menu);
-                    });
+                X("/files", function(d){
+                    menu.menu[2].display = d ? true : false;
+                    f(menu);
+                }, function(){
+                    menu.menu[2].display = false;
+                    f(menu);
                 });
                 break;
             case "keyboard": 
