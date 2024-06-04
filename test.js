@@ -16,7 +16,7 @@ function opts(){
             arguments[i].progress = 1;
             arguments[i].progressColor = "msx-" + arguments[i].key;
             if(r) arguments[i].icon = "refresh";
-            o.caption += "{tb}{col:" + arguments[i].progressColor + "}{ico:" + arguments[i].icon + (r ? "" : (" " + arguments[i].label));
+            o.caption += "{tb}{col:" + arguments[i].progressColor + "}{ico:" + arguments[i].icon + "}" + (r ? "" : (" " + arguments[i].label));
         }
         o.items.push(arguments[i]);
     }
@@ -51,6 +51,8 @@ function found(d, h){return {
         action: "content:request:interaction:" + t.magnet + "@" + window.location.href
     }})
 }}
+function files(){}
+function torrent(){}
 function keyboard(K){
     var S = TVXServices.storage.getFullStr("ts:search", "");
     var X = function(){
@@ -173,7 +175,7 @@ function main(){
         else switch(i){
             case "init":
                 X("/settings", {action: "get"}, function(d){
-                    menu.menu[1].display = d && d.EnableRutorSearch === true;
+                    menu.menu[1].display = d.EnableRutorSearch === true;
                     X("/files", function(d){
                         menu.menu[2].display = d ? true : false;
                         f(menu);
