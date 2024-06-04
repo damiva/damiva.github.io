@@ -141,7 +141,7 @@ function main(){
     var X = function(){
         var d = null, s = null, t = null;
         for(var i = 1; i < arguments.length; i++) switch(typeof arguments[i]){
-            case "object": d = arguments[i]; break;
+            case "object": d = JSON.stringify(arguments[i]); break;
             case "string": t = {dataType: arguments[i]}; break;
             case "function": if(s) s.error = arguments[i]; else s = {success: arguments[i], error: arguments[i]};
         }
