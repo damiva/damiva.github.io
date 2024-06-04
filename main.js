@@ -333,7 +333,7 @@ TVXPluginTools.onReady(function() {
             {icon: "folder", label: "{dic:fls|My files}", data: "request:interaction:access:" + addr + "@" + window.location.protocol + "//nb.msx.benzac.de/interaction"}
         ], options: opts("", [
             {key: "red", label: "{dic:caption:menu|menu}", action: "[cleanup|reload:menu]"},
-            {key: "yellow", icon: "translate", label: R ? "Switch to english" : "Перевести на русский", action: "[interaction:load" + window.location.href + "|reload]", data: {set: "russian"}}
+            {key: "yellow", icon: "translate", label: R ? "Switch to english" : "Перевести на русский", action: "[interaction:load:" + window.location.href + "|reload]", data: {set: "russian"}}
         ]), logo: (addr = window.location.protocol + "//" + addr) + "/logo.png"};
         this.ready = function(){
             B.start();
