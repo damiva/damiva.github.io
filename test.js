@@ -24,7 +24,7 @@ function opts(){
 }
 function torrents(d){return {
     type: "list", cache: false, reuse: false, restore: false, extension: "{ico:msx-white:bookmarks} " + d.length,
-    template: {layout: "0,0,6,1", imageWidth: 1.3, imageFiller: "height"}, items: d.map(function(t){return {
+    template: {layout: "0,0,6,2", imageWidth: 1.3, imageFiller: "height"}, items: d.map(function(t){return {
         id: t.hash,
         headline: t.title,
         image: t.poster,
