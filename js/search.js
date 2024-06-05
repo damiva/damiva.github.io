@@ -116,7 +116,7 @@ function search(K){
                                 text: "{col:msx-white}" + t.title,
                                 iamge: window.location.protocol + "//torrs.ru/img/ico/" + t.trackerName + ".ico",
                                 group: t.trackerName,
-                                stamp: "{ico:date-range} " + TVXDateFormatter.toDateStr(new Date(t.createTime)) + "{tb}{ico:attach-file} " + t.sizeName + "{tb}{ico:north} " + t.pir + " {ico:south} " + t.sid,
+                                stamp: "{col:msx-white-soft}{ico:date-range} " + TVXDateFormatter.toDateStr(new Date(t.createTime)) + "{tb}{ico:attach-file} " + t.sizeName + "{tb}{ico:north} " + t.pir + " {ico:south} " + t.sid,
                                 action: "content:request:interaction:" + encodeURIComponent(t.magnet) + "@" + window.location.href
                             }})
                         });
