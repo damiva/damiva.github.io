@@ -42,17 +42,11 @@ function playlist(){
     var H = function(d, p, c){
         var fs = [], ds = [];
         d = d.matchAll(/.*href="(.+)".*>(.*)<.*/gim);
-        for(var a of d) TVXInteractionPlugin.debug(a[1] + ":" + a[2]);
-        /*
-        d = new window.DOMParser().parseFromString(d, "text/html");
-        d.querySelectorAll("a[href]").forEach(function(a){
-            TVXInteractionPlugin.debug(a);
-            if(a = I({label: a.innerText, action: p + a.href}))
+        for(var a of d) 
+            if(a = I({label: a[2], action: p + a[1]}))
                 if(a.group) fs.push(a);
                 else ds.push(a);
-        });
-        */
-        d = p.substr(0, p.length - 1)
+        d = p.substr(0, p.length - 1);
         return L(ds.concat(fs), decodeURI(d.substr(d.lastIndexOf("/") + 1)), c);
     };
     var T = function(d, l, c, s){
