@@ -6,7 +6,7 @@ function playlist(){
     var I = function(i){
         var x = i.label.length - 1;
         if(x < 0) return null
-        if(i.label[x] == "/") x = 2;
+        if(i.label[x] == "/"){i.label = i.label.substr(0, x); x = 2;}
         else if((x = i.label.lastIndexOf(".")) < 0 || !(x = i.label.substr(x + 1).toLowerCase())) return null;
         else for(var n = 0; n < X.length; n++) if(X[n].indexOf(x) >= 0){
             x = n;
@@ -54,7 +54,7 @@ function playlist(){
         var fs = [], ds =[], sf = prms("folders");
         d.file_stats.forEach(function(f){
             if(f = I({id: TVXTools.strValue(f.id), label: f.path, extensionLabel: size(f.length), action: "/stream/?play&link=" + l + "&index=" + f.id})){
-                var p = f.lable.split("/");
+                var p = f.label.split("/");
                 f.label = p.pop();
                 p.shift();
                 if((p = p.join("/")) && (!ds.length || ds[ds.length - 1].label != p)){
@@ -101,10 +101,7 @@ function playlist(){
     this.handleRequest = function(i, _, f){
         var e = function(m){TVXInteractionPlugin.error(m);f();},
             c = prms("compress");
-        if(i.indexOf("/") === 0) ajax(i, "html", function(d){
-            TVXInteractionPlugin.debug(d);
-            f(H(d, i, c));
-        }, e);
+        if(i.indexOf("/") === 0) ajax(i, "html", function(d){f(H(d, i, c))}, e);
         else switch((i = i.split("|")).length){
             case 4: if(i[3]) i[3] = "&category=" + i[3];
             case 3: if(i[2]) i[2] = "&poster=" + i[2];
