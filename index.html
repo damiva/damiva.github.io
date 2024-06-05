@@ -1,9 +1,111 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>damiva's page</title>
+        <title>Media Station X for TorrServer</title>
+        <meta charset="UTF-8" />
+        <meta name="author" content="damiva" />
+        <meta name="copyright" content="damiva" />
+        <link type="image/png" rel="shortcut icon" href="https://msx.benzac.de/img/icon.png" /> 
+        <link type="image/png" rel="apple-touch-icon" href="https://msx.benzac.de/img/icon.png" />
+        <style>
+            html {height: 100%; margin: 0; padding: 0}
+            body {
+                font-family: Arial, Helvetica, sans-serif; 
+                display: grid; grid-template: max-content auto min-content / min-content;
+                margin: auto 0; padding: 0; height: 100%;
+            }
+            header, footer  {background-color: steelblue; color: white;}
+            main            {overflow: auto;}
+            button          {width: 2em;}
+            input, button   {height: 2em;}
+            #error          {color: red;}
+            #error:empty    {display: none;}
+            #error::before  {content: "⚠ ";}
+        </style>
+        <script>
+            function ajax(f){
+                var x = new XMLHttpRequest(), v = typeof f == "string", s = document.getElementById("stg");
+                e.disabled = true;
+                x.responseType = "json";
+                x.onloadend = function(){
+                    var e = document.getElementById("files");
+                    e.value = e.defaultValue = x.response.files || "";
+                    document.getElementById("error").innerText = x.status != 200 ? (x.statusText + ": " + x.responseText) : (f["error"] || "");
+                    document.getElementById("files").disabled = true;
+                    if(v || x.status == 200) e.disabled = false;
+                }
+                x.open("GET", "/msx/stg" + (v ? ("files=" + encodeURIComponent(f)) : ""));
+                s.send();
+            }
+            window.onload = function(){
+                var e = document.getElementById("lang");
+                e.onclick = function(){
+                    var l = this.value;
+                    this.value = l == "🇷🇺" ? "🇬🇧" : "🇷🇺";
+                    document.querySelectorAll("[lang]").forEach(e => e.hidden = e.lang != l);
+                };
+                e.onclick();
+                e = document.getElementById("msx");
+                if(!(e.hidden = window.location.hostname == "damiva.github.io")){
+                    e.href = e.href.replace("{ORIG}", window.location.origin);
+                    document.getElementById("addr").innerText = window.location.host;
+                    e = document.forms[0];
+                    e.hidden = false;
+                    ajax();
+                    e.files.onchange = function(){document.getElementById("send").disabled = this.value == this.defaultValue};
+                    e.onsubmit = function(){
+                        if(this.files.value != this.files.defaultValue) ajax(this.files.value);
+                        return false;
+                    };
+                }
+            }
+        </script>
     </head>
     <body>
-        <h1>Underconstruction!</h1>
+        <header>
+            <img src="https://msx.benzac.de/img/icon.png" style="height:1em;">
+            TorrServer <span lang="en">on</span><span lang="ru">на</span> Media Station X
+            <button style="float: right;" id="lang"></button>
+        </header>
+        <main>
+            <b lang="en">TV-set instalation</b><b lang="ru">Установка на телевизор</b>:
+            <ol>
+                <li>
+                    <span lang="en">On yuor TV-set install and launch the application:</span>
+                    <span lang="ru">На телевизоре установите и запустите приложение:</span>
+                    <a href="https://msx.benzac.de/info/">Media Station X</a>
+                </li>
+                <li>
+                    <span lang="en">Navigate to</span><span lang="ru">Перейдите к</span>:
+                    <b>Settings ⇒ Start Parameter ⇒ Setup</b>
+                </li>
+                <li>
+                    <span lang="en">Enter the address of</span><span lang="ru">Введите адрес</span>
+                    TorrServer: <b id="addr">&lt;IP&gt;:&lt;PORT&gt;</b>
+                </li>
+                <li>
+                    <span lang="en">Press</span><span lang="ru">Нажмите</span>
+                    <b>Yes</b> <span lang="en">to</span><span lang="ru">на</span>
+                    <b>Complete the setup</b>
+                </li>
+                <li>
+                    <span lang="en">Enjoy your content</span><span lang="ru">Наслождайтесь просмотром</span>
+                </li>
+            </ol>
+            <a id="msx" href="//msx.benzac.de/?start=menu:{ORIG}/msx/plugin.html">
+                <b lang="en">Run MSX in web-browser</b><b lang="ru">Запуск MSX в веб-браузере</b>
+            </a>
+            <fieldset id="stg" style="width: msx-content;">
+                <legend>
+                    <b lang="en">Playing "My files" from the server</b><b lang="ru">Просмотр "Моих фалов" с сервера</b>:
+                </legend>
+                <b id="error"></b>
+                <label>
+                    <i lang="en">Path to the folder</i><i lang="ru">Путь к папке</i>:
+                    <input id="files">
+                </label><button id="send">✅</button>
+            </fieldset>
+        </main>
+        <footer style="text-align: center;">© damiva 2024</footer>
     </body>
 </html>
