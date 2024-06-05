@@ -109,7 +109,7 @@ function search(K){
                 });
                 return true;
             case "find":
-                proxy("https://torrs.ru/search?query=" + encodeURIComponent(S)) + (A ? "&accurate" : "", {
+                proxy("https://torrs.ru/search?query=" + encodeURIComponent(S) + (A ? "&accurate" : ""), {
                     success: function(d){f({
                         type: "list", headline: "{ico:search} " + h, extension: "{ico:msx-white:search} " + d.length,
                         template: {layout: "0,0,12,1", stampColor: "msx-blue"}, options: Z(true),
