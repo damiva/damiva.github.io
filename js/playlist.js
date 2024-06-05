@@ -8,7 +8,7 @@ function playlist(){
         if(x < 0) return null
         if(i.label[x - 1] == "/") x = 2;
         else if((x = i.label.lastIndex.Of(".")) < 0 || !(x = i.label.substr(x + 1).toLowerCase())) return null;
-        else for(var i = 0; i < exts.length; i++) if(exts[i].indexOf(x) >= 0){
+        else for(var i = 0; i < X.length; i++) if(X[i].indexOf(x) >= 0){
             x = i;
             break;
         }
@@ -16,7 +16,10 @@ function playlist(){
         i.playerLabel = i.label;
         if(i.icon = x < 1 ? "movie" : x < 2 ? "auditrack" : "") i.group = "{ico:" + i.icon + "}";
         i.icon = i.icon ? ("msx-white-soft:" + i.icon) : "msx-yellow:folder";
-        i.action = x > 1 ? ("content:" + u) : x ? ("audio:" + u) : !html ? ("video:" + u) : ("video:plugin:" + window.location.protocol + "//msx.benzac.de/plugins/html5x.html?url=" + encodeURIComponent(u))
+        i.action = 
+            x > 1 ? ("content:request:interaction:" + u + "@" + window.location.href) 
+            : x ? ("audio:" + addr + u) 
+            : ("video:resolve:request:interaction:" + addr + u + "@http://msx.benzac.de/interaction/play.html")
         return i;    
     };
     var L = function(d, h, c, o, p){
@@ -38,24 +41,19 @@ function playlist(){
     };
     var H = function(d, p, c){
         var fs = [], ds = [];
-        d = new window.DOMParser().parseFromString(d, "text/xml").documentElement.childNodes;
-        for(var n = 0; n < d.length; n++){
-            var e = {label: d[n].childNodes[0].nodeValue, action: d[n].getAttribute("href")};
-            if(e.label && e.action){
-                e.action = addr + p + e.action;
-                if(e = I(e)){
-                    if(e.group) ts.push(e);
-                    else ds.push(e);
-                }
-            }
-        }
+        d = new window.DOMParser().parseFromString(d, "text/html");
+        d.querySelector("a[href]").forEach(function(a){
+            if(a = I({label: a.innerText, action: p + a.href}))
+                if(a.group) fs.push(a);
+                else ds.push(a);
+        });
         d = p.substr(0, p.length - 1)
         return L(ds.concat(fs), decodeURI(d.substr(d.lastIndexOf("/") + 1)), c);
     };
     var T = function(d, l, c, s){
         var fs = [], ds =[], sf = prms("folders");
         d.file_stats.forEach(function(f){
-            if(f = I({id: TVXTools.strValue(f.id), label: f.path, extensionLabel: size(f.length), action: addr + "/stream/?play&link=" + l + "&index=" + f.id})){
+            if(f = I({id: TVXTools.strValue(f.id), label: f.path, extensionLabel: size(f.length), action: "/stream/?play&link=" + l + "&index=" + f.id})){
                 var p = f.lable.split("/");
                 f.label = p.pop();
                 p.shift();
