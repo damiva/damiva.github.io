@@ -41,6 +41,9 @@ function playlist(){
     };
     var H = function(d, p, c){
         var fs = [], ds = [];
+        d = d.match(/.*href="(.+)".*>(.*)<.*/gim);
+        TVXInteractionPlugin.debug(d);
+        /*
         d = new window.DOMParser().parseFromString(d, "text/html");
         d.querySelectorAll("a[href]").forEach(function(a){
             TVXInteractionPlugin.debug(a);
@@ -49,6 +52,7 @@ function playlist(){
                 else ds.push(a);
         });
         d = p.substr(0, p.length - 1)
+        */
         return L(ds.concat(fs), decodeURI(d.substr(d.lastIndexOf("/") + 1)), c);
     };
     var T = function(d, l, c, s){
