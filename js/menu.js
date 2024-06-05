@@ -1,15 +1,15 @@
 TVXPluginTools.onReady(function() {
     TVXInteractionPlugin.setupHandler(new function(){
         var R = TVXServices.storage.getBool("ts:russian", false),
-        S = new search(R), P = new playlist(),
-        M = {menu: [
+            S = new search(R), P = new playlist();
+        var M = {menu: [
             {icon: "bookmarks", label: "{dic:trns|My torrents}", data: "request:interaction:trns@" + window.location.href},
             {icon: "search", label: "{dic:srch|Search torrents}", data: "request:interaction:search@" + window.location.href},
             {icon: "folder", label: "{dic:fls|My files", data: "request:interaction:/files/@" + window.location.href}
-        ], options: opts(
+        ], options: opts([
             {key: "green", icon: "translate", label: R ? "Switch to english" : "Перевести на русский", data: {action: "russian"}},
             {key: "yellow", label: "{dic:refresh|Refresh} {dic:caption:menu|menu}", action: "[cleanup|reload:menu]"}
-        )};
+        ])};
         var L = function(d){return {
             type: "list", reuse: false, cache: false, restore: false, extension: "{ico:msx-white:bookmarks} " + d.length,
             template: {layout: "0,0,6,2", imageWidth: 1.3, imageFiller: "height"}, items: d.map(function(t){return {
