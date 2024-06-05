@@ -31,7 +31,7 @@ function icon(v, r){return r
     : (v ? "msx-white:check-box" : "check-box-outline-blank");
 }
 function prms(k, c){
-    var v = TVXServices.storage.getVool(k = "ts:" + k, false);
+    var v = TVXServices.storage.getBool(k = "ts:" + k, false);
     if(c) TVXServices.storage.set(k, v = !v);
     return v;
 }
