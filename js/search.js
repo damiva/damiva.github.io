@@ -95,7 +95,7 @@ function search(K){
             default: return false;
         }
     };
-    this.handleRequest = function(i, d, f){
+    this.handleRequest = function(i, _, f){
         switch(i){
             case "search":
                 f({
@@ -119,7 +119,7 @@ function search(K){
                             iamge: window.location.protocol + "//torrs.ru/img/ico/" + t.trackerName + ".ico",
                             group: t.trackerName,
                             stamp: "{ico:attach-file} " + t.sizeName + "{tb}{ico:north} " + t.pir + " {ico:south} " + t.sid,
-                            action: "content:request:interaction:" + t.magnet + "@" + window.location.href
+                            action: "content:request:interaction:" + encodeURIComponent(t.magnet) + "@" + window.location.href
                         }})
                     })},
                     function(e){

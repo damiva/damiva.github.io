@@ -13,7 +13,7 @@ function playlist(){
             break;
         }
         if(typeof x != "number") return null;
-        if(!i.extensionLabel) i.playerLabel = i.label;
+        i.playerLabel = i.label;
         if(i.icon = x < 1 ? "movie" : x < 2 ? "auditrack" : "") i.group = "{ico:" + i.icon + "}";
         i.icon = i.icon ? ("msx-white-soft:" + i.icon) : "msx-yellow:folder";
         i.action = x > 1 ? ("content:" + u) : x ? ("audio:" + u) : !html ? ("video:" + u) : ("video:plugin:" + window.location.protocol + "//msx.benzac.de/plugins/html5x.html?url=" + encodeURIComponent(u))
