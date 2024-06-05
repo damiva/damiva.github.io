@@ -57,7 +57,7 @@ function playlist(){
     var T = function(d, l, c, s){
         var fs = [], ds =[], sf = prms("folders");
         d.file_stats.forEach(function(f){
-            if(f = I({id: TVXTools.strValue(f.id), label: f.path, extensionLabel: size(f.length), action: "/stream/?play&link=" + l + "&index=" + f.id})){
+            if(f = I({id: TVXTools.strValue(f.id), label: f.path.substr(f.path.lastIndexOf("/") + 1), extensionLabel: size(f.length), action: "/stream/?play&link=" + l + "&index=" + f.id})){
                 var p = f.label.split("/");
                 f.label = p.pop();
                 p.shift();
