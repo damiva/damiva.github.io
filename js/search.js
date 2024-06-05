@@ -111,7 +111,7 @@ function search(K){
                     success: function(d){
                         f({
                             type: "list", headline: "{ico:search} " + S, extension: "{ico:msx-white:search} " + d.length,
-                            template: {layout: "0,0,12,1"}, options: Z(c),
+                            template: {layout: "0,0,12,1"}, options: Z(),
                             items: d.sort(Y[O]).map(function(t){return {
                                 text: "{col:msx-white}" + t.title,
                                 iamge: window.location.protocol + "//torrs.ru/img/ico/" + t.trackerName + ".ico",
