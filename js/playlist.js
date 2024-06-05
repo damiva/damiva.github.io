@@ -41,8 +41,9 @@ function playlist(){
     };
     var H = function(d, p, c){
         var fs = [], ds = [];
-        d = d.match(/.*href="(.+)".*>(.*)<.*/gim);
+        d = d.matchAll(/.*href="(.+)".*>(.*)<.*/gim);
         TVXInteractionPlugin.debug(JSON.stringify(d));
+        d.forEach(function(a){TVXInteractionPlugin.debug(a[1] + ":" + a[2])});
         /*
         d = new window.DOMParser().parseFromString(d, "text/html");
         d.querySelectorAll("a[href]").forEach(function(a){
