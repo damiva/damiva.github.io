@@ -22,7 +22,7 @@ function playlist(){
             : ("video:resolve:request:interaction:" + addr + i.action + "@http://msx.benzac.de/interaction/play.html")
         return i;    
     };
-    var L = function(d, h, c, o, p){
+    var L = function(d, h, c, o, p, f){
         if(!p) p = {};
         p["resume:key"] = "url";
         p["trigger:complete"] =  "[player:auto:next|resume:cancel]";
@@ -33,7 +33,7 @@ function playlist(){
                 {key: "yellow", label: "{dic:refresh|Refresh} {dic:list|the list}", action: "[cleanup|reload:content]"}
             ]).concat([
                 {icon: "compress", label: "{dic:compress|Small font}", data: {action: "compress"}, extensionIcon: icon(c)},
-                {icon: "folder", label: "{dic:folders|Show folders}", data: {action: "folders"}, extensionIcon: icon(F), display: !!o}
+                {icon: "folder", label: "{dic:folders|Show folders}", data: {action: "folders"}, extensionIcon: icon(f), display: f !== undefined}
             ])),
             template: {type: "control", layout: C ? "0,0,16,1" : "0,0,12,1", progress: -1, properties: p},
             items: d.length ? d : [{items: "refresh", label: "{dic:empty|Nothing found}", action: "reload:content"}]
@@ -78,7 +78,7 @@ function playlist(){
         }} : null], {
             "trigger:load": "execute:" + addr + "/msx/trn?hash=" + d.hash,
             "trggier:player": "execute:" + addr + "/msx/trn?hash=" + d.hash
-        });
+        }, sf);
     };
     this.init = function(){
         if(addr = TVXServices.urlParams.getFullStr("server", TVXServices.storage.getFullStr("ts:server", ""))) addr = window.location.protocol + "//" + addr;
