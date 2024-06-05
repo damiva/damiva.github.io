@@ -42,7 +42,7 @@ function playlist(){
     var H = function(d, p, c){
         var fs = [], ds = [];
         d = d.match(/.*href="(.+)".*>(.*)<.*/gim);
-        TVXInteractionPlugin.debug(d);
+        TVXInteractionPlugin.debug(JSON.stringify(d));
         /*
         d = new window.DOMParser().parseFromString(d, "text/html");
         d.querySelectorAll("a[href]").forEach(function(a){
