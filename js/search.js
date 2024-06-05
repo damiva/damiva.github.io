@@ -100,7 +100,7 @@ function search(K){
             case "search":
                 f({
                     type: "list", reuse: false, cache: false, restore: false, wrap: true, items: X(),
-                    ready: {action: "interaction:load:" + window.location.href, data: ""}, options: M(),
+                    ready: {action: "interaction:load:" + window.location.href, data: ""}, options: Z(),
                     underlay: {items:[{id: "val", type: "space", layout: "0,0,12,1", color: "msx-black-soft", label: ""}]},
                     template: {
                         type: "button", layout: "0,0,1,1", area: K ? "0,1,12,5" : "1,1,10,5", enumerate: false,
