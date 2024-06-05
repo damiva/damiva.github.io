@@ -52,12 +52,12 @@ function search(K){
     var Z = function(c){
         return opts([
             {icon: "filter-alt", label: "{dic:accurate|Accurate search}", extensionIcon: icon(A), data: true, id: "accurate"},
-            {type: "space", label: "{dic:label:order|Order}: "},    
+            {type: "space", label: "{dic:label:order|Order}:"},    
         ].concat(F.map(function(o, i){
             return {icon: I[i], label: o, extensionIcon: icon(O == i, true), data: i, id: "order" + i}
         })).concat(
-            {type: "button", label: "{dic:label:" + (c ? "apply|Apply}" : "continue|Continue}"), action: "[cleanup" + (c ? "|reload:content]" : "]")}
-        ), ":{tb}{dic:label:order|Order}:" + F[O] + (A ? "{tb}{dic:accurate|Accurate search}" : ""));
+            {type: "button", label: "{dic:label:" + (c ? "apply|Apply}" : "continue|Continue}"), action: "[cleanup|reload:content]"}
+        ), ":{tb}{dic:label:order|Order}: " + F[O] + (A ? "{tb}{dic:accurate|Accurate search}" : ""));
     };
     this.handleData = function(d){
         switch(typeof d.data){

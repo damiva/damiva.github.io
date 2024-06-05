@@ -64,13 +64,13 @@ function playlist(){
             }
         });
         return L(fs, d.title, c, [{
-            type: "space", layout: (c ? 13 : 9) + ",0,3,1", offset: "0,-1,0,0", stamp: "", stampColor: "", id: d.hash,
+            type: "space", layout: (c ? 13 : 9) + ",0,3,1", offset: "0,-1,0,0", stamp: "", stampColor: "", id: d.hash, color: "none",
             live: {type: "setup", action: "execute:" + addr + "/msx/trn", data: "update:content:overlay:" + d.hash}
         }, s ? {
             key: "green", icon: "bookmark-add", label: "{dic:save|Save the torrent}",
             data: {action: "add", link: l, title: d.title, poster: d.poster, category: d.category}
         } : {
-            key: "green", icon: "last-page", label: "{dic:viewed|Viewed item}", data: {action: "focus"}
+            key: "green", icon: "last-page", label: "{dic:viewed|To viewed item}", data: {action: "focus", hash: d.hash}
         }, ds.length > 1 ? {key: "yellow", icon: "folder", label: "{dic:folder|To folder}", action: "panel:data", data: {
             type: "list", headline: "{dic:folder|To folder}:", compress: true, items: ds,
             template: {layout: "0,0,10,1", type: "control", icon: "msx-yellow:folder"}
@@ -92,6 +92,13 @@ function playlist(){
             case "drop": v = v || "{ico:close}";
             case "add": v = v || "{ico:bookmark-add}";
                 ajax("/torrents", d.data, "text", function(){r(v)}, function(e){TVXInteractionPlugin.error(e)});
+                break;
+            case "focus": d.action = "list";
+                ajax("/viewed", d, function(l){
+                    var i = 0;
+                    l.forEach(function(n){if(n.file_index > i) i = n.file_index});
+                    if(i > 0) TVXInteractionPlugin.executeAction("focus:" + i);
+                });
                 break;
             default: prms(d.data.action, true); r(d.data.action == "russian");
         }
