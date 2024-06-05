@@ -43,7 +43,7 @@ function playlist(){
         var fs = [], ds = [];
         d = new window.DOMParser().parseFromString(d, "text/xml").documentElement.childNodes;
         for(var i = 0; i < d.length; i++){
-            var a = {label: d[n].childNodes[0].nodeValue, action: d[n].getAttribute("href")};
+            var a = {label: d[i].childNodes[0].nodeValue, action: d[i].getAttribute("href")};
             if(a.action){
                 a.action = p + a.action;
                 if(a = I(a))
