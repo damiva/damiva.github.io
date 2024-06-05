@@ -22,7 +22,14 @@ TVXPluginTools.onReady(function() {
                 stamp: t.stat < 5 ? ("{ico:north} " + (t.active_peers || 0) + " / " + (t.total_peers || 0) + " {ico:south} " + (t.connected_seeders || 0)) : "",
                 stampColor: "msx-" + (t.stat == 4 ? "red" : t.stat == 3 ? "green" : "yellow"),
                 options: opts([
-                    {key: "red", icon: "delete",  label: "{dic:rem|Remove the torrent}", data: {action: "rem", hash: t.hash}},
+                    {key: "red", icon: "delete", label: "{dic:rem|Remove the torrent}", action: "panel:data", data: {
+                        type: "list", headline: "{dic:rem|Remove the torrent}?",
+                        template: {type: "button", layout: "0,0,6,1", area: "1,4,6,2"},
+                        items: [
+                            {label: "{dic:label:no|No}", action: "cleanup"},
+                            {label: "{dic:label:yes|Yes}", action: "interaction:load:" + window.location.href, data: {action: "rem", hash: t.hash}}
+                        ]
+                    }},
                     t.stat < 5 ? {key: "green", icon: "close", label: "{dic:drop|Drop the torrent}", data: {action: "drop", hash: t.hash}} : null,
                     {key: "yellow", label: "{dic:refresh|Refresh} {dic:list|the list}", action: "[cleanup|reload:content]"}
                 ]),

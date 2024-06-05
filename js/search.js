@@ -57,7 +57,7 @@ function search(K){
             return {icon: I[i], label: o, extensionIcon: icon(O == i, true), data: i, id: "order" + i}
         })).concat(
             {type: "button", label: "{dic:label:" + (c ? "apply|Apply}" : "continue|Continue}"), action: "[cleanup|reload:content]"}
-        ), ":{tb}{dic:label:order|Order}: " + F[O] + (A ? "{tb}{dic:accurate|Accurate search}" : ""));
+        ), ":" + (A ? "{tb}{dic:accurate|Accurate search}" : "") + "{tb}{dic:label:order|Order}: " + F[O]);
     };
     this.handleData = function(d){
         switch(typeof d.data){

@@ -20,6 +20,7 @@ function opts(o, c){
         if(o.key){
             o.progress = 1;
             o.progressColor = "msx-" + o.key;
+            if(!o.action) o.action = r.template.action;
             r.caption += "{tb}{col:" + o.progressColor + "}{ico:" + (o.icon ? (o.icon + "} " + o.label) : ((o.icon = "refresh") + "}"));
         }
         r.items.push(o);
