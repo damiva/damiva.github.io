@@ -54,10 +54,10 @@ function search(K){
             {icon: "filter-alt", label: "{dic:accurate|Accurate search}", extensionIcon: icon(A), data: true, id: "accurate"},
         ].concat(F.map(function(o, i){
             return {icon: I[i], label: "{dic:label:order|Order}: " + o, extensionIcon: icon(O == i, true), data: i, id: "order" + i}
-        })).concat(
-            typeof c == "boolean" ? {icon: "compress", label: "{dic:compress|Small font}", extensionIcon: icon(c)} : {type: "space"},
+        })).concat([
+            typeof c == "boolean" ? {icon: "compress", label: "{dic:compress|Small font}", extensionIcon: icon(c), data: {action: "compress"}} : {type: "space"},
             {type: "button", label: "{dic:label:apply|Apply}", action: "[cleanup|reload:content]"},
-        ), ":" + (A ? "{tb}{dic:accurate|Accurate search}" : "") + "{tb}{dic:label:order|Order}: " + F[O]);
+        ]), ":" + (A ? "{tb}{dic:accurate|Accurate search}" : "") + "{tb}{dic:label:order|Order}: " + F[O]);
     };
     this.handleData = function(d){
         switch(typeof d.data){
