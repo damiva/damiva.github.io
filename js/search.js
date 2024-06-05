@@ -52,11 +52,11 @@ function search(K){
     var Z = function(c){
         return opts([
             {icon: "filter-alt", label: "{dic:accurate|Accurate search}", extensionIcon: icon(A), data: true, id: "accurate"},
-            {type: "space", label: "{dic:label:order|Order}:"},    
         ].concat(F.map(function(o, i){
-            return {icon: I[i], label: o, extensionIcon: icon(O == i, true), data: i, id: "order" + i}
+            return {icon: I[i], label: "{dic:label:order|Order}: " + o, extensionIcon: icon(O == i, true), data: i, id: "order" + i}
         })).concat(
-            {type: "button", label: "{dic:label:" + (c ? "apply|Apply}" : "continue|Continue}"), action: "[cleanup|reload:content]"}
+            typeof c == "boolean" ? {icon: "compress", label: "{dic:compress|Small font}", extensionIcon: icon(c)} : {type: "space"},
+            {type: "button", label: "{dic:label:apply|Apply}", action: "[cleanup|reload:content]"},
         ), ":" + (A ? "{tb}{dic:accurate|Accurate search}" : "") + "{tb}{dic:label:order|Order}: " + F[O]);
     };
     this.handleData = function(d){
@@ -110,17 +110,21 @@ function search(K){
                 return true;
             case "find":
                 proxy("https://torrs.ru/search?query=" + encodeURIComponent(S) + (A ? "&accurate" : ""), {
-                    success: function(d){f({
-                        type: "list", headline: "{ico:search} " + S, extension: "{ico:msx-white:search} " + d.length,
-                        template: {layout: "0,0,12,1"}, options: Z(true),
-                        items: d.sort(Y[O]).map(function(t){return {
-                            text: "{col:msx-white}" + t.title,
-                            iamge: window.location.protocol + "//torrs.ru/img/ico/" + t.trackerName + ".ico",
-                            group: t.trackerName,
-                            stamp: t.trackerName + "{tb}{ico:date-range} " + TVXDateFormatter.toDateStr(new Date(t.createTime)) + "{tb}{ico:attach-file} " + t.sizeName + "{tb}{ico:north} " + t.pir + " {ico:south} " + t.sid,
-                            action: "content:request:interaction:" + encodeURIComponent(t.magnet) + "@" + window.location.href
-                        }})
-                    })},
+                    success: function(d){
+                        var c = prms("compress");
+                        f({
+                            type: "list", headline: "{ico:search} " + S, compress: c,
+                            extension: "{ico:msx-white:search} " + d.length,
+                            template: {layout: c ? "0,0,16,1" : "0,0,12,1"}, options: Z(c),
+                            items: d.sort(Y[O]).map(function(t){return {
+                                text: "{col:msx-white}" + t.title,
+                                iamge: window.location.protocol + "//torrs.ru/img/ico/" + t.trackerName + ".ico",
+                                group: t.trackerName,
+                                stamp: "{ico:date-range} " + TVXDateFormatter.toDateStr(new Date(t.createTime)) + "{tb}{ico:attach-file} " + t.sizeName + "{tb}{ico:north} " + t.pir + " {ico:south} " + t.sid,
+                                action: "content:request:interaction:" + encodeURIComponent(t.magnet) + "@" + window.location.href
+                            }})
+                        });
+                    },
                     error: function(e){
                         TVXInteractionPlugin.error(e);
                         f();
