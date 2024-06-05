@@ -19,14 +19,18 @@
                 s.send(d ? JSON.stringify(d) : undefined);
             }
             window.onload = function(){
-                var f = document.forms[o], s = document.getElementById("set");
+                var f = document.forms[o], s = document.getElementById("set"), b = document.getElementById("set");
                 ajax("/msx/files", null, function(v){
-                    f.files.value = f.files.defaultValue = f
-                });
-                document.forms[0].onsubmit = function(){
+                    f.files.value = f.files.defaultValue = f;
+                    b.disabled = true;
+                }, s);
+                f.files.onchange = function(){
+                    b.disabled = this.value == this.defaultValue;
+                }
+                f.onsubmit = function(){
                     if(this.files.value != this.files.defaultValue) ajax("/msx/files", this.files.value, null, s);
                     return false;
-                }
+                };
             };
         </script>
     </head>
@@ -34,7 +38,7 @@
         <form>
             <fieldset id="set" style="margin: auto;">
                 <legend>My files settings:</legend>
-                <label>Path to files: <input name="files"></label><button>OK</button>
+                <label>Path to files: <input name="files" id="files"></label><button id="ok" disabled>OK</button>
             </fieldset>
         </form>
     </body>
