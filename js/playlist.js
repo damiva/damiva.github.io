@@ -41,7 +41,7 @@ function playlist(){
     };
     var H = function(d, p, c){
         var fs = [], ds = [];
-        d = new window.DOMParser().parseFromString(xmlStr, "text/xml").documentElement.childNodes;
+        d = new window.DOMParser().parseFromString(d, "text/xml").documentElement.childNodes;
         for(var i = 0; i < d.length; i++){
             var a = {label: d[n].childNodes[0].nodeValue, action: d[n].getAttribute("href")};
             if(a.action){
