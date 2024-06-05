@@ -34,7 +34,7 @@ TVXPluginTools.onReady(function() {
         this.handleData = function(d){if(!S.handleData(d)) P.handleData(d)};
         this.handleRequest = function(i, d, f){
             switch(i){
-                case "init:":
+                case "init":
                     ajax("/files", function(d){
                         M.menu[2].display = d ? true : false;
                         f(M);
