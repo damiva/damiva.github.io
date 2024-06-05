@@ -5,7 +5,7 @@ TVXPluginTools.onReady(function() {
         var M = {menu: [
             {icon: "bookmarks", label: "{dic:trns|My torrents}", data: "request:interaction:trns@" + window.location.href},
             {icon: "search", label: "{dic:srch|Search torrents}", data: "request:interaction:search@" + window.location.href},
-            {icon: "folder", label: "{dic:fls|My files", data: "request:interaction:/files/@" + window.location.href}
+            {icon: "folder", label: "{dic:fls|My files}", data: "request:interaction:/files/@" + window.location.href}
         ], options: opts([
             {key: "green", icon: "translate", label: R ? "Switch to english" : "Перевести на русский", data: {action: "russian"}},
             {key: "yellow", label: "{dic:refresh|Refresh} {dic:caption:menu|menu}", action: "[cleanup|reload:menu]"}
@@ -21,11 +21,11 @@ TVXPluginTools.onReady(function() {
                 titleFooter: "{ico:msx-white:attach-file} " + (t.torrent_size ? size(t.torrent_size) : "?"),
                 stamp: t.stat < 5 ? ("{ico:north} " + (t.active_peers || 0) + " / " + (t.total_peers || 0) + " {ico:south} " + (t.connected_seeders || 0)) : "",
                 stampColor: "msx-" + (t.stat == 4 ? "red" : t.stat == 3 ? "green" : "yellow"),
-                options: opts(
+                options: opts([
                     {key: "red", label: "{dic:rem|Remove the torrent}", data: {action: "rem", hash: t.hash}},
                     t.stat < 5 ? {key: "green", label: "{dic:drop|Drop the torrent}", data: {action: "drop", hash: t.hash}} : null,
                     {key: "yellow", label: "{dic:refresh|Refresh} {dic:list|the list}", action: "[cleanup|reload:content]"}
-                ),
+                ]),
                 action: "content:request:interaction:" + t.hash + "@" + window.location.href
             }})
         }};
