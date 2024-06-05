@@ -41,11 +41,16 @@ function playlist(){
     };
     var H = function(d, p, c){
         var fs = [], ds = [];
-        d = d.matchAll(/.*href="(.+)".*>(.*)<.*/gim);
-        for(var a of d) 
-            if(a = I({label: a[2], action: p + a[1]}))
-                if(a.group) fs.push(a);
-                else ds.push(a);
+        d = new window.DOMParser().parseFromString(xmlStr, "text/xml").documentElement.childNodes;
+        for(var i = 0; i < d.length; i++){
+            var a = {label: d[n].childNodes[0].nodeValue, action: d[n].getAttribute("href")};
+            if(a.action){
+                a.action = p + a.action;
+                if(a = I(a))
+                    if(a.group) fs.push(a);
+                    else ds.push(a);
+            }
+        }
         d = p.substr(0, p.length - 1);
         return L(ds.concat(fs), decodeURI(d.substr(d.lastIndexOf("/") + 1)), c);
     };
