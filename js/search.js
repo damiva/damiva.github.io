@@ -112,12 +112,12 @@ function search(K){
                 proxy("https://torrs.ru/search?query=" + encodeURIComponent(S) + (A ? "&accurate" : ""), {
                     success: function(d){f({
                         type: "list", headline: "{ico:search} " + S, extension: "{ico:msx-white:search} " + d.length,
-                        template: {layout: "0,0,12,1", stampColor: "msx-blue"}, options: Z(true),
+                        template: {layout: "0,0,12,1", stampColor: "msx-black"}, options: Z(true),
                         items: d.sort(Y[O]).map(function(t){return {
                             headline: t.title,
                             iamge: window.location.protocol + "//torrs.ru/img/ico/" + t.trackerName + ".ico",
                             group: t.trackerName,
-                            stamp: "{ico:attach-file} " + t.sizeName + "{tb}{ico:north} " + t.pir + " {ico:south} " + t.sid,
+                            stamp: "{ico:date-range} " + TVXDateFormatter.toDateStr(t.createTime) + "{tb}{ico:attach-file} " + t.sizeName + "{tb}{ico:north} " + t.pir + " {ico:south} " + t.sid,
                             action: "content:request:interaction:" + encodeURIComponent(t.magnet) + "@" + window.location.href
                         }})
                     })},

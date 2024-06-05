@@ -35,7 +35,7 @@ function playlist(){
                 {icon: "compress", label: "{dic:compress|Small font}", data: {action: "compress"}, extensionIcon: icon(c)},
                 {icon: "folder", label: "{dic:folders|Show folders}", data: {action: "folders"}, extensionIcon: icon(f), display: f !== undefined}
             ])),
-            template: {type: "control", layout: C ? "0,0,16,1" : "0,0,12,1", progress: -1, properties: p},
+            template: {type: "control", layout: c ? "0,0,16,1" : "0,0,12,1", progress: -1, properties: p},
             items: d.length ? d : [{items: "refresh", label: "{dic:empty|Nothing found}", action: "reload:content"}]
         };
     };
