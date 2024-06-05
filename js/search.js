@@ -51,7 +51,7 @@ function search(K){
     };
     var Z = function(c){
         return opts([
-            {icon: "filter-alt", label: "{dic:accurate|Accurate search}", extensionIcon: icon(A), data: !A, id: "accurate"},
+            {icon: "filter-alt", label: "{dic:accurate|Accurate search}", extensionIcon: icon(A), data: true, id: "accurate"},
             {type: "space", label: "{dic:label:order|Order}: "},    
         ].concat(F.map(function(o, i){
             return {icon: I[i], label: o, extensionIcon: icon(O == i, true), data: i, id: "order" + i}
@@ -62,8 +62,8 @@ function search(K){
     this.handleData = function(d){
         switch(typeof d.data){
             case "boolean":
-                TVXServices.storage.set("ts:search:accurate", S = d.data);
-                TVXInteractionPlugin.executeAction("update:panel:accurate", {extensionIcon: icon(S)});
+                TVXServices.storage.set("ts:search:accurate", A = !A);
+                TVXInteractionPlugin.executeAction("update:panel:accurate", {extensionIcon: icon(A)});
                 return true;
             case "number":
                 TVXServices.storage.set("ts:search:order", O = d.data);
