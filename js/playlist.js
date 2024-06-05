@@ -87,7 +87,7 @@ function playlist(){
         else TVXInteractionPlugin.error("Server is not set!");
     };
     this.handleData = function(d){
-        if(!d.data.action) return false;
+        if(!d.data || !d.data.action) return false;
         var r = function(m){TVXInteractionPlugin.executeAction(m === true ? "reload" : ("[cleanup|reload:content" + (m ? ("|success:" + m) : "") + "]"))},
             v = null;
         switch(d.data.action){
