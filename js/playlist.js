@@ -106,11 +106,11 @@ function playlist(){
         if(i.indexOf("/") === 0) ajax(i, "xml", function(d){f(H(d, i, c));}, e);
         else switch((i = i.split("|")).length){
             case 4: if(i[3]) i[3] = "&category=" + i[3];
-            case 3: if(i[3]) i[3] = "&category=" + i[3];
-            case 2: if(i[3]) i[3] = "&category=" + i[3];
+            case 3: if(i[2]) i[2] = "&poster=" + i[2];
+            case 2: if(i[1]) i[1] = "&title=" + i[1];
             case 1: if(i[0]){
                 ajax("/stream/?stat&link=" + i.join(""), function(d){
-                    ajax("/msx/trn?hash=" + d.hash ,function(s){f(T(f, i[0], c, s !== true))});
+                    ajax("/msx/trn?hash=" + d.hash ,function(s){f(T(d, i[0], c, s !== true))});
                 }, e);
                 break;
             } 
