@@ -17,9 +17,9 @@ function playlist(){
         if(i.icon = x < 1 ? "movie" : x < 2 ? "auditrack" : "") i.group = "{ico:" + i.icon + "}";
         i.icon = i.icon ? ("msx-white-soft:" + i.icon) : "msx-yellow:folder";
         i.action = 
-            x > 1 ? ("content:request:interaction:" + u + "@" + window.location.href) 
-            : x ? ("audio:" + addr + u) 
-            : ("video:resolve:request:interaction:" + addr + u + "@http://msx.benzac.de/interaction/play.html")
+            x > 1 ? ("content:request:interaction:" + i.action + "@" + window.location.href) 
+            : x ? ("audio:" + addr + i.action) 
+            : ("video:resolve:request:interaction:" + addr + i.action + "@http://msx.benzac.de/interaction/play.html")
         return i;    
     };
     var L = function(d, h, c, o, p){
