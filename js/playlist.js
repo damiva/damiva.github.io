@@ -51,8 +51,8 @@ function playlist(){
                 if(a.group) fs.push(a);
                 else ds.push(a);
         });
-        d = p.substr(0, p.length - 1)
         */
+        d = p.substr(0, p.length - 1)
         return L(ds.concat(fs), decodeURI(d.substr(d.lastIndexOf("/") + 1)), c);
     };
     var T = function(d, l, c, s){
