@@ -80,8 +80,8 @@ function playlist(){
             type: "list", headline: "{dic:folder|To folder}:", compress: true, items: ds,
             template: {layout: "0,0,10,1", type: "control", icon: "msx-yellow:folder"}
         }} : null], {
-            "trigger:load": "execute:" + addr + "/msx/trn?hash=" + d.hash,
-            "trggier:player": "execute:" + addr + "/msx/trn?hash=" + d.hash
+            "trigger:load":   "execute:" + addr + "/msx/trn?hash=" + d.hash,
+            "trigger:player": "execute:" + addr + "/msx/trn?hash=" + d.hash
         }, sf);
     };
     this.init = function(){
