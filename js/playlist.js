@@ -42,7 +42,7 @@ function playlist(){
     var H = function(d, p, c){
         var fs = [], ds = [];
         d = new window.DOMParser().parseFromString(d, "text/html");
-        d.querySelector("a[href]").forEach(function(a){
+        d.querySelectorAll("a[href]").forEach(function(a){
             if(a = I({label: a.innerText, action: p + a.href}))
                 if(a.group) fs.push(a);
                 else ds.push(a);
