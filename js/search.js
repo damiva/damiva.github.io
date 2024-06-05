@@ -49,15 +49,13 @@ function search(K){
         k.push({label: "{ico:done}", key: "green", data: "ok", progress: 1, progressColor: "msx-green", offset: (-l-1) + ",0,1,0"});
         return k;
     };
-    var Z = function(c){
-        return opts([
-            {icon: "filter-alt", label: "{dic:accurate|Accurate search}", extensionIcon: icon(A), data: true, id: "accurate"},
-        ].concat(F.map(function(o, i){
+    var Z = function(){
+        var o = F.map(function(o, i){
             return {icon: I[i], label: "{dic:label:order|Order}: " + o, extensionIcon: icon(O == i, true), data: i, id: "order" + i}
-        })).concat([
-            typeof c == "boolean" ? {icon: "compress", label: "{dic:compress|Small font}", extensionIcon: icon(c), data: {action: "compress"}} : {type: "space"},
-            {type: "button", label: "{dic:label:apply|Apply}", action: "[cleanup|reload:content]"},
-        ]), ":" + (A ? "{tb}{dic:accurate|Accurate search}" : "") + "{tb}{dic:label:order|Order}: " + F[O]);
+        })
+        o.unshift({icon: "filter-alt", label: "{dic:accurate|Accurate search}", extensionIcon: icon(A), data: true, id: "accurate"});
+        o.push({type: "space"}, {type: "button", label: "{dic:label:apply|Apply}", action: "[cleanup|reload:content]"});
+        return opts(o, ":" + (A ? "{tb}{dic:accurate|Accurate search}" : "") + "{tb}{dic:label:order|Order}: " + F[O]);
     };
     this.handleData = function(d){
         switch(typeof d.data){
@@ -111,11 +109,9 @@ function search(K){
             case "find":
                 proxy("https://torrs.ru/search?query=" + encodeURIComponent(S) + (A ? "&accurate" : ""), {
                     success: function(d){
-                        var c = prms("compress");
                         f({
-                            type: "list", headline: "{ico:search} " + S, compress: c,
-                            extension: "{ico:msx-white:search} " + d.length,
-                            template: {layout: c ? "0,0,16,1" : "0,0,12,1"}, options: Z(c),
+                            type: "list", headline: "{ico:search} " + S, extension: "{ico:msx-white:search} " + d.length,
+                            template: {layout: "0,0,12,1"}, options: Z(c),
                             items: d.sort(Y[O]).map(function(t){return {
                                 text: "{col:msx-white}" + t.title,
                                 iamge: window.location.protocol + "//torrs.ru/img/ico/" + t.trackerName + ".ico",
