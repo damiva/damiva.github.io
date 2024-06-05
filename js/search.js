@@ -111,7 +111,7 @@ function search(K){
             case "find":
                 proxy("https://torrs.ru/search?query=" + encodeURIComponent(S) + (A ? "&accurate" : ""), {
                     success: function(d){f({
-                        type: "list", headline: "{ico:search} " + h, extension: "{ico:msx-white:search} " + d.length,
+                        type: "list", headline: "{ico:search} " + S, extension: "{ico:msx-white:search} " + d.length,
                         template: {layout: "0,0,12,1", stampColor: "msx-blue"}, options: Z(true),
                         items: d.sort(Y[O]).map(function(t){return {
                             headline: t.title,
