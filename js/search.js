@@ -114,10 +114,10 @@ function search(K){
                         type: "list", headline: "{ico:search} " + S, extension: "{ico:msx-white:search} " + d.length,
                         template: {layout: "0,0,12,1"}, options: Z(true),
                         items: d.sort(Y[O]).map(function(t){return {
-                            headline: t.title,
+                            text: "{col:msx-white}" + t.title,
                             iamge: window.location.protocol + "//torrs.ru/img/ico/" + t.trackerName + ".ico",
                             group: t.trackerName,
-                            stamp: "{ico:date-range} " + TVXDateFormatter.toDateStr(new Date(t.createTime)) + "{tb}{ico:attach-file} " + t.sizeName + "{tb}{ico:north} " + t.pir + " {ico:south} " + t.sid,
+                            stamp: t.trackerName + "{tb}{ico:date-range} " + TVXDateFormatter.toDateStr(new Date(t.createTime)) + "{tb}{ico:attach-file} " + t.sizeName + "{tb}{ico:north} " + t.pir + " {ico:south} " + t.sid,
                             action: "content:request:interaction:" + encodeURIComponent(t.magnet) + "@" + window.location.href
                         }})
                     })},
