@@ -6,10 +6,10 @@ function playlist(){
     var I = function(i){
         var x = i.label.length - 1;
         if(x < 0) return null
-        if(i.label[x - 1] == "/") x = 2;
+        if(i.label[x] == "/") x = 2;
         else if((x = i.label.lastIndexOf(".")) < 0 || !(x = i.label.substr(x + 1).toLowerCase())) return null;
-        else for(var i = 0; i < X.length; i++) if(X[i].indexOf(x) >= 0){
-            x = i;
+        else for(var n = 0; n < X.length; n++) if(X[n].indexOf(x) >= 0){
+            x = n;
             break;
         }
         if(typeof x != "number") return null;
@@ -61,7 +61,7 @@ function playlist(){
                     ds.push({label: p, action: "[cleanup|focus:" + f.id + "]"});
                     if(sf) fs.push({type: "space", label: "{col:msx-yellow}{ico:folder} " + p});
                 }
-                fs.puch(f);
+                fs.push(f);
             }
         });
         return L(fs, d.title, c, [{

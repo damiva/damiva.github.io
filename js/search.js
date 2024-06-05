@@ -6,8 +6,8 @@ function search(K){
         I = ["north", "attach-file", "date-range"];
     var Y = [
         function(a, b){return a.pir < b.pir ? 1 : a.pir > b.pir ? -1 : 0},
-        function(a, b){return a.createTime < b.createTime ? 1 : a.createTime > b.createTime ? -1 : 0},
-        function(a, b){return a.size < b.size ? 1 : a.size > b.size ? -1 : 0}
+        function(a, b){return a.size < b.size ? 1 : a.size > b.size ? -1 : 0},
+        function(a, b){return a.createTime < b.createTime ? 1 : a.createTime > b.createTime ? -1 : 0}
     ]
     var X = function(){
         var k = [{label: "1", key: "1", offset: K ? "1,0,0,0" : undefined}], l = K ? 1 : 0,
