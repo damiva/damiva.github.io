@@ -24,7 +24,8 @@ TVXPluginTools.onReady(function() {
                 options: opts([
                     {key: "red", icon: "delete", label: "{dic:rem|Remove the torrent}", action: "panel:data", data: {
                         type: "list", headline: "{dic:rem|Remove the torrent}?",
-                        template: {type: "button", layout: "0,0,6,1", area: "1,4,6,2"},
+                        overlay: {items: [{type: "space", headline: t.title, layout: "0,0,8,4"}]},
+                        template: {type: "button", layout: "0,0,8,1", area: "0,4,8,2"},
                         items: [
                             {label: "{dic:label:no|No}", action: "cleanup"},
                             {label: "{dic:label:yes|Yes}", action: "interaction:load:" + window.location.href, data: {action: "rem", hash: t.hash}}
