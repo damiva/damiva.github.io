@@ -117,7 +117,7 @@ function search(K){
                                 iamge: window.location.protocol + "//torrs.ru/img/ico/" + t.trackerName + ".ico",
                                 group: t.trackerName,
                                 stamp: "{col:msx-white-soft}{ico:date-range} " + TVXDateFormatter.toDateStr(new Date(t.createTime)) + "{tb}{ico:attach-file} " + t.sizeName + "{tb}{ico:north} " + t.pir + " {ico:south} " + t.sid,
-                                action: "content:request:interaction:" + encodeURIComponent(t.magnet) + "@" + window.location.href
+                                action: "content:request:interaction:" + encodeURIComponent(t.magnet) + "|" + encodeURIComponent(t.title) + "@" + window.location.href
                             }})
                         });
                     },

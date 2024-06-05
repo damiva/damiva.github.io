@@ -13,7 +13,9 @@ function size(s){
     return (s / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'KB', 'MB', 'GB', 'TB'][i];
 }
 function opts(o, c){
-    var r = {caption: "{dic:caption:options|opt/menu}", template: {layout: "0,0,8,1", type: "control", action: "interaction:load:" + window.location.href}, items: []};
+    var r = {caption: "{dic:caption:options|opt/menu}", items: [], template: {
+        layout: "0,0,8,1", type: "control", enumerate: false, action: "interaction:load:" + window.location.href
+    }};
     r.headline = r.caption + ":";
     if(c) r.caption += c;
     o.forEach(function(o){if(o){
