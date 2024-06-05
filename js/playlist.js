@@ -103,7 +103,10 @@ function playlist(){
     this.handleRequest = function(i, _, f){
         var e = function(m){TVXInteractionPlugin.error(m);f();},
             c = prms("compress");
-        if(i.indexOf("/") === 0) ajax(i, "xml", function(d){f(H(d, i, c));}, e);
+        if(i.indexOf("/") === 0) ajax(i, "html", function(d){
+            TVXInteractionPlugin.debug(d);
+            f(H(d, i, c));
+        }, e);
         else switch((i = i.split("|")).length){
             case 4: if(i[3]) i[3] = "&category=" + i[3];
             case 3: if(i[2]) i[2] = "&poster=" + i[2];
