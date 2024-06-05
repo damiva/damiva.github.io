@@ -35,4 +35,9 @@ function prms(k, c){
     if(c) TVXServices.storage.set(k, v = !v);
     return v;
 }
-function proxy(u, s, e, t){ajax("/msx/proxy?url=" + encodeURIComponent(u), s, e, t)};
+function proxy(u, d){
+    var g = d.data === undefined, s = {success: d.success, error: d.error}, t = d.dataType ? {dataType: d.dataType} : null;
+    u = "/msx/proxy?url=" + encodeURIComponent(u);
+    if(d.header) u = u + "&" + Object.keys(d.header).map(function(k){return "header=" + encodeURIComponent(k + ":" + d.header[k])}).join("&");
+    TVXServices.ajax[g ? "get" : "post"](u, g ? s : d.data, g ? t : s, g ? undefined : t);
+};

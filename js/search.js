@@ -51,10 +51,10 @@ function search(K){
     };
     var Z = function(c){
         return opts([
-            {icon: "filter-alt", label: "{dic:accurate|Accurate search}", extensionIcon: icon(A), data: !A},
-            {type: "space", label: "{dic:label:order|Order}:"},    
+            {icon: "filter-alt", label: "{dic:accurate|Accurate search}", extensionIcon: icon(A), data: !A, id: "accurate"},
+            {type: "space", label: "{dic:label:order|Order}: "},    
         ].concat(F.map(function(o, i){
-            return {icon: I[i], label: o, extensionIcon: icon(O == i, true), data: i}
+            return {icon: I[i], label: o, extensionIcon: icon(O == i, true), data: i, id: "order" + i}
         })).concat(
             {type: "button", label: "{dic:label:" + (c ? "apply|Apply}" : "continue|Continue}"), action: "[cleanup" + (c ? "|reload:content]" : "]")}
         ), ":{tb}{dic:label:order|Order}:" + F[O] + (A ? "{tb}{dic:accurate|Accurate search}" : ""));
@@ -63,17 +63,17 @@ function search(K){
         switch(typeof d.data){
             case "boolean":
                 TVXServices.storage.set("ts:search:accurate", S = d.data);
-                TVXInteractionPlugin.executeAction("update:panel:index:0", {extensionIcon: icon(S)});
+                TVXInteractionPlugin.executeAction("update:panel:accurate", {extensionIcon: icon(S)});
                 return true;
             case "number":
                 TVXServices.storage.set("ts:search:order", O = d.data);
-                for(var i = 0; i < F.length; i++) TVXInteractionPlugin.executeAction("update:panel:index:" + (i + 2), {extensionIcon: icon(O == i, true)});
+                for(var i = 0; i < F.length; i++) TVXInteractionPlugin.executeAction("update:panel:order" + i, {extensionIcon: icon(O == i, true)});
                 return true;
             case "string": switch(d.data){
             case "ok":
                 if(S){
-                    TVXServices.storage.set("ts:search", S);
-                    TVXInteractionPlugin.executeAction("content:", S);
+                    TVXServices.storage.set("ts:search:query", S);
+                    TVXInteractionPlugin.executeAction("content:request:interaction:find");
                 }
                 return true;
             case "ck":
@@ -109,9 +109,8 @@ function search(K){
                 });
                 return true;
             case "find":
-                TVXServices.ajax.get(
-                    a + "/msx/proxy?url=" + encodeURIComponent("https://torrs.ru/search?query=" + encodeURIComponent(S)) + (A ? "&accurate" : ""),
-                    function(d){f({
+                proxy("https://torrs.ru/search?query=" + encodeURIComponent(S)) + (A ? "&accurate" : "", {
+                    success: function(d){f({
                         type: "list", headline: "{ico:search} " + h, extension: "{ico:msx-white:search} " + d.length,
                         template: {layout: "0,0,12,1", stampColor: "msx-blue"}, options: Z(true),
                         items: d.sort(Y[O]).map(function(t){return {
@@ -122,11 +121,11 @@ function search(K){
                             action: "content:request:interaction:" + encodeURIComponent(t.magnet) + "@" + window.location.href
                         }})
                     })},
-                    function(e){
+                    error: function(e){
                         TVXInteractionPlugin.error(e);
                         f();
                     }
-                );
+                });
                 return true;
             default: return false;
         }
