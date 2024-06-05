@@ -74,9 +74,9 @@ function playlist(){
         }, s ? {
             key: "green", icon: "bookmark-add", label: "{dic:save|Save the torrent}",
             data: {action: "add", link: l, title: d.title, poster: d.poster, category: d.category}
-        } : {
+        } : fs.length > 1 ? {
             key: "green", icon: "last-page", label: "{dic:viewed|To viewed item}", data: {action: "focus", hash: d.hash}
-        }, ds.length > 1 ? {key: "yellow", icon: "folder", label: "{dic:folder|To folder}", action: "panel:data", data: {
+        } : null, ds.length > 1 ? {key: "yellow", icon: "folder", label: "{dic:folder|To folder}", action: "panel:data", data: {
             type: "list", headline: "{dic:folder|To folder}:", compress: true, items: ds,
             template: {layout: "0,0,10,1", type: "control", icon: "msx-yellow:folder"}
         }} : null], {
