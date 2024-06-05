@@ -43,6 +43,7 @@ function playlist(){
         var fs = [], ds = [];
         d = new window.DOMParser().parseFromString(d, "text/html");
         d.querySelectorAll("a[href]").forEach(function(a){
+            TVXInteractionPlugin.debug(a);
             if(a = I({label: a.innerText, action: p + a.href}))
                 if(a.group) fs.push(a);
                 else ds.push(a);
