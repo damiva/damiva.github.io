@@ -27,7 +27,7 @@ function playlist(){
         p["resume:key"] = "url";
         p["trigger:complete"] =  "[player:auto:next|resume:cancel]";
         return {
-            type: "list", headline: h, cache: !!o, reuse: !!o, restore: !!o, compress: c,
+            type: "list", headline: h, cache: !!o, reuse: !!o, restore: !!o, compress: c, extension: " ",
             overlay: o ? {items: [o.shift()]} : null,
             options: opts((o || [
                 {key: "yellow", label: "{dic:refresh|Refresh} {dic:list|the list}", action: "[cleanup|reload:content]"}
@@ -43,7 +43,6 @@ function playlist(){
         var fs = [], ds = [];
         d = new window.DOMParser().parseFromString(d, "text/xml").getElementsByTagName("a");
         for(var i = 0; i < d.length; i++){
-            console.log(d[i]);
             var a = {label: d[i].childNodes[0].nodeValue, action: d[i].getAttribute("href")};
             if(a.action){
                 a.action = p + a.action;
@@ -103,7 +102,7 @@ function playlist(){
                 ajax("/viewed", d, function(l){
                     var i = 0;
                     l.forEach(function(n){if(n.file_index > i) i = n.file_index});
-                    if(i > 0) TVXInteractionPlugin.executeAction("focus:" + i);
+                    if(i > 0) TVXInteractionPlugin.executeAction("[cleanup|focus:" + i + "]");
                 });
                 break;
             default: prms(d.data.action, true); r(d.data.action == "russian");
