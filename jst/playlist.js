@@ -24,10 +24,11 @@ function playlist(){
     };
     var L = function(d, h, c, o, p, f){
         if(!p) p = {};
-        p["resume:key"] = "url";
+        p["resume:key"] = o ? "id" : "url";
         p["trigger:complete"] =  "[player:auto:next|resume:cancel]";
         return {
-            type: "list", headline: h, cache: !!o, reuse: !!o, restore: !!o, compress: c, extension: o ? " " : ("{ico:msx-white:folder} " + d.length),
+            type: "list", headline: h, cache: !!o, reuse: !!o, restore: !!o, compress: c, 
+            extension: o ? " " : ("{ico:msx-white:folder} " + d.length),
             overlay: o ? {items: [o.shift()]} : null,
             options: opts((o || [
                 {key: "yellow", label: "{dic:refresh|Refresh} {dic:list|the list}", action: "[cleanup|reload:content]"}
@@ -57,10 +58,10 @@ function playlist(){
     var T = function(d, l, c, s){
         var fs = [], ds =[], sf = prms("folders");
         d.file_stats.forEach(function(f){
-            if(f = I({id: TVXTools.strValue(f.id), label: f.path.substr(f.path.lastIndexOf("/") + 1), extensionLabel: size(f.length), action: "/stream/?play&link=" + l + "&index=" + f.id})){
+            if(f = I({id: d.hash + f.id, label: f.path.substr(f.path.lastIndexOf("/") + 1), extensionLabel: size(f.length), action: "/stream/?play&link=" + l + "&index=" + f.id})){
                 var p = f.label.split("/");
                 f.label = p.pop();
-                p.shift();
+                //p.shift();
                 if((p = p.join("/")) && (!ds.length || ds[ds.length - 1].label != p)){
                     ds.push({label: p, action: "[cleanup|focus:" + f.id + "]"});
                     if(sf) fs.push({type: "space", label: "{col:msx-yellow}{ico:folder} " + p});
@@ -73,7 +74,7 @@ function playlist(){
             live: {type: "setup", action: "execute:" + addr + "/msx/trn", data: "update:content:overlay:" + d.hash}
         }, s ? {
             key: "green", icon: "bookmark-add", label: "{dic:save|Save the torrent}",
-            data: {action: "add", link: l, title: d.title, poster: d.poster, category: d.category}
+            data: {action: "add", link: l, title: d.title, poster: d.poster, category: d.category, save_to_db: true}
         } : fs.length > 1 ? {
             key: "green", icon: "last-page", label: "{dic:viewed|To viewed item}", data: {action: "focus", hash: d.hash}
         } : null, ds.length > 1 ? {key: "yellow", icon: "folder", label: "{dic:folder|To folder}", action: "panel:data", data: {
@@ -98,10 +99,10 @@ function playlist(){
             case "add": v = v || "{ico:bookmark-add}";
                 ajax("/torrents", d.data, "text", function(){r(v)}, function(e){TVXInteractionPlugin.error(e)});
                 break;
-            case "focus": d.action = "list";
-                ajax("/viewed", d, function(l){
+            case "focus":
+                ajax("/viewed", {action: "list"}, function(l){
                     var i = 0;
-                    l.forEach(function(n){if(n.file_index > i) i = n.file_index});
+                    if(l && typeof l == "object") l.forEach(function(n){if(n.file_index > i) i = n.file_index});
                     if(i > 0) TVXInteractionPlugin.executeAction("[cleanup|focus:" + i + "]");
                 });
                 break;
