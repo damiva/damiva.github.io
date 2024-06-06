@@ -8,7 +8,7 @@ function search(K){
             {type: "space", label: "{dic:fins|Search}:"},
             {id: "engine0", image: window.location.origin + "/img/rutor.png", label: "{dic:rutor|in rutor (embed)}", extensionIcon: "", data: {engine: 0}},
             {id: "engine1", image: window.location.origin + "/img/torrs.png", label: "{dic:torrs|in torrs.ru}", extensionIcon: "", data: {engine: 1}},
-            {id: "engine2", image: window.location.origin + "/img/torrs.png", label: "{dic:rutor|in torrs.ru (accurate)}", extensionIcon: "", data: {engine: 2}},
+            {id: "engine2", image: window.location.origin + "/img/torrs.png", label: "{dic:torrsA|in torrs.ru (accurate)}", extensionIcon: "", data: {engine: 2}},
             {type: "button", label: "{dic:label:apply|Apply}", action: "[cleanup|reload:content]", offset: "2,0,-4,0"}
         ];
     var kbd = function(){
