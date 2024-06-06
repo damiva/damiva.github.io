@@ -81,7 +81,7 @@ function search(K){
     var rtr = function(t){return itm(t.Title, t.CreateDate, t.Size, t.Magnet, t.Peer, t.Seed, cat(t.Categories), t.IMDBID ? (addr + "/msx/imdb/" + t.IMDBID) : "")};
     var fnd = function(d, f){
         if(P.order){
-            var k = P.order == 1 ? (P.engine ? "Peer" : "pir") : (P.engine ? "CreateDate" : "createTime");
+            var k = P.order == 1 ? (P.engine ? "pir" : "Peer") : (P.engine ? "createTime" : "CreateDate");
             d.sort(function(a, b){return a[k] < b[k] ? 1 : a[k] > b[k] ? -1 : 0});
         }
         return {
