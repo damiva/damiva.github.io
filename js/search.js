@@ -5,10 +5,10 @@ function search(K){
             {type: "space", label: "{dic:label:order|Order}:"},
             {id: "order1", icon: "north", label: "{dic:peers|on peers}", extensionIcon: "", data: {order: 1}},
             {id: "order2", icon: "date-range", label: "{dic:date|on date}", extensionIcon: "", data: {order: 2}},
-            {type: "space", label: "{dic:fins|Search}:"},
-            {id: "engine0", image: window.location.origin + "/img/rutor.png", label: "{dic:rutor|in rutor (embed)}", extensionIcon: "", data: {engine: 0}},
-            {id: "engine1", image: window.location.origin + "/img/torrs.png", label: "{dic:torrs|in torrs.ru}", extensionIcon: "", data: {engine: 1}},
-            {id: "engine2", image: window.location.origin + "/img/torrs.png", label: "{dic:torrsA|in torrs.ru (accurate)}", extensionIcon: "", data: {engine: 2}},
+            {type: "space", label: "{dic:find|Search}:"},
+            {id: "engine0", image: window.location.origin + "/img/rutor.png", label: "{dic:rutor|in rutor (embed)}", extensionIcon: "", data: {engine: 0}, iconSize: small},
+            {id: "engine1", image: window.location.origin + "/img/torrs.png", label: "{dic:torrs|in torrs.ru}", extensionIcon: "", data: {engine: 1}, iconSize: small},
+            {id: "engine2", image: window.location.origin + "/img/torrs.png", label: "{dic:torrsA|in torrs.ru (accurate)}", extensionIcon: "", data: {engine: 2}, iconSize: small},
             {type: "button", label: "{dic:label:apply|Apply}", action: "[cleanup|reload:content]", offset: "2,0,-4,0"}
         ];
     var kbd = function(){
