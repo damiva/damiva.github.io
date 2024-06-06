@@ -9,7 +9,7 @@ function search(K){
             {id: "engine0", image: window.location.origin + "/img/rutor.png", label: "{dic:rutor|in rutor (embed)}", extensionIcon: "", data: {engine: 0}},
             {id: "engine1", image: window.location.origin + "/img/torrs.png", label: "{dic:torrs|in torrs.ru}", extensionIcon: "", data: {engine: 1}},
             {id: "engine2", image: window.location.origin + "/img/torrs.png", label: "{dic:rutor|in torrs.ru (accurate)}", extensionIcon: "", data: {engine: 2}},
-            {type: "button", label: "{dic:label:apply|Apply}", action: "[cleanup|reload:content]"}
+            {type: "button", label: "{dic:label:apply|Apply}", action: "[cleanup|reload:content]", offset: "2,0,-4,0"}
         ];
     var srt = function(k){return function(a, b){return a[k] < b[k] ? 1 : a[k] > b[k] ? -1 : 0}};
     var kbd = function(){
@@ -57,7 +57,7 @@ function search(K){
             O,
             ":{tb}{dic:find|Search} " + O[P.engine + 4].label + (P.order ? ("{tb}{dic:label:order|Order} " + O[P.order + 0].label) : ""),
             true,
-            {action: "interaction:load:" + window.location.href, data: {search: true}}
+            {action: "interaction:load:" + window.location.href, data: {order: 0}}
         );
         if(o)
             for(var i = 1; i < 3; i++)
@@ -111,16 +111,13 @@ function search(K){
                 {label: (S += d) ? (S + "{txt:msx-white-soft:_}") : "{col:msx-white-soft}{dic:input|Enter the word(s) to find}"}
             );
             return true;
-        } else if (d.data.search) {
-            opt(true, true);
-            return true;
         } else if (typeof d.data.engine == "number") {
             TVXServices.storage.set("ts:search:engine", O.engine = d.data.engine);
             opt(false, true);
             return true;
         } else if (typeof d.data.order == "number") {
-            TVXServices.storage.set("ts:search:order", O.order = d.data.order == O.order ? 0 : d.data.order);
-            opt(true);
+            if(d.data.order) TVXServices.storage.set("ts:search:order", O.order = d.data.order == O.order ? 0 : d.data.order);
+            opt(true, !d.data.order);
             return true;
         }
         return false;
