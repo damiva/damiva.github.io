@@ -14,7 +14,7 @@ function size(s){
 }
 function opts(o, v, c, r){
     var r = {caption: "{dic:caption:options|opt/menu}", compress: c, ready: r, items: [], template: {
-        layout: c ? "0,0,10,1" : "0,0,8,1", type: "control", enumerate: false, imagePreload: true, action: "interaction:load:" + window.location.href
+        layout: c ? "0,0,10,1" : "0,0,8,1", type: "control", enumerate: false, imagePreload: true, iconSize: "small", action: "interaction:load:" + window.location.href
     }};
     r.headline = r.caption + ":";
     if(v) r.caption += v;
