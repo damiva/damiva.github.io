@@ -13,7 +13,7 @@ function size(s){
     return (s / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'KB', 'MB', 'GB', 'TB'][i];
 }
 function opts(o, v, c, r){
-    var r = {caption: "{dic:caption:options|opt/menu}", compress: c, ready: r, items: [], reuse: false, template: {
+    var r = {caption: "{dic:caption:options|opt/menu}", compress: c, ready: r, items: [], template: {
         layout: c ? "0,0,10,1" : "0,0,8,1", type: "control", enumerate: false, action: "interaction:load:" + window.location.href
     }};
     r.headline = r.caption + ":";

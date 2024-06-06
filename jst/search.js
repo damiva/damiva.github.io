@@ -112,11 +112,11 @@ function search(K){
             );
             return true;
         } else if (typeof d.data.engine == "number") {
-            TVXServices.storage.set("ts:search:engine", O.engine = d.data.engine);
+            TVXServices.storage.set("ts:search:engine", P.engine = d.data.engine);
             opt(false, true);
             return true;
         } else if (typeof d.data.order == "number") {
-            if(d.data.order) TVXServices.storage.set("ts:search:order", O.order = d.data.order == O.order ? 0 : d.data.order);
+            if(d.data.order) TVXServices.storage.set("ts:search:order", P.order = d.data.order == P.order ? 0 : d.data.order);
             opt(true, !d.data.order);
             return true;
         }
@@ -126,7 +126,7 @@ function search(K){
         switch(i){
             case "search":
                 ajax("/settings", {action: "get"}, function(d){
-                    O[4].enable = d.EnableRutorSearch === true;
+                    if(!(O[4].enable = d.EnableRutorSearch === true) && !P.engine) P.engine = 1;
                     f({
                         type: "list", reuse: false, cache: false, restore: false, wrap: true, items: kbd(),
                         ready: {action: "interaction:load:" + window.location.href, data: {key: ""}}, options: opt(),
