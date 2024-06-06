@@ -94,9 +94,9 @@ function playlist(){
         var r = function(m){TVXInteractionPlugin.executeAction(m === true ? "reload" : ("[cleanup|reload:content" + (m ? ("|success:" + m) : "") + "]"))},
             v = null;
         switch(d.data.action){
-            case "rem": v = "{dic:remed|Torrent removed}!";
-            case "drop": v = v || "{dic:droped|Torrent dropped}";
-            case "add": v = v || "{dic:saved|Torrent added to {col:msx-white}{dic:my|My} {dic:trns|torrents}";
+            case "rem": v = "{dix:remed}Torrent removed{dix}";
+            case "drop": v = v || "{dix:droped}Torrent dropped{dix}";
+            case "add": v = v || "{dix:saved}Torrent added to{dix} {col:msx-white}{dix:my}My{dix} {dix:trns}torrents{dix}";
                 ajax("/torrents", d.data, "text", function(){r(v)}, function(e){TVXInteractionPlugin.error(e)});
                 break;
             case "focus": d.data.action = "list";
