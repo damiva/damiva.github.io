@@ -12,12 +12,12 @@ function size(s){
     var i = s == 0 ? 0 : Math.floor(Math.log(s) / Math.log(1024));
     return (s / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'KB', 'MB', 'GB', 'TB'][i];
 }
-function opts(o, c){
-    var r = {caption: "{dic:caption:options|opt/menu}", items: [], template: {
-        layout: "0,0,8,1", type: "control", enumerate: false, action: "interaction:load:" + window.location.href
+function opts(o, v, c, r){
+    var r = {caption: "{dic:caption:options|opt/menu}", compress: c, ready: r, items: [], template: {
+        layout: c ? "0,0,10,1" : "0,0,8,1", type: "control", enumerate: false, imagePreload: true, action: "interaction:load:" + window.location.href
     }};
     r.headline = r.caption + ":";
-    if(c) r.caption += c;
+    if(v) r.caption += v;
     o.forEach(function(o){if(o){
         if(o.key){
             o.progress = 1;
@@ -33,6 +33,8 @@ function icon(v, r){return r
     ? (v ? "msx-white:radio-button-on" : "radio-button-off") 
     : (v ? "msx-white:check-box" : "check-box-outline-blank");
 }
+function cati(c){return c == "movie" ? "movie" : c == "tv" ? "live-tv" : c == "music" ? "audiotrack" : "more-horiz"}
+function catg(c){return "{ico:" + cati(c) + "}"}
 function prms(k, c){
     var v = TVXServices.storage.getBool(k = "ts:" + k, false);
     if(c) TVXServices.storage.set(k, v = !v);

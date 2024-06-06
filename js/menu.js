@@ -3,9 +3,9 @@ TVXPluginTools.onReady(function() {
         var R = TVXServices.storage.getBool("ts:russian", false),
             S = new search(R), P = new playlist();
         var M = {menu: [
-            {icon: "bookmarks", label: "{dic:trns|My torrents}", data: "request:interaction:trns@" + window.location.href},
-            {icon: "search", label: "{dic:srch|Search torrents}", data: "request:interaction:search@" + window.location.href},
-            {icon: "folder", label: "{dic:fls|My files}", data: "request:interaction:/files/@" + window.location.href}
+            {icon: "bookmarks", label: "{dic:ьн|My} {dic:trns|torrents}", data: "request:interaction:trns@" + window.location.href},
+            {icon: "search", label: "{dic:find|Search} {dic:tns|torrents}", data: "request:interaction:search@" + window.location.href},
+            {icon: "folder", label: "{dic:my|My} {dic:fls|files}", data: "request:interaction:/files/@" + window.location.href}
         ], options: opts([
             {key: "green", icon: "translate", label: R ? "Switch to english" : "Перевести на русский", data: {action: "russian"}},
             {key: "yellow", label: "{dic:refresh|Refresh} {dic:caption:menu|menu}", action: "[cleanup|reload:menu]"}
@@ -17,7 +17,7 @@ TVXPluginTools.onReady(function() {
                 headline: t.title,
                 image: t.poster,
                 icon: t.poster ? "" : "msx-white-soft:bookmark",
-                group: "{ico:" + (t.category == "movie" ? "movie" : t.category == "tv" ? "live-tv" : t.category == "music" ? "audiotrack" : "more-horiz") + "}",
+                group: catg(t.category),
                 titleFooter: "{ico:msx-white:attach-file} " + (t.torrent_size ? size(t.torrent_size) : "?"),
                 stamp: t.stat < 5 ? ("{ico:north} " + (t.active_peers || 0) + " / " + (t.total_peers || 0) + " {ico:south} " + (t.connected_seeders || 0)) : "",
                 stampColor: "msx-" + (t.stat == 4 ? "red" : t.stat == 3 ? "green" : "yellow"),

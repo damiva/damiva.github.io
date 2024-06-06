@@ -27,7 +27,7 @@ function playlist(){
         p["resume:key"] = "url";
         p["trigger:complete"] =  "[player:auto:next|resume:cancel]";
         return {
-            type: "list", headline: h, cache: !!o, reuse: !!o, restore: !!o, compress: c, extension: " ",
+            type: "list", headline: h, cache: !!o, reuse: !!o, restore: !!o, compress: c, extension: o ? " " : ("{ico:msx-white:folder} " + d.length),
             overlay: o ? {items: [o.shift()]} : null,
             options: opts((o || [
                 {key: "yellow", label: "{dic:refresh|Refresh} {dic:list|the list}", action: "[cleanup|reload:content]"}
