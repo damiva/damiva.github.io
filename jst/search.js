@@ -52,6 +52,14 @@ function search(K){
         k.push({label: "{ico:done}", key: "green", data: {key: "ok"}, progress: 1, progressColor: "msx-green", offset: (-l-1) + ",0,1,0"});
         return k;
     };
+    var opt = function(o, e){
+        if(o)
+            for(var i = 1; i < 3; i++)
+                TVXInteractionPlugin.executeAction("update:panel:order" + i, {extensionIcon: icon(P.order == i)});
+        if(e)
+            for(var i = 0; i < 3; i++)
+                TVXInteractionPlugin.executeAction("update:panel:engine" + i, {extensionIcon: icon(P.engine == i, true)});
+    }
     var cat = function(c){return c == "Movie" ? "movie" : c == "Series" || c == "TVShow" ? "tv" : c};
     var itm = function(t, d, l, m, p, s, c, i){ return {
         text: "{col:msx-white}" + t,
@@ -75,7 +83,8 @@ function search(K){
             options: opts(
                 O,
                 ":{tb}{dic:find|Search} " + O[P.engine + 1].label + (P.order ? ("{tb}{dic:label:order|Order} " + O[P.order + 5].label) : ""),
-                true
+                true,
+                {action: "interaction:load:" + window.location.href, data: {search: true}}
             )
         };
     };
@@ -101,14 +110,17 @@ function search(K){
                 {label: (S += d) ? (S + "{txt:msx-white-soft:_}") : "{col:msx-white-soft}{dic:input|Enter the word(s) to find}"}
             );
             return true;
+        } else if (d.data.search) {
+            opt(true, true);
+            return true;
         } else if (typeof d.data.engine == "number") {
-            TVXServices.storage.set("ts:search:engine", E.v = d.data.engine);
-            TVXInteractionPlugin.executeAction("[cleanup|reload:content]");
-            return false;
+            TVXServices.storage.set("ts:search:engine", O.engine = d.data.engine);
+            opt(false, true);
+            return true;
         } else if (typeof d.data.order == "number") {
-            TVXServices.storage.set("ts:search:order", O.v = d.data.order);
-            TVXInteractionPlugin.executeAction("[cleanup|reload:content]");
-            return false;
+            TVXServices.storage.set("ts:search:order", O.order = d.data.order);
+            opt(true);
+            return true;
         }
         return false;
     };
@@ -116,9 +128,9 @@ function search(K){
         switch(i){
             case "search":
                 ajax("/settings", {action: "get"}, function(d){
-                    if(!(R = d.EnableRutorSearch === true) && !E.v) E.v = 1;
+                    O.items[4].enable = d.EnableRutorSearch === true;
                     f({
-                        type: "list", reuse: false, cache: false, restore: false, wrap: true, items: X(),
+                        type: "list", reuse: false, cache: false, restore: false, wrap: true, items: kbd(),
                         ready: {action: "interaction:load:" + window.location.href, data: {key: ""}}, options: Z(),
                         underlay: {items:[{id: "val", type: "space", layout: "0,0,12,1", color: "msx-black-soft", label: ""}]},
                         template: {
