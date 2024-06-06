@@ -11,7 +11,6 @@ function search(K){
             {id: "engine2", image: window.location.origin + "/img/torrs.png", label: "{dic:rutor|in torrs.ru (accurate)}", extensionIcon: "", data: {engine: 2}},
             {type: "button", label: "{dic:label:apply|Apply}", action: "[cleanup|reload:content]", offset: "2,0,-4,0"}
         ];
-    var srt = function(k){return function(a, b){return a[k] < b[k] ? 1 : a[k] > b[k] ? -1 : 0}};
     var kbd = function(){
         var k = [{label: "1", key: "1", offset: K ? "1,0,0,0" : undefined}], l = K ? 1 : 0,
             e = [
@@ -66,6 +65,7 @@ function search(K){
             for(var i = 0; i < 3; i++)
                 TVXInteractionPlugin.executeAction("update:panel:engine" + i, {extensionIcon: icon(P.engine == i, true)});
     }
+    var ext = function(l){return "{ico:msx-white:search} " (P.engine ? "rutor" : "torrs.ru") + (l !== undefined ? (": " + l) : "")}
     var cat = function(c){return c == "Movie" ? "movie" : c == "Series" || c == "TVShow" ? "tv" : c};
     var itm = function(t, d, l, m, p, s, c, i){ return {
         text: "{col:msx-white}" + t,
@@ -80,13 +80,13 @@ function search(K){
     var trs = function(t){return itm(t.title, t.createTime, t.sizeName, t.magnet, t.pir, t.sid)};
     var rtr = function(t){return itm(t.Title, t.CreateDate, t.Size, t.Magnet, t.Peer, t.Seed, cat(t.Categories), t.IMDBID ? (addr + "/msx/imdb/" + t.IMDBID) : "")};
     var fnd = function(d, f){
-        if(P.order) d.sort(srt(P.order == 1 ? (P.engine ? "Peer" : "pir") : (P.engine ? "CreateDate" : "createTime")));
+        if(P.order){
+            var k = P.order == 1 ? (P.engine ? "Peer" : "pir") : (P.engine ? "CreateDate" : "createTime");
+            d.sort(function(a, b){return a[k] < b[k] ? 1 : a[k] > b[k] ? -1 : 0});
+        }
         return {
-            type: "list", headline: "{ico:search} " + S,
-            extension: "{ico:msx-white:search} " + d.length,
-            template: {layout: "0,0,12,1"},
-            items: d.map(f),
-            options: opt()
+            type: "list", headline: "{ico:search} " + S, extension: ext(d.length),
+            template: {layout: "0,0,12,1"}, items: d.map(f), options: opt()
         };
     };
     this.handleData = function(d){
@@ -128,7 +128,7 @@ function search(K){
                 ajax("/settings", {action: "get"}, function(d){
                     if(!(O[4].enable = d.EnableRutorSearch === true) && !P.engine) P.engine = 1;
                     f({
-                        type: "list", reuse: false, cache: false, restore: false, wrap: true, items: kbd(),
+                        type: "list", reuse: false, cache: false, restore: false, wrap: true, extension: ext(), items: kbd(),
                         ready: {action: "interaction:load:" + window.location.href, data: {key: ""}}, options: opt(),
                         underlay: {items:[{id: "val", type: "space", layout: "0,0,12,1", color: "msx-black-soft", label: ""}]},
                         template: {
