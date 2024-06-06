@@ -73,7 +73,7 @@ function playlist(){
             live: {type: "setup", action: "execute:" + addr + "/msx/trn", data: "update:content:overlay:" + d.hash}
         }, s ? {
             key: "green", icon: "bookmark-add", label: "{dic:save|Save the torrent}",
-            data: {action: "add", link: l, title: d.title, poster: d.poster, category: d.category}
+            data: {action: "add", link: l, title: d.title, poster: d.poster, category: d.category, save_to_db: true}
         } : fs.length > 1 ? {
             key: "green", icon: "last-page", label: "{dic:viewed|To viewed item}", data: {action: "focus", hash: d.hash}
         } : null, ds.length > 1 ? {key: "yellow", icon: "folder", label: "{dic:folder|To folder}", action: "panel:data", data: {
