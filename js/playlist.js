@@ -24,10 +24,11 @@ function playlist(){
     };
     var L = function(d, h, c, o, p, f){
         if(!p) p = {};
-        p["resume:key"] = "url";
+        p["resume:key"] = o ? "id" : "url";
         p["trigger:complete"] =  "[player:auto:next|resume:cancel]";
         return {
-            type: "list", headline: h, cache: !!o, reuse: !!o, restore: !!o, compress: c, extension: o ? " " : ("{ico:msx-white:folder} " + d.length),
+            type: "list", headline: h, cache: !!o, reuse: !!o, restore: !!o, compress: c, 
+            extension: o ? " " : ("{ico:msx-white:folder} " + d.length),
             overlay: o ? {items: [o.shift()]} : null,
             options: opts((o || [
                 {key: "yellow", label: "{dic:refresh|Refresh} {dic:list|the list}", action: "[cleanup|reload:content]"}
@@ -57,7 +58,7 @@ function playlist(){
     var T = function(d, l, c, s){
         var fs = [], ds =[], sf = prms("folders");
         d.file_stats.forEach(function(f){
-            if(f = I({id: TVXTools.strValue(f.id), label: f.path.substr(f.path.lastIndexOf("/") + 1), extensionLabel: size(f.length), action: "/stream/?play&link=" + l + "&index=" + f.id})){
+            if(f = I({id: d.hash + f.id, label: f.path.substr(f.path.lastIndexOf("/") + 1), extensionLabel: size(f.length), action: "/stream/?play&link=" + l + "&index=" + f.id})){
                 var p = f.label.split("/");
                 f.label = p.pop();
                 p.shift();
