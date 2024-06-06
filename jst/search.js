@@ -128,7 +128,7 @@ function search(K){
         switch(i){
             case "search":
                 ajax("/settings", {action: "get"}, function(d){
-                    O.items[4].enable = d.EnableRutorSearch === true;
+                    O[4].enable = d.EnableRutorSearch === true;
                     f({
                         type: "list", reuse: false, cache: false, restore: false, wrap: true, items: kbd(),
                         ready: {action: "interaction:load:" + window.location.href, data: {key: ""}}, options: Z(),
