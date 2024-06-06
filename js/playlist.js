@@ -33,7 +33,7 @@ function playlist(){
             options: opts((o || [
                 {key: "yellow", label: "{dic:refresh|Refresh} {dic:list|the list}", action: "[cleanup|reload:content]"}
             ]).concat([
-                {icon: "compress", label: "{dic:compress|Small font}", data: {action: "compress"}, extensionIcon: icon(c)},
+                {icon: "compress", label: "{dic:compress|Compress} {dic:list|the list}", data: {action: "compress"}, extensionIcon: icon(c)},
                 {icon: "folder", label: "{dic:folders|Show folders}", data: {action: "folders"}, extensionIcon: icon(f), display: f !== undefined}
             ])),
             template: {type: "control", layout: c ? "0,0,16,1" : "0,0,12,1", progress: -1, properties: p},
@@ -94,9 +94,9 @@ function playlist(){
         var r = function(m){TVXInteractionPlugin.executeAction(m === true ? "reload" : ("[cleanup|reload:content" + (m ? ("|success:" + m) : "") + "]"))},
             v = null;
         switch(d.data.action){
-            case "rem": v = "{ico:delete}";
-            case "drop": v = v || "{ico:close}";
-            case "add": v = v || "{ico:bookmark-add}";
+            case "rem": v = "{dic:remed|Torrent removed}!";
+            case "drop": v = v || "{dic:droped|Torrent dropped}";
+            case "add": v = v || "{dic:saved|Torrent added to {col:msx-white}{dic:my|My} {dic:trns|torrents}";
                 ajax("/torrents", d.data, "text", function(){r(v)}, function(e){TVXInteractionPlugin.error(e)});
                 break;
             case "focus": d.data.action = "list";

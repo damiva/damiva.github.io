@@ -4,39 +4,43 @@ TVXPluginTools.onReady(function() {
             S = new search(R), P = new playlist();
         var M = {menu: [
             {icon: "bookmarks", label: "{dic:my|My} {dic:trns|torrents}", data: "request:interaction:trns@" + window.location.href},
-            {icon: "search", label: "{dic:find|Search} {dic:tns|torrents}", data: "request:interaction:search@" + window.location.href},
+            {icon: "search", label: "{dic:find|Search} {dic:trns|torrents}", data: "request:interaction:search@" + window.location.href},
             {icon: "folder", label: "{dic:my|My} {dic:fls|files}", data: "request:interaction:/files/@" + window.location.href}
         ], options: opts([
             {key: "green", icon: "translate", label: R ? "Switch to english" : "Перевести на русский", data: {action: "russian"}},
             {key: "yellow", label: "{dic:refresh|Refresh} {dic:caption:menu|menu}", action: "[cleanup|reload:menu]"}
         ])};
-        var L = function(d){return {
-            type: "list", reuse: false, cache: false, restore: false, extension: "{ico:msx-white:bookmarks} " + d.length,
-            template: {layout: "0,0,6,2", imageWidth: 1.3, imageFiller: "height"}, items: d.map(function(t){return {
-                id: t.hash,
-                headline: t.title,
-                image: t.poster,
-                icon: t.poster ? "" : "msx-white-soft:bookmark",
-                group: catg(t.category),
-                titleFooter: "{ico:msx-white:attach-file} " + (t.torrent_size ? size(t.torrent_size) : "?"),
-                stamp: t.stat < 5 ? ("{ico:north} " + (t.active_peers || 0) + " / " + (t.total_peers || 0) + " {ico:south} " + (t.connected_seeders || 0)) : "",
-                stampColor: "msx-" + (t.stat == 4 ? "red" : t.stat == 3 ? "green" : "yellow"),
-                options: opts([
-                    {key: "red", icon: "delete", label: "{dic:rem|Remove the torrent}", action: "panel:data", data: {
-                        type: "list", headline: "{dic:rem|Remove the torrent}?",
-                        overlay: {items: [{type: "space", headline: t.title, layout: "0,0,8,4"}]},
-                        template: {type: "button", layout: "0,0,8,1", area: "0,4,8,2"},
-                        items: [
-                            {label: "{dic:label:no|No}", action: "cleanup"},
-                            {label: "{dic:label:yes|Yes}", action: "interaction:load:" + window.location.href, data: {action: "rem", hash: t.hash}}
-                        ]
-                    }},
-                    t.stat < 5 ? {key: "green", icon: "close", label: "{dic:drop|Drop the torrent}", data: {action: "drop", hash: t.hash}} : null,
-                    {key: "yellow", label: "{dic:refresh|Refresh} {dic:list|the list}", action: "[cleanup|reload:content]"}
-                ]),
-                action: "content:request:interaction:" + t.hash + "@" + window.location.href
-            }})
-        }};
+        var L = function(d){
+            var c = prms("font");
+            return {
+                type: "list", reuse: false, cache: false, restore: false, extension: "{ico:msx-white:bookmarks} " + d.length,
+                template: {layout: "0,0,6,2", imageWidth: 1.3, imageFiller: "height"}, items: d.map(function(t){return {
+                    id: t.hash,
+                    headline: c ? undefined : t.title, text: c ? ("{col:msx-white}" + t.title) : undefined,
+                    image: t.poster,
+                    icon: t.poster ? "" : "msx-white-soft:bookmark",
+                    group: catg(t.category),
+                    titleFooter: "{ico:msx-white:attach-file} " + (t.torrent_size ? size(t.torrent_size) : "?"),
+                    stamp: t.stat < 5 ? ("{ico:north} " + (t.active_peers || 0) + " / " + (t.total_peers || 0) + " {ico:south} " + (t.connected_seeders || 0)) : "",
+                    stampColor: "msx-" + (t.stat == 4 ? "red" : t.stat == 3 ? "green" : "yellow"),
+                    options: opts([
+                        {key: "red", icon: "delete", label: "{dic:rem|Remove the torrent}", action: "panel:data", data: {
+                            type: "list", headline: "{dic:rem|Remove the torrent}?",
+                            overlay: {items: [{type: "space", headline: t.title, layout: "0,0,8,4"}]},
+                            template: {type: "button", layout: "0,0,8,1", area: "0,4,8,2"},
+                            items: [
+                                {label: "{dic:label:no|No}", action: "cleanup"},
+                                {label: "{dic:label:yes|Yes}", action: "interaction:load:" + window.location.href, data: {action: "rem", hash: t.hash}}
+                            ]
+                        }},
+                        t.stat < 5 ? {key: "green", icon: "close", label: "{dic:drop|Drop the torrent}", data: {action: "drop", hash: t.hash}} : null,
+                        {key: "yellow", label: "{dic:refresh|Refresh} {dic:list|the list}", action: "[cleanup|reload:content]"},
+                        {icon: "format-size", label: "{dic:compress|Compress} {dic:font|the font}", extensionIcon: icon(c), data: {action: "font"}}
+                    ]),
+                    action: "content:request:interaction:" + t.hash + "@" + window.location.href
+                }})
+            };
+        };
         this.init = P.init();
         this.ready = function(){M.logo = addr + "/logo.png"};
         this.handleData = function(d){if(!S.handleData(d)) P.handleData(d)};
