@@ -58,10 +58,10 @@ function playlist(){
     var T = function(d, l, c, s){
         var fs = [], ds =[], sf = prms("folders");
         d.file_stats.forEach(function(f){
-            if(f = I({id: d.hash + f.id, label: f.path.substr(f.path.lastIndexOf("/") + 1), extensionLabel: size(f.length), action: "/stream/?play&link=" + l + "&index=" + f.id})){
+            if(f = I({id: d.hash + f.id, label: f.path, extensionLabel: size(f.length), action: "/stream/?play&link=" + l + "&index=" + f.id})){
                 var p = f.label.split("/");
                 f.label = p.pop();
-                //p.shift();
+                p.shift();
                 if((p = p.join("/")) && (!ds.length || ds[ds.length - 1].label != p)){
                     ds.push({label: p, action: "[cleanup|focus:" + f.id + "]"});
                     if(sf) fs.push({type: "space", label: "{col:msx-yellow}{ico:folder} " + p});
@@ -99,8 +99,8 @@ function playlist(){
             case "add": v = v || "{ico:bookmark-add}";
                 ajax("/torrents", d.data, "text", function(){r(v)}, function(e){TVXInteractionPlugin.error(e)});
                 break;
-            case "focus":
-                ajax("/viewed", {action: "list"}, function(l){
+            case "focus": d.data.action = "list";
+                ajax("/viewed", d.data, function(l){
                     var i = 0;
                     if(l && typeof l == "object") l.forEach(function(n){if(n.file_index > i) i = n.file_index});
                     if(i > 0) TVXInteractionPlugin.executeAction("[cleanup|focus:" + i + "]");
