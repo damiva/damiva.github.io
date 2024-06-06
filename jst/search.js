@@ -65,7 +65,7 @@ function search(K){
             for(var i = 0; i < 3; i++)
                 TVXInteractionPlugin.executeAction("update:panel:engine" + i, {extensionIcon: icon(P.engine == i, true)});
     }
-    var ext = function(l){return "{ico:msx-white:search} " (P.engine ? "rutor" : "torrs.ru") + (l !== undefined ? (": " + l) : "")}
+    var ext = function(l){return "{ico:msx-white:search} " + (P.engine ? "rutor" : "torrs.ru") + (l !== undefined ? (": " + l) : "")}
     var cat = function(c){return c == "Movie" ? "movie" : c == "Series" || c == "TVShow" ? "tv" : c};
     var itm = function(t, d, l, m, p, s, c, i){ return {
         text: "{col:msx-white}" + t,
