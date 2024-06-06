@@ -3,7 +3,7 @@ TVXPluginTools.onReady(function() {
         var R = TVXServices.storage.getBool("ts:russian", false),
             S = new search(R), P = new playlist();
         var M = {menu: [
-            {icon: "bookmarks", label: "{dic:ьн|My} {dic:trns|torrents}", data: "request:interaction:trns@" + window.location.href},
+            {icon: "bookmarks", label: "{dic:my|My} {dic:trns|torrents}", data: "request:interaction:trns@" + window.location.href},
             {icon: "search", label: "{dic:find|Search} {dic:tns|torrents}", data: "request:interaction:search@" + window.location.href},
             {icon: "folder", label: "{dic:my|My} {dic:fls|files}", data: "request:interaction:/files/@" + window.location.href}
         ], options: opts([
