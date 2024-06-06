@@ -68,6 +68,7 @@ function search(K){
     var ext = function(l){return "{ico:msx-white:search} " + (P.engine ? "torrs.ru" : "rutor") + (l !== undefined ? (": " + l) : "")}
     var cat = function(c){return c == "Movie" ? "movie" : c == "Series" || c == "TVShow" ? "tv" : c};
     var itm = function(t, d, l, m, p, s, c, i){ return {
+        image: i || undefined, imageWidth: i ? 0.7 : undefined, imageFiller: i ? "height" : undefined,
         text: "{col:msx-white}" + t,
         stamp: "{col:msx-white-soft}{ico:date-range} " + TVXDateFormatter.toDateStr(new Date(d)) 
             + "{tb}{ico:attach-file} " + l 
