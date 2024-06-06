@@ -53,6 +53,12 @@ function search(K){
         return k;
     };
     var opt = function(o, e){
+        if(!o && !e) return opts(
+            O,
+            ":{tb}{dic:find|Search} " + O[P.engine + 4].label + (P.order ? ("{tb}{dic:label:order|Order} " + O[P.order + 0].label) : ""),
+            true,
+            {action: "interaction:load:" + window.location.href, data: {search: true}}
+        );
         if(o)
             for(var i = 1; i < 3; i++)
                 TVXInteractionPlugin.executeAction("update:panel:order" + i, {extensionIcon: icon(P.order == i)});
@@ -80,12 +86,7 @@ function search(K){
             extension: "{ico:msx-white:search} " + d.length,
             template: {layout: "0,0,12,1"},
             items: d.map(f),
-            options: opts(
-                O,
-                ":{tb}{dic:find|Search} " + O[P.engine + 1].label + (P.order ? ("{tb}{dic:label:order|Order} " + O[P.order + 5].label) : ""),
-                true,
-                {action: "interaction:load:" + window.location.href, data: {search: true}}
-            )
+            options: opt()
         };
     };
     this.handleData = function(d){
@@ -118,7 +119,7 @@ function search(K){
             opt(false, true);
             return true;
         } else if (typeof d.data.order == "number") {
-            TVXServices.storage.set("ts:search:order", O.order = d.data.order);
+            TVXServices.storage.set("ts:search:order", O.order = d.data.order == O.order ? 0 : d.data.order);
             opt(true);
             return true;
         }
@@ -131,7 +132,7 @@ function search(K){
                     O[4].enable = d.EnableRutorSearch === true;
                     f({
                         type: "list", reuse: false, cache: false, restore: false, wrap: true, items: kbd(),
-                        ready: {action: "interaction:load:" + window.location.href, data: {key: ""}}, options: Z(),
+                        ready: {action: "interaction:load:" + window.location.href, data: {key: ""}}, options: opt(),
                         underlay: {items:[{id: "val", type: "space", layout: "0,0,12,1", color: "msx-black-soft", label: ""}]},
                         template: {
                             type: "button", layout: "0,0,1,1", area: K ? "0,1,12,5" : "1,1,10,5", enumerate: false,
@@ -146,11 +147,7 @@ function search(K){
                     "https://torrs.ru/search?query=" + encodeURIComponent(S) + (P.engine == 2 ? "&accurate" : ""),
                     {success: function(d){f(fnd(d, trs))}, error: e}
                 );
-                else ajax(
-                    "/search/?query=" + encodeURIComponent(S),
-                    function(d){f(fnd(d, rtr))},
-                    e
-                );
+                else ajax("/search/?query=" + encodeURIComponent(S), function(d){f(fnd(d, rtr))}, e);
                 return true;
             default: return false;
         }
