@@ -80,7 +80,7 @@ function search(K){
     var trs = function(t){return itm(t.title, t.createTime, t.sizeName, t.magnet, t.pir, t.sid)};
     var rtr = function(t){return itm(t.Title, t.CreateDate, t.Size, t.Magnet, t.Peer, t.Seed, cat(t.Categories), t.IMDBID ? (addr + "/msx/imdb/" + t.IMDBID) : "")};
     var fnd = function(d, f){
-        if(P.order) d = d.sort(srt(P.order == 1 ? (P.engine ? "Peer" : "pir") : (P.engine ? "CreateDate" : "createTime")));
+        if(P.order) d.sort(srt(P.order == 1 ? (P.engine ? "Peer" : "pir") : (P.engine ? "CreateDate" : "createTime")));
         return {
             type: "list", headline: "{ico:search} " + S,
             extension: "{ico:msx-white:search} " + d.length,
