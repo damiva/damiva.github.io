@@ -19,7 +19,7 @@
                 s.send(d ? JSON.stringify(d) : undefined);
             }
             window.onload = function(){
-                var f = document.forms[o], s = document.getElementById("set"), b = document.getElementById("set");
+                var f = document.forms[0], s = document.getElementById("set"), b = document.getElementById("set");
                 ajax("/msx/files", null, function(v){
                     f.files.value = f.files.defaultValue = f;
                     b.disabled = true;
@@ -34,11 +34,11 @@
             };
         </script>
     </head>
-    <body>
+    <body style="font-family: Arial, Helvetica, sans-serif;">
         <form style="margin: auto; width: fit-content;">
             <fieldset id="set">
-                <legend>My files settings:</legend>
-                <label>Path to files: <input name="files" id="files"></label><button id="ok" disabled>OK</button>
+                <legend><b>My files</b> settings:</legend>
+                <label>Path to files on the server: <input name="files" id="files"></label><button id="ok" disabled>OK</button>
             </fieldset>
         </form>
     </body>
