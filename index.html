@@ -29,6 +29,7 @@
                 }
                 f.onsubmit = function(){
                     if(this.files.value != this.files.defaultValue) ajax("/files", this.files.value, null, s);
+                    console.log("set /files: " + this.files.value);
                     return false;
                 };
             };
