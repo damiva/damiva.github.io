@@ -59,7 +59,7 @@ function search(K){
     var fnd = function(d, f){
         if(!TVXTools.isArray(d) || d.length == 0) d = null;
         else if(P[0] || P[1]){
-            var k = [["", "Peer", "CreateDate"], ["size", "pir", "createTime"]][P[0]][P[1]];
+            var k = [["", "Peer", "CreateDate"], ["size", "pir", "createTime"]][P[0] ? 1 : 0][P[1]];
             d.sort(function(a, b){return a[k] < b[k] ? 1 : a[k] > b[k] ? -1 : 0});
         }
         return {
