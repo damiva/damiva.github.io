@@ -8,6 +8,7 @@
         <script type="text/javascript">
             function ajax(u, d, f, s){
                 var x = new XMLHttpRequest();
+                x.responseType = "json";
                 if(s) s.disabled = true;
                 x.onloadend = function(){
                     if(x.status != 200) alert(x.statusText + ": " + x.responseText);
