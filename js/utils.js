@@ -12,13 +12,11 @@ function size(s){
     var i = s == 0 ? 0 : Math.floor(Math.log(s) / Math.log(1024));
     return (s / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'KB', 'MB', 'GB', 'TB'][i];
 }
-function opts(o, v, r, u){
-    var r = {
-        caption: "{dic:caption:options|opt/menu}", ready: r, underlay: u, items: [], template: {
+function opts(o, h, v){
+    h = h || "{dic:caption:options|opt/menu}";
+    var r = {caption: h + (v || ""), headline: h + ":", items: [], template: {
         layout: "0,0,8,1", type: "control", enumerate: false, imagePreload: true, action: "interaction:load:" + window.location.href
     }};
-    r.headline = r.caption + ":";
-    if(v) r.caption += v;
     o.forEach(function(o){if(o){
         if(o.key){
             o.progress = 1;

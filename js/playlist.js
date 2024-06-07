@@ -40,7 +40,7 @@ function playlist(){
                 {icon: "folder", label: "{dic:folders|Show folders}", data: {action: "folders"}, extensionIcon: icon(f), display: f !== undefined}
             ])),
             template: {type: "control", layout: c ? "0,0,16,1" : "0,0,12,1", progress: -1, properties: p},
-            items: d.length ? d : [{items: "refresh", label: "{dic:empty|Nothing found}", action: "reload:content"}]
+            items: d && d.length ? d : [{items: "refresh", label: "{dic:empty|Nothing found}", action: "reload:content"}]
         };
     };
     var H = function(d, p, c){

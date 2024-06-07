@@ -1,14 +1,6 @@
 function search(K){
     var S = TVXServices.storage.getFullStr("ts:search:query", ""),
-        P = {engine: TVXServices.storage.getNum("ts:search:engine", 0), order: TVXServices.storage.getNum("ts:search:order", 0)},
-        O = [
-            {id: "order1", icon: "north", label: "{dic:label:order|Order} {dic:peers|by peers}", extensionIcon: "", data: {order: 1}},
-            {id: "order2", icon: "date-range", label: "{dic:label:order|Order} {dic:date|by date}", extensionIcon: "", data: {order: 2}},
-            {id: "engine0", image: window.location.origin + "/img/rutor.png", label: "{dic:find|Search} {dic:rutor|in Rutor (embeded)}", extensionIcon: "", data: {engine: 0}},
-            {id: "engine1", image: window.location.origin + "/img/torrs.png", label: "{dic:find|Search} {dic:torrs|in Torrs}", extensionIcon: "", data: {engine: 1}},
-            {id: "engine2", image: window.location.origin + "/img/torrs.png", label: "{dic:find|Search} {dic:accurate|accurate} {dic:torrs|in torrs.ru}", extensionIcon: "", data: {engine: 2}},
-            {type: "button", label: "{dic:label:apply|Apply}", action: "[cleanup|reload:content]"}
-        ];
+        P = [TVXServices.storage.getNum("ts:search:engine", 0), TVXServices.storage.getNum("ts:search:order", 0)];
     var kbd = function(){
         var k = [{label: "1", key: "1", offset: K ? "1,0,0,0" : undefined}], l = K ? 1 : 0,
             e = [
@@ -49,24 +41,7 @@ function search(K){
         k.push({label: "{ico:done}", key: "green", data: {key: "ok"}, progress: 1, progressColor: "msx-green", offset: (-l-1) + ",0,1,0"});
         return k;
     };
-    var opt = function(o, e){
-        if(!o && !e) return opts(
-            O,
-            ":{tb}" + O[P.engine + 2].label + (P.order ? ("{tb}" + O[P.order - 1].label) : ""),
-            {action: "interaction:load:" + window.location.href, data: {order: 0}},
-            {items: [
-                {type: "space", color: "msx-glass", layout: "0,0,8,2", offset: "-.05,-.05,.1,.1"},
-                {type: "space", color: "msx-glass", layout: "0,2,8,3", offset: "-.05,-.05,.1,.1"}
-            ]}
-        );
-        if(o)
-            for(var i = 1; i < 3; i++)
-                TVXInteractionPlugin.executeAction("update:panel:order" + i, {extensionIcon: icon(P.order == i)});
-        if(e)
-            for(var i = 0; i < 3; i++)
-                TVXInteractionPlugin.executeAction("update:panel:engine" + i, {extensionIcon: icon(P.engine == i, true)});
-    }
-    var ext = function(l){return "{ico:msx-white:search}" + (l !== undefined ? ((P.engine ? " Torrs: " : " Rutor: ") + l) : "")}
+    var ext = function(l){return "{ico:msx-white:search}" + (l !== undefined ? ((P[0] ? " Torrs: " : " Rutor: ") + l) : "")}
     var cat = function(c){return c == "Movie" ? "movie" : c == "Series" || c == "TVShow" ? "tv" : c};
     var itm = function(t, d, l, m, p, s, c, i){ return {
         image: i || undefined, imageWidth: i ? 0.7 : undefined, imageFiller: i ? "height" : undefined,
@@ -82,13 +57,27 @@ function search(K){
     var trs = function(t){return itm(t.title, t.createTime, t.sizeName, t.magnet, t.pir, t.sid)};
     var rtr = function(t){return itm(t.Title, t.CreateDate, t.Size, t.Magnet, t.Peer, t.Seed, cat(t.Categories), t.IMDBID ? (addr + "/msx/imdb/" + t.IMDBID) : "")};
     var fnd = function(d, f){
-        if(P.order){
-            var k = P.order == 1 ? (P.engine ? "pir" : "Peer") : (P.engine ? "createTime" : "CreateDate");
+        if(!TVXTools.isArray(d) || d.length == 0) d = null;
+        else if(P[0] || P[1]){
+            var k = [["", "Peer", "CreateDate"], ["size", "pir", "createTime"]][P[0], P[1]];
             d.sort(function(a, b){return a[k] < b[k] ? 1 : a[k] > b[k] ? -1 : 0});
         }
         return {
             type: "list", headline: "{ico:search} " + S, extension: ext(d.length),
-            template: {layout: "0,0,12,1"}, items: d.map(f), options: opt()
+            header: d ? {items: [{
+                headline: "{ico:sort} {dic:label:order|Order}:", type: "space",
+                layout: "0,0,12,1", color: "msx-glass", centration: "text", offset: "-.1,-.1,.2,.2"
+            },{
+                icon: "attach-file", label: P[0] ? "{dic:size|by size}" : "{dic:label:no|No}", type: "control", layout: "4,0,3,1",
+                extensionIcon: icon(P[1] == 0, true), data: {opt: 10}, action: "interaction:load:" + window.location.href
+            },{
+                icon: "north", label: "{dic:peers|by peers}", type: "control", layout: "7,0,3,1",
+                extensionIcon: icon(P[1] == 1, true), data: {opt: 11}, action: "interaction:load:" + window.location.href
+            },{
+                icon: "date-range", label: "{dic:date|by date}", type: "control", layout: "10,0,3,1",
+                extensionIcon: icon(P[1] == 2, true), data: {opt: 12}, action: "interaction:load:" + window.location.href},
+            ]} : null,
+            template: {layout: "0,0,12,1"}, items: d ? d = d.map(f) : [{label: "{dic:empty|Nothing found}!", action: "[]"}]
         };
     };
     this.handleData = function(d){
@@ -113,13 +102,10 @@ function search(K){
                 {label: (S += d) ? (S + "{txt:msx-white-soft:_}") : "{col:msx-white-soft}{dic:input|Enter the word(s) to find}"}
             );
             return true;
-        } else if (typeof d.data.engine == "number") {
-            TVXServices.storage.set("ts:search:engine", P.engine = d.data.engine);
-            opt(false, true);
-            return true;
-        } else if (typeof d.data.order == "number") {
-            if(d.data.order) TVXServices.storage.set("ts:search:order", P.order = d.data.order == P.order ? 0 : d.data.order);
-            opt(true, !d.data.order);
+        } else if (typeof d.data.opt == "number") {
+            var o = d.data.opt < 10 ? 0 : 1;
+            TVXServices.storage.set("ts:search:" + ["engine", "order"][o], P[o] = d.data.opt - o * 10);
+            TVXInteractionPlugin.executeAction("[claenup|reload:content]")
             return true;
         }
         return false;
@@ -128,10 +114,18 @@ function search(K){
         switch(i){
             case "search":
                 ajax("/settings", {action: "get"}, function(d){
-                    if(!(O[2].enable = d.EnableRutorSearch === true) && !P.engine) P.engine = 1;
+                    if(!(d = d.EnableRutorSearch === true) && !P[0]) P[0] = 1;
+                    d = [
+                        ["{dic:rutor|in Rutor (embeded)}", "rutor.png"],
+                        ["{dic:torrs|in Torrs}", "torrs.png"],
+                        ["{dic:torrs|in Torrs} ({dic:accurate|accurate})", "torrs.png"]
+                    ].map(function(o, i){return {
+                        label: o[0], image: window.location.origin + "/img/" + o[1], extensionIcon: P[0] == i, data: {opt: i}, display: !i || d
+                    }});
                     f({
                         type: "list", reuse: false, cache: false, restore: false, wrap: true, extension: ext(), items: kbd(),
-                        ready: {action: "interaction:load:" + window.location.href, data: {key: ""}}, options: opt(),
+                        ready: {action: "interaction:load:" + window.location.href, data: {key: ""}},
+                        options: opts(d, "{dic:find|Search}", ": " + d[P[0]][0]),
                         underlay: {items:[{id: "val", type: "space", layout: "0,0,12,1", color: "msx-black-soft", label: ""}]},
                         template: {
                             type: "button", layout: "0,0,1,1", area: K ? "0,1,12,5" : "1,1,10,5", enumerate: false,
