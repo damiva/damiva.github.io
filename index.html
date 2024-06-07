@@ -14,12 +14,12 @@
                     else if(f) f(x.response);
                     if(s) s.disabled = false;
                 }
-                x.open(d ? "POST" : "GET", window.location.origin + u);
+                x.open(d ? "POST" : "GET", u);
                 x.send(d ? JSON.stringify(d) : undefined);
             }
             window.onload = function(){
                 var f = document.forms[0], s = document.getElementById("set"), b = document.getElementById("set");
-                ajax("/msx/files", null, function(v){
+                ajax("/files", null, function(v){
                     f.files.value = f.files.defaultValue = f;
                     b.disabled = true;
                 }, s);
