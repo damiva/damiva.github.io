@@ -2,14 +2,12 @@ function search(K){
     var S = TVXServices.storage.getFullStr("ts:search:query", ""),
         P = {engine: TVXServices.storage.getNum("ts:search:engine", 0), order: TVXServices.storage.getNum("ts:search:order", 0)},
         O = [
-            {type: "space", label: "{dic:label:order|Order}:"},
-            {id: "order1", icon: "north", label: "{dic:peers|on peers}", extensionIcon: "", data: {order: 1}},
-            {id: "order2", icon: "date-range", label: "{dic:date|on date}", extensionIcon: "", data: {order: 2}},
-            {type: "space", label: "{dic:find|Search}:"},
-            {id: "engine0", image: window.location.origin + "/img/rutor.png", label: "{dic:rutor|in rutor (embed)}", extensionIcon: "", data: {engine: 0}},
-            {id: "engine1", image: window.location.origin + "/img/torrs.png", label: "{dic:torrs|in torrs.ru}", extensionIcon: "", data: {engine: 1}},
-            {id: "engine2", image: window.location.origin + "/img/torrs.png", label: "{dic:torrsA|in torrs.ru (accurate)}", extensionIcon: "", data: {engine: 2}},
-            {type: "button", label: "{dic:label:apply|Apply}", action: "[cleanup|reload:content]", offset: "2,0,-4,0"}
+            {id: "order1", icon: "north", label: "{dic:label:order|Order} {dic:peers|on peers}", extensionIcon: "", data: {order: 1}},
+            {id: "order2", icon: "date-range", label: "{dic:label:order|Order} {dic:date|on date}", extensionIcon: "", data: {order: 2}},
+            {id: "engine0", image: window.location.origin + "/img/rutor.png", label: "{dic:find|Search} {dic:rutor|in rutor (embed)}", extensionIcon: "", data: {engine: 0}},
+            {id: "engine1", image: window.location.origin + "/img/torrs.png", label: "{dic:find|Search} {dic:torrs|in torrs.ru}", extensionIcon: "", data: {engine: 1}},
+            {id: "engine2", image: window.location.origin + "/img/torrs.png", label: "{dic:find|Search} {dic:torrsA|in torrs.ru (accurate)}", extensionIcon: "", data: {engine: 2}},
+            {type: "button", label: "{dic:label:apply|Apply}", action: "[cleanup|reload:content]", color: "msx-black-soft"}
         ];
     var kbd = function(){
         var k = [{label: "1", key: "1", offset: K ? "1,0,0,0" : undefined}], l = K ? 1 : 0,
@@ -54,8 +52,7 @@ function search(K){
     var opt = function(o, e){
         if(!o && !e) return opts(
             O,
-            ":{tb}{dic:find|Search} " + O[P.engine + 4].label + (P.order ? ("{tb}{dic:label:order|Order} " + O[P.order + 0].label) : ""),
-            true,
+            ":{tb}" + O[P.engine + 2].label + (P.order ? ("{tb}" + O[P.order - 1].label) : ""),
             {action: "interaction:load:" + window.location.href, data: {order: 0}}
         );
         if(o)
@@ -65,7 +62,7 @@ function search(K){
             for(var i = 0; i < 3; i++)
                 TVXInteractionPlugin.executeAction("update:panel:engine" + i, {extensionIcon: icon(P.engine == i, true)});
     }
-    var ext = function(l){return "{ico:msx-white:search} " + (P.engine ? "torrs.ru" : "rutor") + (l !== undefined ? (": " + l) : "")}
+    var ext = function(l){return "{ico:msx-white:search}" + (l !== undefined ? ((P.engine ? " torrs.ru: " : " rutor: ") + l) : "")}
     var cat = function(c){return c == "Movie" ? "movie" : c == "Series" || c == "TVShow" ? "tv" : c};
     var itm = function(t, d, l, m, p, s, c, i){ return {
         image: i || undefined, imageWidth: i ? 0.7 : undefined, imageFiller: i ? "height" : undefined,
@@ -127,7 +124,7 @@ function search(K){
         switch(i){
             case "search":
                 ajax("/settings", {action: "get"}, function(d){
-                    if(!(O[4].enable = d.EnableRutorSearch === true) && !P.engine) P.engine = 1;
+                    if(!(O[2].enable = d.EnableRutorSearch === true) && !P.engine) P.engine = 1;
                     f({
                         type: "list", reuse: false, cache: false, restore: false, wrap: true, extension: ext(), items: kbd(),
                         ready: {action: "interaction:load:" + window.location.href, data: {key: ""}}, options: opt(),

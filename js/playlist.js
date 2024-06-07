@@ -103,7 +103,7 @@ function playlist(){
                 ajax("/viewed", d.data, function(l){
                     var i = 0;
                     if(l && typeof l == "object") l.forEach(function(n){if(n.file_index > i) i = n.file_index});
-                    if(i > 0) TVXInteractionPlugin.executeAction("[cleanup|focus:" + i + "]");
+                    if(i > 0) TVXInteractionPlugin.executeAction("[cleanup|focus:" + d.data.hash + i + "]");
                 });
                 break;
             default: prms(d.data.action, true); r(d.data.action == "russian");

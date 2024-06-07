@@ -12,9 +12,9 @@ function size(s){
     var i = s == 0 ? 0 : Math.floor(Math.log(s) / Math.log(1024));
     return (s / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'KB', 'MB', 'GB', 'TB'][i];
 }
-function opts(o, v, c, r){
-    var r = {caption: "{dic:caption:options|opt/menu}", compress: c, ready: r, items: [], template: {
-        layout: c ? "0,0,10,1" : "0,0,8,1", type: "control", enumerate: false, imagePreload: true, action: "interaction:load:" + window.location.href
+function opts(o, v, r){
+    var r = {caption: "{dic:caption:options|opt/menu}", ready: r, items: [], template: {
+        layout: "0,0,8,1", type: "control", enumerate: false, imagePreload: true, action: "interaction:load:" + window.location.href
     }};
     r.headline = r.caption + ":";
     if(v) r.caption += v;
