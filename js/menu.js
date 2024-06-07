@@ -17,7 +17,7 @@ TVXPluginTools.onReady(function() {
                 extension: e ? "{ico:msx-yellow:warning}" : ("{ico:msx-white:bookmarks} " + d.length),
                 template: {layout: "0,0,6,2", imageWidth: 1.3, imageFiller: "height"}, 
                 items: e || !d.length ? [{
-                    headline: e ? ("{dic:label:data_load_error|Load data error}: " + d) : "{dic:empty|Nothing found}!", action: "reload:content"
+                    headline: e ? ("{dic:label:data_load_error|Load data error}: " + d) : "{dic:empty|Nothing found}!", icon: "refresh", action: "reload:content"
                 }] : d.map(function(t){return {
                     id: t.hash,
                     headline: c ? undefined : t.title, text: c ? ("{col:msx-white}" + t.title) : undefined,
