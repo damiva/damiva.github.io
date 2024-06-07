@@ -20,7 +20,7 @@
             window.onload = function(){
                 var f = document.forms[0], s = document.getElementById("set"), b = document.getElementById("set");
                 ajax("/files", null, function(v){
-                    f.files.value = f.files.defaultValue = f;
+                    f.files.value = f.files.defaultValue = v;
                     b.disabled = true;
                 }, s);
                 f.files.onchange = function(){
