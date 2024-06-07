@@ -59,8 +59,9 @@ TVXPluginTools.onReady(function() {
                     ajax("/torrents", {action: "list"}, function(d){
                         f(L(d));
                     }, function(e){
-                        TVXInteractionPlugin.error(e);
-                        f();
+                        f({type: "list", template: {layout: "0,0,12,2", type: "control"}, items: [
+                            {icon: "refresh", headline: "{dic:label:data_load_error|Data load error}: " + e, action: "reload"}
+                        ]});
                     });
                     break;
                 default: if(!S.handleRequest(i, d, f)) P.handleRequest(i, d, f);

@@ -4,9 +4,9 @@ function search(K){
         O = [
             {id: "order1", icon: "north", label: "{dic:label:order|Order} {dic:peers|on peers}", extensionIcon: "", data: {order: 1}},
             {id: "order2", icon: "date-range", label: "{dic:label:order|Order} {dic:date|on date}", extensionIcon: "", data: {order: 2}},
-            {id: "engine0", image: window.location.origin + "/img/rutor.png", label: "{dic:find|Search} {dic:rutor|in rutor (embed)}", extensionIcon: "", data: {engine: 0}},
-            {id: "engine1", image: window.location.origin + "/img/torrs.png", label: "{dic:find|Search} {dic:torrs|in torrs.ru}", extensionIcon: "", data: {engine: 1}},
-            {id: "engine2", image: window.location.origin + "/img/torrs.png", label: "{dic:find|Search} {dic:torrsA|in torrs.ru (accurate)}", extensionIcon: "", data: {engine: 2}},
+            {id: "engine0", image: window.location.origin + "/img/rutor.png", label: "{dic:find|Search} {dic:rutor|in Rutor (embeded)}", extensionIcon: "", data: {engine: 0}},
+            {id: "engine1", image: window.location.origin + "/img/torrs.png", label: "{dic:find|Search} {dic:torrs|in Torrs}", extensionIcon: "", data: {engine: 1}},
+            {id: "engine2", image: window.location.origin + "/img/torrs.png", label: "{dic:find|Search} {dic:accurate|accurate} {dic:torrs|in torrs.ru}", extensionIcon: "", data: {engine: 2}},
             {type: "button", label: "{dic:label:apply|Apply}", action: "[cleanup|reload:content]"}
         ];
     var kbd = function(){
@@ -66,12 +66,12 @@ function search(K){
             for(var i = 0; i < 3; i++)
                 TVXInteractionPlugin.executeAction("update:panel:engine" + i, {extensionIcon: icon(P.engine == i, true)});
     }
-    var ext = function(l){return "{ico:msx-white:search}" + (l !== undefined ? ((P.engine ? " torrs.ru: " : " rutor: ") + l) : "")}
+    var ext = function(l){return "{ico:msx-white:search}" + (l !== undefined ? ((P.engine ? " Torrs: " : " Rutor: ") + l) : "")}
     var cat = function(c){return c == "Movie" ? "movie" : c == "Series" || c == "TVShow" ? "tv" : c};
     var itm = function(t, d, l, m, p, s, c, i){ return {
         image: i || undefined, imageWidth: i ? 0.7 : undefined, imageFiller: i ? "height" : undefined,
         text: "{col:msx-white}" + t,
-        stamp: "{col:msx-white-soft}{ico:date-range} " + TVXDateFormatter.toDateStr(new Date(d)) 
+        stamp: "{col:msx-white-soft}{ico:date-range} " + TVXDateFormatter.toDateStr(new Date(d))
             + "{tb}{ico:attach-file} " + l 
             + "{tb}{ico:north} " + p + " {ico:south} " + s,
         group: c ? catg(c) : null,
