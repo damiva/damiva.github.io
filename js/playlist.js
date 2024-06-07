@@ -24,7 +24,7 @@ function playlist(){
     };
     var L = function(d, h, c, o, p, f){
         var s = o ? null : prms("fileorder");
-        if(s === true) d.sort(function(a, b){return !a.group && b.group < b ? 1 : a.group && !b.group > b ? -1: a.label < b.label ? 1 : a.label > b.label ? -1 : 0});
+        if(s === true) d.sort(function(a, b){return !a.group && b.group ? -1 : a.group && !b.group ? 1 : a.label < b.label ? -1 : a.label > b.label ? 1 : 0});
         if(!p) p = {};
         p["resume:key"] = o ? "id" : "url";
         p["trigger:complete"] =  "[player:auto:next|resume:cancel]";
