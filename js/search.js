@@ -7,7 +7,7 @@ function search(K){
             {id: "engine0", image: window.location.origin + "/img/rutor.png", label: "{dic:find|Search} {dic:rutor|in rutor (embed)}", extensionIcon: "", data: {engine: 0}},
             {id: "engine1", image: window.location.origin + "/img/torrs.png", label: "{dic:find|Search} {dic:torrs|in torrs.ru}", extensionIcon: "", data: {engine: 1}},
             {id: "engine2", image: window.location.origin + "/img/torrs.png", label: "{dic:find|Search} {dic:torrsA|in torrs.ru (accurate)}", extensionIcon: "", data: {engine: 2}},
-            {type: "button", label: "{dic:label:apply|Apply}", action: "[cleanup|reload:content]", color: "msx-black-soft"}
+            {type: "button", label: "{dic:label:apply|Apply}", action: "[cleanup|reload:content]"}
         ];
     var kbd = function(){
         var k = [{label: "1", key: "1", offset: K ? "1,0,0,0" : undefined}], l = K ? 1 : 0,
@@ -53,7 +53,11 @@ function search(K){
         if(!o && !e) return opts(
             O,
             ":{tb}" + O[P.engine + 2].label + (P.order ? ("{tb}" + O[P.order - 1].label) : ""),
-            {action: "interaction:load:" + window.location.href, data: {order: 0}}
+            {action: "interaction:load:" + window.location.href, data: {order: 0}},
+            {items: [
+                {type: "space", color: "msx-black-soft", layout: "0,0,8,2", offset: "-.2.-.2,.4,.4"},
+                {type: "space", color: "msx-black-soft", layout: "0,2,8,3", offset: "-.2.-.2,.4,.4"}
+            ]}
         );
         if(o)
             for(var i = 1; i < 3; i++)
