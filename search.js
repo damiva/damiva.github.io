@@ -59,7 +59,7 @@ function search(K){
     var fnd = function(d, f){
         if(!TVXTools.isArray(d) || d.length == 0) d = null;
         else if(P[0] || P[1]){
-            var k = [["", "Peer", "CreateDate"], ["size", "pir", "createTime"]][P[0] ? 1 : 0][P[1]];
+            var k = P[0] ? ["size", "pir", "createTime"][P[1]] : ["", "Peer", "CreateDate"][P[1]];
             d.sort(function(a, b){return a[k] < b[k] ? 1 : a[k] > b[k] ? -1 : 0});
         }
         return {
@@ -77,7 +77,7 @@ function search(K){
                 icon: "date-range", label: "{dic:date|by date}", type: "control", layout: "9,0,3,1",
                 extensionIcon: icon(P[1] == 2, true), data: {opt: 12}, action: "interaction:load:" + window.location.href},
             ]} : null,
-            template: {layout: "0,0,12,1"}, items: d ? d = d.map(f) : [{label: "{dic:empty|Nothing found}!", action: "[]"}]
+            template: {layout: "0,0,12,1"}, items: d ? d.map(f) : [{label: "{dic:empty|Nothing found}!", action: "[]"}]
         };
     };
     this.handleData = function(d){
