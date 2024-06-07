@@ -14,7 +14,7 @@
                     else if(f) f(x.response);
                     if(s) s.disabled = false;
                 }
-                x.open(d ? "POST" : "GET", u);
+                x.open(d ? "POST" : "GET", window.location.origin + u);
                 x.send(d ? JSON.stringify(d) : undefined);
             }
             window.onload = function(){
@@ -27,7 +27,7 @@
                     b.disabled = this.value == this.defaultValue;
                 }
                 f.onsubmit = function(){
-                    if(this.files.value != this.files.defaultValue) ajax("../files", this.files.value, null, s);
+                    if(this.files.value != this.files.defaultValue) ajax("/files", this.files.value, null, s);
                     return false;
                 };
             };
