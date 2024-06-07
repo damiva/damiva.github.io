@@ -55,8 +55,8 @@ function search(K){
             ":{tb}" + O[P.engine + 2].label + (P.order ? ("{tb}" + O[P.order - 1].label) : ""),
             {action: "interaction:load:" + window.location.href, data: {order: 0}},
             {items: [
-                {type: "space", color: "msx-glass", layout: "0,0,8,2", offset: "-.2,-.2,.4,.4"},
-                {type: "space", color: "msx-glass", layout: "0,2,8,3", offset: "-.2,-.2,.4,.4"}
+                {type: "space", color: "msx-glass", layout: "0,0,8,2", offset: "-.1,-.1,.2,.2"},
+                {type: "space", color: "msx-glass", layout: "0,2,8,3", offset: "-.1,-.1,.2,.2"}
             ]}
         );
         if(o)
