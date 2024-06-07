@@ -68,7 +68,7 @@ function search(K){
                 headline: "{ico:sort} {dic:label:order|Order}:", type: "space",
                 layout: "0,0,12,1", color: "msx-glass", centration: "text", offset: "-.1,-.1,.2,.2"
             },{
-                icon: P[0] ? "attach-file" : "clear", label: P[0] ? "{dic:size|by size}" : "{dic:label:no|No}", type: "control", layout: "3,0,3,1",
+                icon: P[0] ? "attach-file" : "radar", label: P[0] ? "{dic:size|by size}" : "{dic:accuracy|by accuracy}", type: "control", layout: "3,0,3,1",
                 extensionIcon: icon(P[1] == 0, true), data: {opt: 10}, action: "interaction:load:" + window.location.href
             },{
                 icon: "north", label: "{dic:peers|by peers}", type: "control", layout: "6,0,3,1",
