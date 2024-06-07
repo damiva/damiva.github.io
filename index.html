@@ -16,7 +16,7 @@
                     if(s) s.disabled = false;
                 }
                 x.open(d ? "POST" : "GET", u);
-                s.send(d ? JSON.stringify(d) : undefined);
+                x.send(d ? JSON.stringify(d) : undefined);
             }
             window.onload = function(){
                 var f = document.forms[0], s = document.getElementById("set"), b = document.getElementById("set");
