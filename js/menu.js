@@ -11,10 +11,14 @@ TVXPluginTools.onReady(function() {
             {key: "yellow", label: "{dic:refresh|Refresh} {dic:caption:menu|menu}", action: "[cleanup|reload:menu]"}
         ])};
         var L = function(d){
-            var c = prms("font");
+            var c = prms("font"), e = typeof d == "string";
             return {
-                type: "list", reuse: false, cache: false, restore: false, extension: "{ico:msx-white:bookmarks} " + d.length,
-                template: {layout: "0,0,6,2", imageWidth: 1.3, imageFiller: "height"}, items: d.map(function(t){return {
+                type: "list", reuse: false, cache: false, restore: false,
+                extension: e ? "{ico:msx-yellow:warning}" : ("{ico:msx-white:bookmarks} " + d.length),
+                template: {layout: "0,0,6,2", imageWidth: 1.3, imageFiller: "height"}, 
+                items: e || !d.length ? [{
+                    headline: e ? ("{dic:label:data_load_error|Load data error}: " + d) : "{dic:empty|Nothing found}!", action: "reload:content"
+                }] : d.map(function(t){return {
                     id: t.hash,
                     headline: c ? undefined : t.title, text: c ? ("{col:msx-white}" + t.title) : undefined,
                     image: t.poster,
@@ -59,9 +63,8 @@ TVXPluginTools.onReady(function() {
                     ajax("/torrents", {action: "list"}, function(d){
                         f(L(d));
                     }, function(e){
-                        f({type: "list", template: {layout: "0,0,12,2", type: "control"}, items: [
-                            {icon: "refresh", headline: "{dic:label:data_load_error|Data load error}: " + e, action: "reload"}
-                        ]});
+                        f(L(e));
+                        TVXInteractionPlugin.error(e);
                     });
                     break;
                 default: if(!S.handleRequest(i, d, f)) P.handleRequest(i, d, f);
