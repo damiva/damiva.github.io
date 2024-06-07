@@ -63,7 +63,7 @@ function search(K){
             d.sort(function(a, b){return a[k] < b[k] ? 1 : a[k] > b[k] ? -1 : 0});
         }
         return {
-            type: "list", headline: "{ico:search} " + S, extension: ext(d.length),
+            type: "list", headline: "{ico:search} " + S, extension: ext(d ? d.length : 0),
             header: d ? {items: [{
                 headline: "{ico:sort} {dic:label:order|Order}:", type: "space",
                 layout: "0,0,12,1", color: "msx-glass", centration: "text", offset: "-.1,-.1,.2,.2"
