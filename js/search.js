@@ -125,7 +125,7 @@ function search(K){
                     f({
                         type: "list", reuse: false, cache: false, restore: false, wrap: true, extension: ext(), items: kbd(),
                         ready: {action: "interaction:load:" + window.location.href, data: {key: ""}},
-                        options: opts(d, "{dic:find|Search}", ": " + d[P[0]].label),
+                        options: opts(d, "{dic:find|Search}", " " + d[P[0]].label),
                         underlay: {items:[{id: "val", type: "space", layout: "0,0,12,1", color: "msx-black-soft", label: ""}]},
                         template: {
                             type: "button", layout: "0,0,1,1", area: K ? "0,1,12,5" : "1,1,10,5", enumerate: false,
