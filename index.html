@@ -28,7 +28,7 @@
                     b.disabled = this.value == this.defaultValue;
                 }
                 f.onsubmit = function(){
-                    if(this.files.value != this.files.defaultValue) ajax("/msx/files", this.files.value, null, s);
+                    if(this.files.value != this.files.defaultValue) ajax("/files", this.files.value, null, s);
                     return false;
                 };
             };
