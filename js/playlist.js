@@ -23,6 +23,8 @@ function playlist(){
         return i;    
     };
     var L = function(d, h, c, o, p, f){
+        var s = o ? null : prms("fileorder");
+        if(s === true) d.sort(function(a, b){return a < b ? -1 : a > b ? 1: 0});
         if(!p) p = {};
         p["resume:key"] = o ? "id" : "url";
         p["trigger:complete"] =  "[player:auto:next|resume:cancel]";
@@ -31,7 +33,8 @@ function playlist(){
             extension: o ? " " : ("{ico:msx-white:folder} " + d.length),
             overlay: o ? {items: [o.shift()]} : null,
             options: opts((o || [
-                {key: "yellow", label: "{dic:refresh|Refresh} {dic:list|the list}", action: "[cleanup|reload:content]"}
+                {key: "yellow", label: "{dic:refresh|Refresh} {dic:list|the list}", action: "[cleanup|reload:content]"},
+                {icon: "sort-by-alpha", label: "{dic:label:order|Order} {dic:name|by name}", extensionIcon: icon(s)}
             ]).concat([
                 {icon: "compress", label: "{dic:compress|Compress} {dic:list|the list}", data: {action: "compress"}, extensionIcon: icon(c)},
                 {icon: "folder", label: "{dic:folders|Show folders}", data: {action: "folders"}, extensionIcon: icon(f), display: f !== undefined}

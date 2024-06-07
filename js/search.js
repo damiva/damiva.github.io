@@ -2,8 +2,8 @@ function search(K){
     var S = TVXServices.storage.getFullStr("ts:search:query", ""),
         P = {engine: TVXServices.storage.getNum("ts:search:engine", 0), order: TVXServices.storage.getNum("ts:search:order", 0)},
         O = [
-            {id: "order1", icon: "north", label: "{dic:label:order|Order} {dic:peers|on peers}", extensionIcon: "", data: {order: 1}},
-            {id: "order2", icon: "date-range", label: "{dic:label:order|Order} {dic:date|on date}", extensionIcon: "", data: {order: 2}},
+            {id: "order1", icon: "north", label: "{dic:label:order|Order} {dic:peers|by peers}", extensionIcon: "", data: {order: 1}},
+            {id: "order2", icon: "date-range", label: "{dic:label:order|Order} {dic:date|by date}", extensionIcon: "", data: {order: 2}},
             {id: "engine0", image: window.location.origin + "/img/rutor.png", label: "{dic:find|Search} {dic:rutor|in Rutor (embeded)}", extensionIcon: "", data: {engine: 0}},
             {id: "engine1", image: window.location.origin + "/img/torrs.png", label: "{dic:find|Search} {dic:torrs|in Torrs}", extensionIcon: "", data: {engine: 1}},
             {id: "engine2", image: window.location.origin + "/img/torrs.png", label: "{dic:find|Search} {dic:accurate|accurate} {dic:torrs|in torrs.ru}", extensionIcon: "", data: {engine: 2}},
