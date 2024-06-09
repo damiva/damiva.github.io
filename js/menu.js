@@ -50,7 +50,7 @@ TVXPluginTools.onReady(function() {
         this.handleData = function(d){
             if(!S.handleData(d) && !P.handleData(d) && d.data.action) ajax(
                 "/torrents", d.data, "text", 
-                function(){TVXInteractionPlugin.extension("[cleanup|reload:content]")},
+                function(){TVXInteractionPlugin.executeAction("[cleanup|reload:content]")},
                 function(e){TVXInteractionPlugin.error(e)}
             );
         };
