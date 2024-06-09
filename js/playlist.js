@@ -117,7 +117,7 @@ function playlist(){
             case 1: if(i[0]){
                 ajax("/stream/?stat&link=" + i.join("") + (S ? "&save" : ""), function(d){
                     ajax("/msx/trn?hash=" + d.hash ,function(s){f(T(d, i[0], c, s !== true))});
-                    if(S) TVXInteractionPlugin.success("{dic:saved|Torrent added in} {txt:msx-white:dic:trns|My torrents}", S = false);
+                    if(S) TVXInteractionPlugin.success("{dic:saved|Torrent added in} {col:msx-white}{dic:my|My} {dic:trns|torrents}", S = false);
                 }, e);
                 break;
             } 
