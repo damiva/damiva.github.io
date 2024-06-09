@@ -7,7 +7,7 @@ TVXPluginTools.onReady(function() {
             {icon: "search", label: "{dic:find|Search} {dic:trns|torrents}", data: "request:interaction:search@" + window.location.href},
             {icon: "folder", label: "{dic:my|My} {dic:fls|files}", data: "request:interaction:/files/@" + window.location.href}
         ], options: opts([
-            {key: "green", icon: "translate", label: R ? "Switch to english" : "Перевести на русский", data: {action: "russian"}},
+            {key: "green", icon: "translate", label: R ? "Switch to english" : "Перевести на русский", data: "russian"},
             {key: "yellow", label: "{dic:refresh|Refresh} {dic:caption:menu|menu}", action: "[cleanup|reload:menu]"}
         ])};
         var L = function(d){

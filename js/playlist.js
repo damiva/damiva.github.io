@@ -102,7 +102,7 @@ function playlist(){
         else {
             if(d.data == "save") S = true;
             else prms(d.data, true);
-            TVXInteractionPlugin.executeAction("[cleanup|reload:content]");
+            TVXInteractionPlugin.executeAction(d.data == "russian" ? "reload" : "[cleanup|reload:content]");
         }
         return true;
     };
