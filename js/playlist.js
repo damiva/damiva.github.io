@@ -3,6 +3,7 @@ function playlist(){
         ["3g2","3gp","aaf","asf","avchd","avi","drc","flv","m2ts","ts","m2v","m4p","m4v","mkv","mng","mov","mp2","mp4","mpe","mpeg","mpg","mpv","mxf","nsv","ogg","ogv","qt","rm","rmvb","roq","svi",".vob","webm","wmv","yuv"],
         ["aac","aiff","ape","au","flac","gsm","it","m3u","m4a","mid","mod","mp3","mpa","pls","ra","s3m","sid","wav","wma","xm"]
     ];
+    var S = false;
     var I = function(i){
         var x = i.label.length - 1;
         if(x < 0) return null
@@ -34,12 +35,12 @@ function playlist(){
             overlay: o ? {items: [o.shift()]} : null,
             options: opts((o || [
                 {key: "yellow", label: "{dic:refresh|Refresh} {dic:list|the list}", action: "[cleanup|reload:content]"},
-                {icon: "sort-by-alpha", label: "{dic:label:order|Order} {dic:name|by name}", extensionIcon: icon(s), data: {action: "fileorder"}}
+                {icon: "sort-by-alpha", label: "{dic:label:order|Order} {dic:name|by name}", extensionIcon: icon(s), data: "fileorder"}
             ]).concat([
-                {icon: "compress", label: "{dic:compress|Compress} {dic:list|the list}", data: {action: "compress"}, extensionIcon: icon(c)},
-                {icon: "folder", label: "{dic:folders|Show folders}", data: {action: "folders"}, extensionIcon: icon(f), display: f !== undefined}
+                {icon: "compress", label: "{dic:compress|Compress} {dic:list|the list}", data: "compress", extensionIcon: icon(c)},
+                {icon: "folder", label: "{dic:folders|Show folders}", data: "folders", extensionIcon: icon(f), display: f !== undefined}
             ])),
-            template: {type: "control", layout: c ? "0,0,16,1" : "0,0,12,1", progress: -1, properties: p},
+            template: {type: "control", layout: c ? "0,0,16,1" : "0,0,12,1", progress: -1, live: {type: "playback", action: "player:show"}, properties: p},
             items: d && d.length ? d : [{items: "refresh", label: "{dic:empty|Nothing found}", action: "reload:content"}]
         };
     };
@@ -76,10 +77,9 @@ function playlist(){
             type: "space", layout: (c ? 13 : 9) + ",0,3,1", offset: "0,-1,0,0", stamp: "", stampColor: "", id: d.hash, color: "none",
             live: {type: "setup", action: "execute:" + addr + "/msx/trn", data: "update:content:overlay:" + d.hash}
         }, s ? {
-            key: "green", icon: "bookmark-add", label: "{dic:save|Save the torrent}",
-            data: {action: "add", link: l, title: d.title, poster: d.poster, category: d.category, save_to_db: true}
+            key: "green", icon: "bookmark-add", label: "{dic:save|Save the torrent}", data: "save"
         } : fs.length > 1 ? {
-            key: "green", icon: "last-page", label: "{dic:viewed|To viewed item}", data: {action: "focus", hash: d.hash}
+            key: "green", icon: "last-page", label: "{dic:viewed|To viewed item}", data:  d.hash
         } : null, ds.length > 1 ? {key: "yellow", icon: "folder", label: "{dic:folder|To folder}", action: "panel:data", data: {
             type: "list", headline: "{dic:folder|To folder}:", compress: true, items: ds,
             template: {layout: "0,0,10,1", type: "control", icon: "msx-yellow:folder"}
@@ -93,23 +93,16 @@ function playlist(){
         else TVXInteractionPlugin.error("Server is not set!");
     };
     this.handleData = function(d){
-        if(!d.data || !d.data.action) return false;
-        var r = function(m){TVXInteractionPlugin.executeAction(m === true ? "reload" : ("[cleanup|reload:content" + (m ? ("|success:" + m) : "") + "]"))},
-            v = null;
-        switch(d.data.action){
-            case "rem": v = "{dix:remed}Torrent removed{dix}";
-            case "drop": v = v || "{dix:droped}Torrent dropped{dix}";
-            case "add": v = v || "{dix:saved}Torrent added to{dix} {col:msx-white}{dix:my}My{dix} {dix:trns}torrents{dix}";
-                ajax("/torrents", d.data, "text", function(){r(v)}, function(e){TVXInteractionPlugin.error(e)});
-                break;
-            case "focus": d.data.action = "list";
-                ajax("/viewed", d.data, function(l){
-                    var i = 0;
-                    if(l && typeof l == "object") l.forEach(function(n){if(n.file_index > i) i = n.file_index});
-                    if(i > 0) TVXInteractionPlugin.executeAction("[cleanup|focus:" + d.data.hash + i + "]");
-                });
-                break;
-            default: prms(d.data.action, true); r(d.data.action == "russian");
+        if(!d.data || typeof d.data != "string") return false;
+        if(d.data.length > 20) ajax("/viewed", {action: "list", hash: d.data}, function(l){
+            var i = 0;
+            if(l && typeof l == "object") l.forEach(function(n){if(n.file_index > i) i = n.file_index});
+            if(i > 0) TVXInteractionPlugin.executeAction("[cleanup|focus:" + d.data + i + "]");
+        });
+        else {
+            if(d.data == "save") S = true;
+            else prms(d.data, true);
+            TVXInteractionPlugin.executeAction("[cleanup|reload:content]");
         }
         return true;
     };
@@ -122,8 +115,9 @@ function playlist(){
             case 3: if(i[2]) i[2] = "&poster=" + i[2];
             case 2: if(i[1]) i[1] = "&title=" + i[1];
             case 1: if(i[0]){
-                ajax("/stream/?stat&link=" + i.join(""), function(d){
+                ajax("/stream/?stat&link=" + i.join("") + (S ? "&save" : ""), function(d){
                     ajax("/msx/trn?hash=" + d.hash ,function(s){f(T(d, i[0], c, s !== true))});
+                    if(S) TVXInteractionPlugin.success("{dic:saved|Torrent added in} {txt:msx-white:dic:trns|My torrents}", S = false);
                 }, e);
                 break;
             } 

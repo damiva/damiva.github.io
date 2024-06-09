@@ -11,7 +11,7 @@ TVXPluginTools.onReady(function() {
             {key: "yellow", label: "{dic:refresh|Refresh} {dic:caption:menu|menu}", action: "[cleanup|reload:menu]"}
         ])};
         var L = function(d){
-            var c = prms("font"), e = typeof d == "string";
+            var c = prms("smallfont"), e = typeof d == "string";
             return {
                 type: "list", reuse: false, cache: false, restore: false,
                 extension: e ? "{ico:msx-yellow:warning}" : ("{ico:msx-white:bookmarks} " + d.length),
@@ -39,7 +39,7 @@ TVXPluginTools.onReady(function() {
                         }},
                         t.stat < 5 ? {key: "green", icon: "close", label: "{dic:drop|Drop the torrent}", data: {action: "drop", hash: t.hash}} : null,
                         {key: "yellow", label: "{dic:refresh|Refresh} {dic:list|the list}", action: "[cleanup|reload:content]"},
-                        {icon: "format-size", label: "{dic:compress|Compress} {dic:font|the font}", extensionIcon: icon(c), data: {action: "font"}}
+                        {icon: "format-size", label: "{dic:compress|Compress} {dic:font|the font}", extensionIcon: icon(c), data: "smallfont"}
                     ]),
                     action: "content:request:interaction:" + t.hash + "@" + window.location.href
                 }})
@@ -47,7 +47,13 @@ TVXPluginTools.onReady(function() {
         };
         this.init = P.init();
         this.ready = function(){M.logo = addr + "/logo.png"};
-        this.handleData = function(d){if(!S.handleData(d)) P.handleData(d)};
+        this.handleData = function(d){
+            if(!S.handleData(d) && !P.handleData(d) && d.data.action) ajax(
+                "/torrents", d.data, "text", 
+                function(){TVXInteractionPlugin.extension("[cleanup|reload:content]")},
+                function(e){TVXInteractionPlugin.error(e)}
+            );
+        };
         this.handleRequest = function(i, d, f){
             switch(i){
                 case "init":
