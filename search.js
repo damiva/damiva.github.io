@@ -149,7 +149,7 @@ function search(K){
                 t.act = "content:request:interaction:" + encodeURIComponent(t.Magnet || t.magnet) + "|" + encodeURIComponent(t.Title || t.title);
                 if(!t.Hash){
                     t.Hash = t.magnet.indexOf("xt=urn:btih:");
-                    t.Hash = t.Hash > 0 ? t.magnet.substr(t.Hash + 12, m.indexOf("&", t.Hash)) : "";
+                    t.Hash = t.Hash > 0 ? t.magnet.substr(t.Hash + 12, t.magnet.indexOf("&", t.Hash)) : "";
                 }else{
                     t.Poster = t.Poster || (t.IMDBID ? (t.IMDBID = addr + "/msx/imdb/" + t.IMDBID) : "");
                     t.Link += "|" + encodeURIComponent(t.Poster) + "|" + t.encodeURIComponent(cat(t.Categories));            
