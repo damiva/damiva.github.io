@@ -156,7 +156,7 @@ function search(K){
                     t.Hash = t.Hash.substr(0, t.Hash.indexOf("&"));
                 }else{
                     t.Poster = t.Poster || (t.IMDBID ? (t.IMDBID = addr + "/msx/imdb/" + t.IMDBID) : "");
-                    t.Link += "|" + encodeURIComponent(t.Poster) + "|" + t.encodeURIComponent(cat(t.Categories));            
+                    t.Link += "|" + encodeURIComponent(t.Poster) + "|" + encodeURIComponent(cat(t.Categories));            
                 }
                 return {
                     image: t.Poster || null,
