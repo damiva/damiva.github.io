@@ -148,7 +148,7 @@ function search(K){
             items: !d ? [{label: "{dic:empty|Nothing found}!", action: "[]"}] : d.map(function(t){
                 t.act = "content:request:interaction:" + encodeURIComponent(t.Magnet || t.magnet) + "|" + encodeURIComponent(t.Title || t.title);
                 if(!t.Hash){
-                    t.Hash = m.indexOf("xt=urn:btih:");
+                    t.Hash = t.Magnet.indexOf("xt=urn:btih:");
                     t.Hash = t.Hash > 0 ? m.substr(t.Hash + 12, m.indexOf("&", t.Hash)) : "";
                 }else{
                     t.Poster = t.Poster || (t.IMDBID ? (t.IMDBID = addr + "/msx/imdb/" + t.IMDBID) : "");
