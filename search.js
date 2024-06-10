@@ -177,8 +177,8 @@ function search(K){
                                 "{ico:msx-white:theater-comedy} "       + (t.Magnet ? t.Categories : t.types.join(", ")) +
                                 "{br}{ico:msx-white:video-settings} "   + (t.Magnet ? quv(t.VideoQuality) : (t.quality + " " + t.videotype)) +
                                 "{br}{ico:msx-white:audiotrack} "       + (t.Magnet ? qua(t.AudioQuality) : t.voices.join(", ")),
-                            titleFooter: "{col:msx-white-soft}{ico:date-range} " + dat(t.CreateDate || t.createTime)
-                                +"{br}{ico:msx-white:attach-file} " + (t.Size || t.sizeName),
+                            titleFooter: "{col:msx-white}{ico:date-range} " + dat(t.CreateDate || t.createTime)
+                                +"{tb}{ico:msx-white:attach-file} " + (t.Size || t.sizeName),
                             stamp: "{tb}{ico:north} " + (t.Peer || t.pir) + " {ico:south} " + (t.Seed || t.sid),
                         }, {type: "space"}, {type: "space"},
                         {
