@@ -94,6 +94,7 @@ function search(K){
             }
         );
     };
+    var dat = function(ts){return TVXDateTools.getFormattedDateStr(new Date(ts), "dd.mm.yyyy");}
     var ext = function(l){return "{ico:msx-white:search}" + (l !== undefined ? ((P[0] ? " Torrs: " : " Rutor: ") + l) : "")};
     var cat = function(c){return c == "Movie" ? "movie" : c == "Series" || c == "TVShow" ? "tv" : c};
     var quv = function(t){return {
@@ -162,7 +163,7 @@ function search(K){
                     image: t.Poster || null,
                     imageWidth: t.Poster ? 0.7 : -1, imageFiller: t.Poster ? "height" : "default",
                     text: "{col:msx-white}" + (t.Title = t.Title || t.title),
-                    stamp: "{col:msx-white-soft}{ico:date-range} " + TVXDateFormatter.toDateStr(new Date(t.CreateDate || t.createTime))
+                    stamp: "{col:msx-white-soft}{ico:date-range} " + dat(t.CreateDate || t.createTime)
                         + "{tb}{ico:attach-file} " + (t.Size || t.sizeName)
                         + "{tb}{ico:north} " + (t.Peer || t.pir) + " {ico:south} " + (t.Seed || t.sid),
                     action: t.act + "@" + window.location.href,
@@ -176,7 +177,8 @@ function search(K){
                                 "{ico:msx-white:theater-comedy} "       + (t.Magnet ? t.Categories : t.types.join(", ")) +
                                 "{br}{ico:msx-white:video-settings} "   + (t.Magnet ? quv(t.VideoQuality) : (t.quality + " " + t.videotype)) +
                                 "{br}{ico:msx-white:audiotrack} "       + (t.Magnet ? qua(t.AudioQuality) : t.voices.join(", ")),
-                            titleFooter: "{ico:msx-white:attach-file} " + (t.Size || t.sizeName),
+                            titleFooter: "{col:msx-white-soft}{ico:date-range} " + dat(t.CreateDate || t.createTime)
+                                +"{br}{ico:msx-white:attach-file} " + (t.Size || t.sizeName),
                             stamp: "{tb}{ico:north} " + (t.Peer || t.pir) + " {ico:south} " + (t.Seed || t.sid),
                         }, {type: "space"}, {type: "space"},
                         {
