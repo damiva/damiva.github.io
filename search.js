@@ -173,9 +173,9 @@ function search(K){
                             headline: t.Name || t.name,
                             image: t.Poster || "", imageWidth: 2, imageFiller: "height", icon: t.Poster ? "" : "msx-white-soft:info",
                             text:
-                                "{ico:msx-white:theater-comedy} "       + (t.Categories || t.types.join(", ")) +
-                                "{br}{ico:msx-white:video-settings} "   + (t.VideoQuality ? quv(t.VideoQuality) : (t.quality + " " + t.videotype)) +
-                                "{br}{ico:msx-white:audiotrack} "       + (t.AudioQuality ? qua(t.AudioQuality) : t.voices.join(", ")),
+                                "{ico:msx-white:theater-comedy} "       + (t.Magnet ? t.Categories : t.types.join(", ")) +
+                                "{br}{ico:msx-white:video-settings} "   + (t.Magnet ? quv(t.VideoQuality) : (t.quality + " " + t.videotype)) +
+                                "{br}{ico:msx-white:audiotrack} "       + (t.Magnet ? qua(t.AudioQuality) : t.voices.join(", ")),
                             titleFooter: "{ico:msx-white:attach-file} " + (t.Size || t.sizeName),
                             stamp: "{tb}{ico:north} " + (t.Peer || t.pir) + " {ico:south} " + (t.Seed || t.sid),
                         }, {type: "space"}, {type: "space"},
