@@ -192,7 +192,7 @@ function search(K){
     this.handleData = function(d){
         var r = false;
         if(r = typeof d.data.key == "string") key(d.data.key);
-        else if (r = typeof d.data.search == "number") opt(d.data.seach);
+        else if (r = typeof d.data.search == "number") opt(d.data.search);
         else if (r = typeof d.data.preload == "string") pld(d.data);
         return r;
     };
@@ -209,7 +209,7 @@ function search(K){
                         label: o[0],
                         image: window.location.origin + "/img/" + o[1],
                         extensionIcon: icon(P[0] == i, true), 
-                        data: {search: i}, display: !i || d
+                        data: {search: i}, enable: !i || d
                     }});
                     f({
                         type: "list", reuse: false, cache: false, restore: false, wrap: true, extension: ext(), items: kbd(),
