@@ -61,7 +61,7 @@ function search(K){
                 d = "";
             default: TVXInteractionPlugin.executeAction(
                 "update:content:underlay:val",
-                {label: (S += d) ? (S + "{txt:msx-white-soft:_}") : "{col:msx-white-soft}{dic:input|Enter the word(s) to find}"}
+                {label: (S += d) ? (S + (S[S.length - 1] == " " ? "{txt:msx-white-soft:_}" : "")) : "{col:msx-white-soft}{dic:input|Enter the word(s) to find}"}
             );
         }
     };
