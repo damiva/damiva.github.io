@@ -137,7 +137,7 @@ function search(K){
         return {
             type: "list", headline: "{ico:search} " + S, extension: ext(d ? d.length : 0),
             header: d ? {items: [{
-                headline: "{ico:sort} {dic:label:order|Order}:", type: "space",
+                headline: "{dic:label:order|Order}:", type: "space", icon: "sort", imageWidth: 1, image: "",
                 layout: "0,0,12,1", color: "msx-glass", centration: "text", offset: "-.1,-.1,.2,.2"
             },{
                 icon: P[0] ? "attach-file" : "radar", label: P[0] ? "{dic:size|by size}" : "{dic:accuracy|by accuracy}", type: "control", layout: "3,0,3,1",
