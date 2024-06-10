@@ -1,6 +1,7 @@
 function search(K){
     var S = TVXServices.storage.getFullStr("ts:search:query", ""),
-        P = [TVXServices.storage.getNum("ts:search:engine", 0), TVXServices.storage.getNum("ts:search:order", 0)];
+        P = [TVXServices.storage.getNum("ts:search:engine", 0), TVXServices.storage.getNum("ts:search:order", 0)],
+        L = false;
     var kbd = function(){
         var k = [{label: "1", key: "1", offset: K ? "1,0,0,0" : undefined}], l = K ? 1 : 0,
             e = [
@@ -41,22 +42,93 @@ function search(K){
         k.push({label: "{ico:done}", key: "green", data: {key: "ok"}, progress: 1, progressColor: "msx-green", offset: (-l-1) + ",0,1,0"});
         return k;
     };
-    var ext = function(l){return "{ico:msx-white:search}" + (l !== undefined ? ((P[0] ? " Torrs: " : " Rutor: ") + l) : "")}
+    var key = function(d){
+        switch(d){
+            case "ok":
+                if(S){
+                    TVXServices.storage.set("ts:search:query", S);
+                    TVXInteractionPlugin.executeAction("content:request:interaction:find@" + window.location.href);
+                }
+                break;
+            case "ck":
+                K = !K;
+                TVXInteractionPlugin.executeAction("reload:content>lang");
+                break;
+            case "cl":
+                S = "";
+            case "bs":
+                S = S ? S.substr(0, S.length - 1) : "";
+                d = "";
+            default: TVXInteractionPlugin.executeAction(
+                "update:content:underlay:val",
+                {label: (S += d) ? (S + "{txt:msx-white-soft:_}") : "{col:msx-white-soft}{dic:input|Enter the word(s) to find}"}
+            );
+        }
+    };
+    var opt = function(d){
+        var o = d < 10 ? 0 : 1;
+        TVXServices.storage.set("ts:search:" + ["engine", "order"][o], P[o] = d - o * 10);
+        TVXInteractionPlugin.executeAction("[cleanup|reload:content]")
+    };
+    var pld = function(d){
+        TVXInteractionPlugin.startLoading();
+        ajax(
+            L ? "/torrents" : ("/stream/?preload&stat&link=" + encodeURIComponent(d.preload)),
+            L ? {action: "drop", hash: d.id} : false,
+            "text",
+            function(){
+                TVXInteractionPlugin.executeAction(
+                    "update:panel:key", 
+                    {label: L ? "{dic:load|Preload the torrent}" : "{dic:drop|Drop the torrent}"}
+                );
+                TVXInteractionPlugin.executeAction(
+                    L ? ("update:panel:" + d.id) : ("execute:" + addr + "/msx/trn"),
+                    L ? {stampColor: "default", live: {type: "setup"}} : ("update:panel:" + d.id)
+                );
+                L = !L;
+                TVXInteractionPlugin.stopLoading();
+            },
+            function(e){
+                TVXInteractionPlugin.error(e);
+                TVXInteractionPlugin.stopLoading();
+            }
+        );
+    };
+    var dat = function(ts){return TVXDateTools.getFormattedDateStr(new Date(ts), "dd.mm.yyyy");}
+    var ext = function(l){return "{ico:msx-white:search}" + (l !== undefined ? ((P[0] ? " Torrs: " : " Rutor: ") + l) : "")};
     var cat = function(c){return c == "Movie" ? "movie" : c == "Series" || c == "TVShow" ? "tv" : c};
-    var itm = function(t, d, l, m, p, s, c, i){ return {
-        image: i || undefined, imageWidth: i ? 0.7 : undefined, imageFiller: i ? "height" : undefined,
-        text: "{col:msx-white}" + t,
-        stamp: "{col:msx-white-soft}{ico:date-range} " + TVXDateFormatter.toDateStr(new Date(d))
-            + "{tb}{ico:attach-file} " + l 
-            + "{tb}{ico:north} " + p + " {ico:south} " + s,
-        group: c ? catg(c) : null,
-        action: "content:request:interaction:" 
-            + [m, t, i, c].map(function(v){return encodeURIComponent(v || "")}).join("|") 
-            + "@" + window.location.href
-    }};
-    var trs = function(t){return itm(t.title, t.createTime, t.sizeName, t.magnet, t.pir, t.sid)};
-    var rtr = function(t){return itm(t.Title, t.CreateDate, t.Size, t.Magnet, t.Peer, t.Seed, cat(t.Categories), t.IMDBID ? (addr + "/msx/imdb/" + t.IMDBID) : "")};
-    var fnd = function(d, f){
+    var quv = function(t){return {
+        100: "720 WebDL",
+        101: "720 BDRip",
+        102: "720 HEVC BDRip",
+        200: "1080 WebDL",
+        201: "1080 BDRip",
+        202: "1080 HEVC BDRip",
+        203: "1080 BDRemux",
+        300: "2160 SDR WebDL",
+        301: "2160 HDR WebDL",
+        302: "2160 DV WebDL",
+        303: "2160 SDR BDRip",
+        304: "2160 HDR BDRip",
+        305: "2160 DV BDRip",
+        306: "UHD SDR BDRemux",
+        307: "UHD HDR BDRemux",
+        308: "UHD DV BDRemux"
+    }[t] || "-"}
+    var qua = function(t){return {
+        1: "Авторский",
+        100: "Любит. одноголосый",
+        101: "Любит. двухголосый",
+        102: "Любит. многоголосый",
+        103: "Любит. студия",
+        200: "Проф. одноголосый",
+        201: "Проф. двухголосый",
+        202: "Проф. многоголосый",
+        203: "Проф. студия",
+        300: "Дубляж",
+        301: "Лицензия"
+    }[t] || "-"}
+    var fnd = function(d){
         if(!TVXTools.isArray(d) || d.length == 0) d = null;
         else if(P[0] || P[1]){
             var k = P[0] ? ["size", "pir", "createTime"][P[1]] : ["", "Peer", "CreateDate"][P[1]];
@@ -69,46 +141,62 @@ function search(K){
                 layout: "0,0,12,1", color: "msx-glass", centration: "text", offset: "-.1,-.1,.2,.2"
             },{
                 icon: P[0] ? "attach-file" : "radar", label: P[0] ? "{dic:size|by size}" : "{dic:accuracy|by accuracy}", type: "control", layout: "3,0,3,1",
-                extensionIcon: icon(P[1] == 0, true), data: {opt: 10}, action: "interaction:load:" + window.location.href
+                extensionIcon: icon(P[1] == 0, true), data: {search: 10}, action: "interaction:load:" + window.location.href
             },{
                 icon: "north", label: "{dic:peers|by peers}", type: "control", layout: "6,0,3,1",
-                extensionIcon: icon(P[1] == 1, true), data: {opt: 11}, action: "interaction:load:" + window.location.href
+                extensionIcon: icon(P[1] == 1, true), data: {search: 11}, action: "interaction:load:" + window.location.href
             },{
                 icon: "date-range", label: "{dic:date|by date}", type: "control", layout: "9,0,3,1",
-                extensionIcon: icon(P[1] == 2, true), data: {opt: 12}, action: "interaction:load:" + window.location.href},
+                extensionIcon: icon(P[1] == 2, true), data: {seach: 12}, action: "interaction:load:" + window.location.href},
             ]} : null,
-            template: {layout: "0,0,12,1"}, items: d ? d.map(f) : [{label: "{dic:empty|Nothing found}!", action: "[]"}]
+            template: {layout: "0,0,12,1"},
+            items: !d ? [{label: "{dic:empty|Nothing found}!", action: "[]"}] : d.map(function(t){
+                t.act = "content:request:interaction:" + encodeURIComponent(t.Magnet || t.magnet) + "|" + encodeURIComponent(t.Title || t.title);
+                if(!t.Hash){
+                    t.Hash = t.magnet.substr(t.magnet.indexOf("xt=urn:btih:") + 12);
+                    t.Hash = t.Hash.substr(0, t.Hash.indexOf("&"));
+                }else{
+                    t.Poster = t.Poster || (t.IMDBID ? (t.IMDBID = addr + "/msx/imdb/" + t.IMDBID) : "");
+                    t.Link += "|" + encodeURIComponent(t.Poster) + "|" + encodeURIComponent(cat(t.Categories));            
+                }
+                return {
+                    image: t.Poster || null,
+                    imageWidth: t.Poster ? 0.7 : -1, imageFiller: t.Poster ? "height" : "default",
+                    text: "{col:msx-white}" + (t.Title = t.Title || t.title),
+                    stamp: "{col:msx-white-soft}{ico:date-range} " + dat(t.CreateDate || t.createTime)
+                        + "{tb}{ico:attach-file} " + (t.Size || t.sizeName)
+                        + "{tb}{ico:north} " + (t.Peer || t.pir) + " {ico:south} " + (t.Seed || t.sid),
+                    action: t.act + "@" + window.location.href,
+                    options: opts([
+                        {type: "space", offset: "0,0,0,1", headline: t.Title}, {type: "space"},
+                        {
+                            type: "space", offset: "0,0,0,2", id: t.Hash, progress: -1, stampColor: "", color: "msx-black-soft",
+                            headline: t.Name || t.name,
+                            image: t.Poster || "", imageWidth: 2, imageFiller: "height", icon: t.Poster ? "" : "msx-white-soft:info",
+                            text:
+                                "{ico:msx-white:theater-comedy} "       + (t.Magnet ? t.Categories : t.types.join(", ")) +
+                                "{br}{ico:msx-white:video-settings} "   + (t.Magnet ? quv(t.VideoQuality) : (t.quality + " " + t.videotype)) +
+                                "{br}{ico:msx-white:audiotrack} "       + (t.Magnet ? qua(t.AudioQuality) : t.voices.join(", ")),
+                            titleFooter: "{ico:msx-white:date-range} "  + dat(t.CreateDate || t.createTime)
+                                +"{tb}{ico:msx-white:attach-file} "     + (t.Size || t.sizeName),
+                            stamp: "{tb}{ico:north} " + (t.Peer || t.pir) + " {ico:south} " + (t.Seed || t.sid),
+                        }, {type: "space"}, {type: "space"},
+                        {
+                            id: "key",
+                            type: "button", label: L ? "{dic:drop|Drop the torrent}" : "{dic:load|Preload the torrent}",
+                            data: {preload: t.Magnet || t.magnet, id: t.Hash}
+                        }
+                    ], "{dic:info|Torrent's info}", "", "{ico:msx-white:bolt} " + (t.Tracker || t.trackerName))
+                };        
+            }) 
         };
     };
     this.handleData = function(d){
-        if(typeof d.data.key == "string") switch(d = d.data.key){
-            case "ok":
-                if(S){
-                    TVXServices.storage.set("ts:search:query", S);
-                    TVXInteractionPlugin.executeAction("content:request:interaction:find@" + window.location.href);
-                }
-                return true;
-            case "ck":
-                K = !K;
-                TVXInteractionPlugin.executeAction("reload:content>lang");
-                return true;
-            case "cl":
-                S = "";
-            case "bs":
-                S = S ? S.substr(0, S.length - 1) : "";
-                d = "";
-            default: TVXInteractionPlugin.executeAction(
-                "update:content:underlay:val",
-                {label: (S += d) ? (S + "{txt:msx-white-soft:_}") : "{col:msx-white-soft}{dic:input|Enter the word(s) to find}"}
-            );
-            return true;
-        } else if (typeof d.data.opt == "number") {
-            var o = d.data.opt < 10 ? 0 : 1;
-            TVXServices.storage.set("ts:search:" + ["engine", "order"][o], P[o] = d.data.opt - o * 10);
-            TVXInteractionPlugin.executeAction("[cleanup|reload:content]")
-            return true;
-        }
-        return false;
+        var r = false;
+        if(r = typeof d.data.key == "string") key(d.data.key);
+        else if (r = typeof d.data.search == "number") opt(d.data.search);
+        else if (r = typeof d.data.preload == "string") pld(d.data);
+        return r;
     };
     this.handleRequest = function(i, _, f){
         switch(i){
@@ -120,7 +208,10 @@ function search(K){
                         ["{dic:torrs|in Torrs}", "torrs.png"],
                         ["{dic:torrs|in Torrs} ({dic:accurate|accurate})", "torrs.png"]
                     ].map(function(o, i){return {
-                        label: o[0], image: window.location.origin + "/img/" + o[1], extensionIcon: icon(P[0] == i, true), data: {opt: i}, display: !i || d
+                        label: o[0],
+                        image: window.location.origin + "/img/" + o[1],
+                        extensionIcon: icon(P[0] == i, true), 
+                        data: {search: i}, enable: !i || d
                     }});
                     f({
                         type: "list", reuse: false, cache: false, restore: false, wrap: true, extension: ext(), items: kbd(),
@@ -135,12 +226,16 @@ function search(K){
                 });
                 return true;
             case "find":
-                var e = function(e){TVXInteractionPlugin.error(e);f();}
-                if(P[0]) proxy(
-                    "https://torrs.ru/search?query=" + encodeURIComponent(S) + (P[0] == 2 ? "&accurate" : ""),
-                    {success: function(d){f(fnd(d, trs))}, error: e}
+                var s = encodeURIComponent(S);
+                ajax(
+                    P[0] ? (
+                        "/msx/proxy?url=" + encodeURIComponent("https://torrs.ru/search?query=" + s + (P[0] == 2 ? "&accurate" : ""))
+                    ) : (
+                        "/search/?query=" + s
+                    ),
+                    function(d){f(fnd(d))},
+                    function(e){TVXInteractionPlugin.error(e);f();}
                 );
-                else ajax("/search/?query=" + encodeURIComponent(S), function(d){f(fnd(d, rtr))}, e);
                 return true;
             default: return false;
         }
