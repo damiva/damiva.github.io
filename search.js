@@ -173,7 +173,7 @@ function search(K){
                             headline: t.Name || t.name,
                             image: t.Poster || "", imageWidth: 2, imageFiller: "height", icon: t.Poster ? "" : "msx-white-soft:info",
                             text:
-                                "{br}{ico:msx-white:theater-comedy} "   + (t.Categories || t.types.join(", ")) +
+                                "{ico:msx-white:theater-comedy} "       + (t.Categories || t.types.join(", ")) +
                                 "{br}{ico:msx-white:video-settings} "   + (t.VideoQuality ? quv(t.VideoQuality) : (t.quality + " " + t.videotype)) +
                                 "{br}{ico:msx-white:audiotrack} "       + (t.AudioQuality ? qua(t.AudioQuality) : t.voices.join(", ")),
                             titleFooter: "{ico:msx-white:attach-file} " + (t.Size || t.sizeName),
@@ -206,7 +206,10 @@ function search(K){
                         ["{dic:torrs|in Torrs}", "torrs.png"],
                         ["{dic:torrs|in Torrs} ({dic:accurate|accurate})", "torrs.png"]
                     ].map(function(o, i){return {
-                        label: o[0], image: window.location.origin + "/img/" + o[1], extensionIcon: icon(P[0] == i, true), data: {opt: i}, display: !i || d
+                        label: o[0],
+                        image: window.location.origin + "/img/" + o[1],
+                        extensionIcon: icon(P[0] == i, true), 
+                        data: {search: i}, display: !i || d
                     }});
                     f({
                         type: "list", reuse: false, cache: false, restore: false, wrap: true, extension: ext(), items: kbd(),
