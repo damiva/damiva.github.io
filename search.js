@@ -77,6 +77,7 @@ function search(K){
             L ? {action: "drop", hash: d.id} : false,
             "text",
             function(){
+                L = !L;
                 TVXInteractionPlugin.executeAction(
                     "update:panel:key", 
                     {label: L ? "{dic:drop|Drop the torrent}" : "{dic:load|Preload the torrent}"}
@@ -85,7 +86,6 @@ function search(K){
                     L ? ("update:panel:" + d.id) : ("execute:" + addr + "/msx/trn"),
                     L ? {stampColor: "default"} : ("update:panel:" + d.id)
                 );
-                L = !L;
                 TVXInteractionPlugin.stopLoading();
             },
             function(e){
