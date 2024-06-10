@@ -165,21 +165,21 @@ function search(K){
                     text: "{col:msx-white}" + (t.Title = t.Title || t.title),
                     stamp: "{col:msx-white-soft}{ico:date-range} " + dat(t.CreateDate || t.createTime)
                         + "{tb}{ico:attach-file} " + (t.Size || t.sizeName)
-                        + "{tb}{ico:north} " + (t.Peer || t.pir) + " {ico:south} " + (t.Seed || t.sid),
+                        + "{tb}{ico:north} " + (t.Peer || t.pir || 0) + " {ico:south} " + (t.Seed || t.sid || 0),
                     action: t.act + "@" + window.location.href,
                     options: opts([
                         {type: "space", offset: "0,0,0,1", headline: t.Title}, {type: "space"},
                         {
                             type: "space", offset: "0,0,0,2", id: t.Hash, progress: -1, stampColor: "", color: "msx-black-soft",
-                            headline: t.Name || t.name,
+                            headline: t.Name || t.name || "",
                             image: t.Poster || "", imageWidth: 2, imageFiller: "height", icon: t.Poster ? "" : "msx-white-soft:info",
                             text:
                                 "{ico:msx-white:theater-comedy} "       + (t.Magnet ? t.Categories : t.types.join(", ")) +
                                 "{br}{ico:msx-white:video-settings} "   + (t.Magnet ? quv(t.VideoQuality) : (t.quality + " " + t.videotype)) +
                                 "{br}{ico:msx-white:audiotrack} "       + (t.Magnet ? qua(t.AudioQuality) : t.voices.join(", ")),
-                            titleFooter: "{ico:msx-white:date-range} "  + dat(t.CreateDate || t.createTime)
-                                +"{tb}{ico:msx-white:attach-file} "     + (t.Size || t.sizeName),
-                            stamp: "{tb}{ico:north} " + (t.Peer || t.pir) + " {ico:south} " + (t.Seed || t.sid),
+                            titleFooter: "{ico:msx-white:date-range} "  + dat(t.CreateDate || t.createTime) +
+                                "{tb}{ico:msx-white:attach-file} "      + (t.Size || t.sizeName),
+                            stamp: "{tb}{ico:north} " + (t.Peer || t.pir || 0) + " {ico:south} " + (t.Seed || t.sid || 0),
                         }, {type: "space"}, {type: "space"},
                         {
                             id: "key",
