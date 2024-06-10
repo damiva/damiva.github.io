@@ -154,7 +154,7 @@ function search(K){
                 t.act = "content:request:interaction:" + encodeURIComponent(t.Magnet || t.magnet) + "|" + encodeURIComponent(t.Title || t.title);
                 if(!t.Hash){
                     var b = t.magnet.indexOf("xt=urn:btih:") + 12, e = t.magnet.indexOf("&", b);
-                    t.Hash = t.magnet.substr(b, e > 0 ? e - b : undefined);
+                    t.Hash = t.magnet.substr(b, e > b ? e - b : undefined);
                 }else{
                     t.Poster = t.Poster || (t.IMDBID ? (t.IMDBID = addr + "/msx/imdb/" + t.IMDBID) : "");
                     t.Link += "|" + encodeURIComponent(t.Poster) + "|" + encodeURIComponent(cat(t.Categories));            
