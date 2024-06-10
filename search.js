@@ -71,22 +71,26 @@ function search(K){
         TVXInteractionPlugin.executeAction("[cleanup|reload:content]")
     };
     var pld = function(d){
+        TVXInteractionPlugin.startLoading();
         ajax(
-            L ? "/torrents" : ("/stream/?preload&link=" + encodeURIComponent(d.preload)),
+            L ? "/torrents" : ("/stream/?preload&stat&link=" + encodeURIComponent(d.preload)),
             L ? {action: "drop", hash: d.id} : false,
             "text",
             function(){
-                TVXInteractionPlugin.executeAction("data", [{
-                    action: "update:panel:key", data: {label: L ? "{dic:drop|Drop the torrent}" : "{dic:load|Preload the torrent}"}
-                }, L ? {
-                    action: "update:panel:" + d.id, data: {stampColor: "default"}
-                } : {
-                    action: "execute:" + addr + "/msx/trn", data: "update:panel:" + d.id
-                }]);
+                TVXInteractionPlugin.executeAction(
+                    "update:panel:key", 
+                    {label: L ? "{dic:drop|Drop the torrent}" : "{dic:load|Preload the torrent}"}
+                );
+                TVXInteractionPlugin.executeAction(
+                    L ? ("update:panel:" + d.id) : ("execute:" + addr + "/msx/trn"),
+                    L ? {stampColor: "default"} : ("update:panel:" + d.id)
+                );
                 L = !L;
+                TVXInteractionPlugin.stopLoading();
             },
             function(e){
                 TVXInteractionPlugin.error(e);
+                TVXInteractionPlugin.stopLoading();
             }
         );
     };
