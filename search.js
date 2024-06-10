@@ -167,7 +167,7 @@ function search(K){
                         {
                             type: "space", offset: "0,0,0,2", id: t.Hash, progress: -1, stampColor: "",
                             headline: t.Name || t.name,
-                            image: t.Poster || null, imageWidth: 2, imageFiller: "height", icon: t.Poster ? "" : "info",
+                            image: t.Poster || "", imageWidth: 2, imageFiller: "height", icon: t.Poster ? "" : "info",
                             text:
                                 "{br}{ico:msx-white:theater-comedy} "   + (t.Categories || t.types.join(", ")) +
                                 "{br}{ico:msx-white:video-settings} "   + (t.VideoQuality ? quv(t.VideoQuality) : (t.quality + " " + t.videotype)) +
