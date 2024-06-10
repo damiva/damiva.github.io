@@ -180,7 +180,7 @@ function search(K){
                             type: "button", label: L ? "{dic:drop|Drop the torrent}" : "{dic:load|Preload the torrent}",
                             data: {preload: t.Magnet || t.magnet, id: t.Hash}
                         }
-                    ], "{dic:info|Torrent's info}", "", "{idc:msx-white:bolt} " + (t.Tracker || t.trackerName))
+                    ], "{dic:info|Torrent's info}", "", "{ico:msx-white:bolt} " + (t.Tracker || t.trackerName))
                 };        
             }) 
         };
