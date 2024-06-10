@@ -83,7 +83,7 @@ function search(K){
                 );
                 TVXInteractionPlugin.executeAction(
                     L ? ("update:panel:" + d.id) : ("execute:" + addr + "/msx/trn"),
-                    L ? {stampColor: "default", live: {type: "setup"}} : ("update:panel:" + d.id)
+                    L ? {stampColor: "default", live: {type: "setup"}, progress: -1} : ("update:panel:" + d.id)
                 );
                 L = !L;
                 TVXInteractionPlugin.stopLoading();
