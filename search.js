@@ -169,9 +169,9 @@ function search(K){
                     options: opts([
                         {type: "space", offset: "0,0,0,1", headline: t.Title}, {type: "space"},
                         {
-                            type: "space", offset: "0,0,0,2", id: t.Hash, progress: -1, stampColor: "",
+                            type: "space", offset: "0,0,0,2", id: t.Hash, progress: -1, stampColor: "", color: "msx-black-soft",
                             headline: t.Name || t.name,
-                            image: t.Poster || "", imageWidth: 2, imageFiller: "height", icon: t.Poster ? "" : "info",
+                            image: t.Poster || "", imageWidth: 2, imageFiller: "height", icon: t.Poster ? "" : "msx-white-soft:info",
                             text:
                                 "{br}{ico:msx-white:theater-comedy} "   + (t.Categories || t.types.join(", ")) +
                                 "{br}{ico:msx-white:video-settings} "   + (t.VideoQuality ? quv(t.VideoQuality) : (t.quality + " " + t.videotype)) +
