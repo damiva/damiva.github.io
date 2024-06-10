@@ -72,7 +72,7 @@ function search(K){
     };
     var pld = function(d){
         ajax(
-            L ? "/torrents" : ("/stream/?preload&link=" + encodeURIComponent(d.preload), "text"),
+            L ? "/torrents" : ("/stream/?preload&link=" + encodeURIComponent(d.preload)),
             L ? {action: "drop", hash: d.id} : false,
             "text",
             function(){
@@ -155,31 +155,30 @@ function search(K){
                     t.Link += "|" + encodeURIComponent(t.Poster) + "|" + t.encodeURIComponent(cat(t.Categories));            
                 }
                 return {
-                    image: t.Poster, 
-                    imageWidth: t.Poster ? 0.7 : undefined, imageFiller: t.Poster ? "height" : undefined,
+                    image: t.Poster || null,
+                    imageWidth: t.Poster ? 0.7 : -1, imageFiller: t.Poster ? "height" : "default",
                     text: "{col:msx-white}" + (t.Title = t.Title || t.title),
                     stamp: "{col:msx-white-soft}{ico:date-range} " + TVXDateFormatter.toDateStr(new Date(t.CreateDate || t.createTime))
                         + "{tb}{ico:attach-file} " + (t.Size || t.sizeName)
                         + "{tb}{ico:north} " + (t.Peer || t.pir) + " {ico:south} " + (t.Seed || t.sid),
                     action: t.act + "@" + window.location.href,
                     options: opts([
-                        {type: "space", offset: "0,0,0,1", headline: t.Title},
-                        {type: "space"},
-                        {type: "space", text: "{col:msx-white}" + (t.Name || t.name)},
+                        {type: "space", offset: "0,0,0,1", headline: t.Title}, {type: "space"},
                         {
-                            type: "space", offset: "0,0,0,1", id: t.Hash, progress: -1, stampColor: "",
+                            type: "space", offset: "0,0,0,2", id: t.Hash, progress: -1, stampColor: "",
+                            headline: t.Name || t.name,
+                            image: t.Poster || null, imageWidth: 2, imageFiller: "height", icon: t.Poster ? "" : "info",
                             text:
                                 "{br}{ico:msx-white:theater-comedy} "   + (t.Categories || t.types.join(", ")) +
                                 "{br}{ico:msx-white:video-settings} "   + (t.VideoQuality ? quv(t.VideoQuality) : (t.quality + " " + t.videotype)) +
                                 "{br}{ico:msx-white:audiotrack} "       + (t.AudioQuality ? qua(t.AudioQuality) : t.voices.join(", ")),
                             titleFooter: "{ico:msx-white:attach-file} " + (t.Size || t.sizeName),
                             stamp: "{tb}{ico:north} " + (t.Peer || t.pir) + " {ico:south} " + (t.Seed || t.sid),
-                        },
-                        {type: "space"},
+                        }, {type: "space"}, {type: "space"},
                         {
                             id: "key",
-                            type: "button", label: !t.Hash ? "{dic:label:ok|OK}" : L ? "{dic:drop|Drop the torrent}" : "{dic:load|Preload the torrent}",
-                            data: {preload: t.Magnet || t.magnet, id: t.Hash}, action: t.Hash ? undefined : "cleanup"
+                            type: "button", label: L ? "{dic:drop|Drop the torrent}" : "{dic:load|Preload the torrent}",
+                            data: {preload: t.Magnet || t.magnet, id: t.Hash}
                         }
                     ], "{dic:info|Torrent's info}", "", "{idc:msx-white:bolt} " + (t.Tracker || t.trackerName))
                 };        
