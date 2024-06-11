@@ -1,7 +1,7 @@
 function search(K){
     var S = TVXServices.storage.getFullStr("ts:search:query", ""),
         P = [TVXServices.storage.getNum("ts:search:engine", 0), TVXServices.storage.getNum("ts:search:order", 0)],
-        L = false;
+        L = false, R = false;
     var kbd = function(){
         var k = [{label: "1", key: "1", offset: K ? "1,0,0,0" : undefined}], l = K ? 1 : 0,
             e = [
@@ -65,7 +65,7 @@ function search(K){
             );
         }
     };
-    var opt = function(d){
+    var src = function(d){
         var o = d < 10 ? 0 : 1;
         TVXServices.storage.set("ts:search:" + ["engine", "order"][o], P[o] = d - o * 10);
         TVXInteractionPlugin.executeAction("[cleanup|reload:content]")
@@ -97,6 +97,19 @@ function search(K){
     var dat = function(ts){return TVXDateTools.getFormattedDateStr(new Date(ts), "dd.mm.yyyy");}
     var ext = function(l){return "{ico:msx-white:search}" + (l !== undefined ? ((P[0] ? " Torrs: " : " Rutor: ") + l) : "")};
     var cat = function(c){return c == "Movie" ? "movie" : c == "Series" || c == "TVShow" ? "tv" : c};
+    var opt = function(){
+        var d = [
+            ["{dic:rutor|in Rutor (embeded)}", "rutor.png"],
+            ["{dic:torrs|in Torrs}", "torrs.png"],
+            ["{dic:torrs|in Torrs} ({dic:accurate|accurate})", "torrs.png"]
+        ].map(function(o, i){return {
+            label: o[0],
+            image: window.location.origin + "/img/" + o[1],
+            extensionIcon: icon(P[0] == i, true), 
+            data: {search: i}, enable: !i || R
+        }});
+        return opts(d, "{dic:find|Search}", " " + d[P[0]].label);
+    }
     var quv = function(t){return {
         100: "720 WebDL",
         101: "720 BDRip",
@@ -137,8 +150,8 @@ function search(K){
         return {
             type: "list", headline: "{ico:search} " + S, extension: ext(d ? d.length : 0),
             header: d ? {items: [{
-                headline: "{dic:label:order|Order}:", type: "space", icon: "sort", imageWidth: 1, image: "", iconSize: "medium",
-                layout: "0,0,12,1", color: "msx-glass", centration: "text", offset: "-.1,-.1,.2,.2"
+                headline: "{dic:label:order|Order}:", icon: "sort", imageWidth: 1, image: "",
+                type: "space", layout: "0,0,3,1", centration: "text",
             },{
                 icon: P[0] ? "attach-file" : "radar", label: P[0] ? "{dic:size|by size}" : "{dic:accuracy|by accuracy}", type: "control", layout: "3,0,3,1",
                 extensionIcon: icon(P[1] == 0, true), data: {search: 10}, action: "interaction:load:" + window.location.href
@@ -148,7 +161,7 @@ function search(K){
             },{
                 icon: "date-range", label: "{dic:date|by date}", type: "control", layout: "9,0,3,1",
                 extensionIcon: icon(P[1] == 2, true), data: {seach: 12}, action: "interaction:load:" + window.location.href},
-            ]} : null,
+            ], options: opt()} : null,
             template: {layout: "0,0,12,1"},
             items: !d ? [{label: "{dic:empty|Nothing found}!", action: "[]"}] : d.map(function(t){
                 t.act = "content:request:interaction:" + encodeURIComponent(t.Magnet || t.magnet) + "|" + encodeURIComponent(t.Title || t.title);
@@ -194,7 +207,7 @@ function search(K){
     this.handleData = function(d){
         var r = false;
         if(r = typeof d.data.key == "string") key(d.data.key);
-        else if (r = typeof d.data.search == "number") opt(d.data.search);
+        else if (r = typeof d.data.search == "number") src(d.data.search);
         else if (r = typeof d.data.preload == "string") pld(d.data);
         return r;
     };
@@ -202,21 +215,11 @@ function search(K){
         switch(i){
             case "search":
                 ajax("/settings", {action: "get"}, function(d){
-                    if(!(d = d.EnableRutorSearch === true) && !P[0]) P[0] = 1;
-                    d = [
-                        ["{dic:rutor|in Rutor (embeded)}", "rutor.png"],
-                        ["{dic:torrs|in Torrs}", "torrs.png"],
-                        ["{dic:torrs|in Torrs} ({dic:accurate|accurate})", "torrs.png"]
-                    ].map(function(o, i){return {
-                        label: o[0],
-                        image: window.location.origin + "/img/" + o[1],
-                        extensionIcon: icon(P[0] == i, true), 
-                        data: {search: i}, enable: !i || d
-                    }});
+                    if(!(R = d.EnableRutorSearch === true) && !P[0]) P[0] = 1;
                     f({
-                        type: "list", reuse: false, cache: false, restore: false, wrap: true, extension: ext(), items: kbd(),
+                        type: "list", reuse: false, cache: false, restore: false, wrap: true,
+                        extension: ext(), items: kbd(), options: opt(),
                         ready: {action: "interaction:load:" + window.location.href, data: {key: ""}},
-                        options: opts(d, "{dic:find|Search}", " " + d[P[0]].label),
                         underlay: {items:[{id: "val", type: "space", layout: "0,0,12,1", color: "msx-black-soft", label: ""}]},
                         template: {
                             type: "button", layout: "0,0,1,1", area: K ? "0,1,12,5" : "1,1,10,5", enumerate: false,
