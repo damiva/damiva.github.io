@@ -42,11 +42,11 @@ TVXPluginTools.onReady(function() {
                 action: "content:request:interaction:" + t.hash + "@" + window.location.href
             }});
             return {
-                type: "list", reuse: false, cache: false, restore: false, compress: false,
+                type: "list", reuse: false, cache: false, restore: false,
                 extension: e ? "{ico:msx-yellow:warning}" : l == d.length ? ("{ico:msx-white:bookmarks} " + d.length) : ("{ico:msx-white:" + G + "} " + l + "/" + d.length),
-                header: e ? null : {option: opts(o), compress: true, items: ["movie", "live-tv", "audiotrack", "more-horiz"].map(function(g, i){return {
-                    layout: (i + 5) + ",0,1,1", icon: g, progress: G == g ? 1 : -1, progressColor: "msx-white", color: "none",
-                    data: g, action: "execute:request:interaction:trns@" + window.location.href
+                header: e ? null : {options: opts(o), items: ["movie", "live-tv", "audiotrack", "more-horiz"].map(function(g, i){return {
+                    layout: (i + 4) + ",0,1,1", progress: G == g ? 1 : -1, progressColor: "msx-white", color: "none", iconSize: "small",
+                    icon: g, data: g, action: "execute:request:interaction:trns@" + window.location.href
                 }})},
                 template: {layout: "0,0,6,2", imageWidth: 1.3, imageFiller: "height"}, 
                 items: e ? [{headline: "{dic:label:data_load_error|Load data error}: " + d, icon: "refresh", action: "reload:content"}] : d 
