@@ -150,8 +150,8 @@ function search(K){
         return {
             type: "list", headline: "{ico:search} " + S, extension: ext(d ? d.length : 0),
             header: d ? {items: [{
-                headline: "{dic:label:order|Order}:", icon: "sort", imageWidth: 1,
-                type: "space", layout: "0,0,12,1", centration: "text",
+                headline: "{dic:label:order|Order}:", icon: "sort", imageWidth: 1, image: "",
+                type: "space", layout: "0,0,3,1", centration: "text",
             },{
                 icon: P[0] ? "attach-file" : "radar", label: P[0] ? "{dic:size|by size}" : "{dic:accuracy|by accuracy}", type: "control", layout: "3,0,3,1",
                 extensionIcon: icon(P[1] == 0, true), data: {search: 10}, action: "interaction:load:" + window.location.href
@@ -160,7 +160,7 @@ function search(K){
                 extensionIcon: icon(P[1] == 1, true), data: {search: 11}, action: "interaction:load:" + window.location.href
             },{
                 icon: "date-range", label: "{dic:date|by date}", type: "control", layout: "9,0,3,1",
-                extensionIcon: icon(P[1] == 2, true), data: {seach: 12}, action: "interaction:load:" + window.location.href},
+                extensionIcon: icon(P[1] == 2, true), data: {search: 12}, action: "interaction:load:" + window.location.href},
             ], options: opt()} : null,
             template: {layout: "0,0,12,1"},
             items: !d ? [{label: "{dic:empty|Nothing found}!", action: "[]"}] : d.map(function(t){
