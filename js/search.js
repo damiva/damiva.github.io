@@ -150,7 +150,7 @@ function search(K){
         return {
             type: "list", headline: "{ico:search} " + S, extension: ext(d ? d.length : 0),
             header: d ? {items: [{
-                headline: "{ico:sort}{tb}{dic:label:order|Order}:", type: "space", layout: "0,0,12,1", imageWidth: 1, color: "msx-glass",
+                headline: "{ico:sort}{tb}{dic:label:order|Order}:", type: "space", layout: "0,0,12,1", color: "msx-glass", centration: "text"
             },{
                 icon: P[0] ? "attach-file" : "radar", label: P[0] ? "{dic:size|by size}" : "{dic:accuracy|by accuracy}", type: "control", layout: "3,0,3,1",
                 extensionIcon: icon(P[1] == 0, true), data: {search: 10}, action: "interaction:load:" + window.location.href
