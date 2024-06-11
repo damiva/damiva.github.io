@@ -24,7 +24,7 @@ TVXPluginTools.onReady(function() {
                     {type: "space", layout: "0,0,12,1", color: "msx-glass", headline: "{ico:filter-alt}{tb}{dic:filter|Filter}:", centration: "text"}
                 ].concat(["", "movie", "live-tv", "audiotrack", "more-horiz"].map(function(g, i){return {
                     type: "control", layout: ((i + 1) * 2) + ",0,2,1", icon: g || undefined, label: g ? "" : "{dic:label:no|No}",
-                    extensionIcon: icon(G == g), data: g, action: "execute:request:interaction:trns@" + window.location.href
+                    extensionIcon: icon(G == g, true), data: g, action: "execute:request:interaction:trns@" + window.location.href
                 }})), options: opts(o)},
                 template: {layout: "0,0,6,2", imageWidth: 1.3, imageFiller: "height"}, 
                 items: e || !d.length ? [{
