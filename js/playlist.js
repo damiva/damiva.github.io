@@ -89,7 +89,6 @@ function playlist(){
         }, sf);
     };
     this.init = function(){
-        imdb = new imdb();
         if(addr = TVXServices.urlParams.getFullStr("server", TVXServices.storage.getFullStr("ts:server", ""))) addr = window.location.protocol + "//" + addr;
         else TVXInteractionPlugin.error("Server is not set!");
     };
