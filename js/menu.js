@@ -23,7 +23,7 @@ TVXPluginTools.onReady(function() {
                 headline: c ? undefined : t.title, text: c ? ("{col:msx-white}" + t.title) : undefined,
                 image: t.poster,
                 icon: t.poster ? "" : "msx-white-soft:bookmark",
-                group: G ? null : "{ico:" + t.category + "}",
+                group: "{ico:" + t.category + "}",
                 titleFooter: "{ico:msx-white:attach-file} " + (t.torrent_size ? size(t.torrent_size) : "?"),
                 stamp: t.stat < 5 ? ("{ico:north} " + (t.active_peers || 0) + " / " + (t.total_peers || 0) + " {ico:south} " + (t.connected_seeders || 0)) : "",
                 stampColor: "msx-" + (t.stat == 4 ? "red" : t.stat == 3 ? "green" : "yellow"),
