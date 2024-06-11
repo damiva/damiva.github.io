@@ -44,12 +44,10 @@ TVXPluginTools.onReady(function() {
             return {
                 type: "list", reuse: false, cache: false, restore: false,
                 extension: e ? "{ico:msx-yellow:warning}" : l == d.length ? ("{ico:msx-white:bookmarks} " + d.length) : ("{ico:msx-white:filter-alt} " + l + "/" + d.length),
-                header: e ? null : {items: [
-                    {type: "space", layout: "3,0,2,1", headline: (G ? "" : "{col:msx-white-soft}") + "{ico:filter-alt}{tb}{dic:filter|Filter}:", centration: "text"}
-                ].concat(["movie", "live-tv", "audiotrack", "more-horiz"].map(function(g, i){return {
-                    type: "button", layout: (i + 5) + ",0,1,1", icon: g, progress: G == g ? 1 : -1, progressColor: "msx-white",
+                header: e ? null : {option: opts(o), items: ["movie", "live-tv", "audiotrack", "more-horiz"].map(function(g, i){return {
+                    layout: (i + 5) + ",0,1,1", icon: g, progress: G == g ? 1 : -1, progressColor: "msx-white",
                     data: g, action: "execute:request:interaction:trns@" + window.location.href
-                }})), options: opts(o)},
+                }})},
                 template: {layout: "0,0,6,2", imageWidth: 1.3, imageFiller: "height"}, 
                 items: e ? [{headline: "{dic:label:data_load_error|Load data error}: " + d, icon: "refresh", action: "reload:content"}] : d 
             };
