@@ -13,7 +13,7 @@ function size(s){
     return (s / Math.pow(1024, i)).toFixed(2) * 1 + ' ' + ['B', 'KB', 'MB', 'GB', 'TB'][i];
 }
 function opts(o, h, v, e){
-    var s = "refresh"
+    var s = "refresh";
     h = h || "{dic:caption:options|opt/menu}";
     var r = {caption: h + (v || ""), headline: h + ":", items: [], template: {
         layout: "0,0,8,1", type: "control", enumerate: false, imagePreload: true, action: "interaction:load:" + window.location.href
