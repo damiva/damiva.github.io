@@ -34,7 +34,6 @@ function icon(v, r){return r
     : (v ? "msx-white:check-box" : "check-box-outline-blank");
 }
 function cati(c){return c == "movie" ? "movie" : c == "tv" ? "live-tv" : c == "music" ? "audiotrack" : "more-horiz"}
-function catg(c){return "{ico:" + cati(c) + "}"}
 function prms(k, c){
     var v = TVXServices.storage.getBool(k = "ts:" + k, false);
     if(c) TVXServices.storage.set(k, v = !v);

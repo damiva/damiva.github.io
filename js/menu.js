@@ -1,7 +1,8 @@
 TVXPluginTools.onReady(function() {
     TVXInteractionPlugin.setupHandler(new function(){
         var R = TVXServices.storage.getBool("ts:russian", false),
-            S = new search(R), P = new playlist();
+            S = new search(R), P = new playlist(),
+            G = "";
         var M = {menu: [
             {icon: "bookmarks", label: "{dic:my|My} {dic:trns|torrents}", data: "request:interaction:trns@" + window.location.href},
             {icon: "search", label: "{dic:find|Search} {dic:trns|torrents}", data: "request:interaction:search@" + window.location.href},
@@ -11,19 +12,29 @@ TVXPluginTools.onReady(function() {
             {key: "yellow", label: "{dic:refresh|Refresh} {dic:caption:menu|menu}", action: "[cleanup|reload:menu]"}
         ])};
         var L = function(d){
-            var c = prms("smallfont"), e = typeof d == "string";
+            var c = prms("smallfont"), e = typeof d == "string",
+                o = [
+                    {key: "yellow", label: "{dic:refresh|Refresh} {dic:list|the list}", action: "[cleanup|reload:content]"},
+                    {icon: "format-size", label: "{dic:compress|Compress} {dic:font|the font}", extensionIcon: icon(c), data: "smallfont"}    
+                ];
             return {
                 type: "list", reuse: false, cache: false, restore: false,
                 extension: e ? "{ico:msx-yellow:warning}" : ("{ico:msx-white:bookmarks} " + d.length),
+                header: {items: [
+                    {type: "space", layout: "0,0,12,1", color: "msx-glass", imageWidth: 1, icon: "filter"}
+                ].concat(["", "movie", "live-tv", "audiotrack", "more-horiz"].map(function(g, i){return {
+                    type: "control", layout: ((i + 1) * 2) + ",0,2,1", icon: g, label: g ? "" : "{dic:label:no|No}",
+                    extensionIcon: icon(!G), action: "execute:request:interaction:trns@" + window.location.href
+                }})), options: opts(o)},
                 template: {layout: "0,0,6,2", imageWidth: 1.3, imageFiller: "height"}, 
                 items: e || !d.length ? [{
                     headline: e ? ("{dic:label:data_load_error|Load data error}: " + d) : "{dic:empty|Nothing found}!", icon: "refresh", action: "reload:content"
-                }] : d.map(function(t){return {
+                }] : d.map(function(t){return (t.category = cati(t.category)) != G && G ? {display: false} : {
                     id: t.hash,
                     headline: c ? undefined : t.title, text: c ? ("{col:msx-white}" + t.title) : undefined,
                     image: t.poster,
                     icon: t.poster ? "" : "msx-white-soft:bookmark",
-                    group: catg(t.category),
+                    group: "{ico:" + t.category + "}",
                     titleFooter: "{ico:msx-white:attach-file} " + (t.torrent_size ? size(t.torrent_size) : "?"),
                     stamp: t.stat < 5 ? ("{ico:north} " + (t.active_peers || 0) + " / " + (t.total_peers || 0) + " {ico:south} " + (t.connected_seeders || 0)) : "",
                     stampColor: "msx-" + (t.stat == 4 ? "red" : t.stat == 3 ? "green" : "yellow"),
@@ -37,10 +48,8 @@ TVXPluginTools.onReady(function() {
                                 {label: "{dic:label:yes|Yes}", action: "interaction:load:" + window.location.href, data: {action: "rem", hash: t.hash}}
                             ]
                         }},
-                        t.stat < 5 ? {key: "green", icon: "close", label: "{dic:drop|Drop the torrent}", data: {action: "drop", hash: t.hash}} : null,
-                        {key: "yellow", label: "{dic:refresh|Refresh} {dic:list|the list}", action: "[cleanup|reload:content]"},
-                        {icon: "format-size", label: "{dic:compress|Compress} {dic:font|the font}", extensionIcon: icon(c), data: "smallfont"}
-                    ]),
+                        t.stat < 5 ? {key: "green", icon: "close", label: "{dic:drop|Drop the torrent}", data: {action: "drop", hash: t.hash}} : null
+                    ].concat(o)),
                     action: "content:request:interaction:" + t.hash + "@" + window.location.href
                 }})
             };
@@ -66,7 +75,10 @@ TVXPluginTools.onReady(function() {
                     });
                     break;
                 case "trns":
-                    ajax("/torrents", {action: "list"}, function(d){
+                    if (d) {
+                        G = d.data || "";
+                        f({action: "reload:content"});
+                    } else ajax("/torrents", {action: "list"}, function(d){
                         f(L(d));
                     }, function(e){
                         f(L(e));
