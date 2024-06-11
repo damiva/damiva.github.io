@@ -23,7 +23,7 @@ TVXPluginTools.onReady(function() {
                 headline: c ? undefined : t.title, text: c ? ("{col:msx-white}" + t.title) : undefined,
                 image: t.poster,
                 icon: t.poster ? "" : "msx-white-soft:bookmark",
-                group: "{ico:" + t.category + "}",
+                group: G ? null : "{ico:" + t.category + "}",
                 titleFooter: "{ico:msx-white:attach-file} " + (t.torrent_size ? size(t.torrent_size) : "?"),
                 stamp: t.stat < 5 ? ("{ico:north} " + (t.active_peers || 0) + " / " + (t.total_peers || 0) + " {ico:south} " + (t.connected_seeders || 0)) : "",
                 stampColor: "msx-" + (t.stat == 4 ? "red" : t.stat == 3 ? "green" : "yellow"),
@@ -45,8 +45,8 @@ TVXPluginTools.onReady(function() {
                 type: "list", reuse: false, cache: false, restore: false,
                 extension: e ? "{ico:msx-yellow:warning}" : l == d.length ? ("{ico:msx-white:bookmarks} " + d.length) : ("{ico:msx-white:" + G + "} " + l + "/" + d.length),
                 header: e ? null : {options: opts(o), items: ["movie", "live-tv", "audiotrack", "more-horiz"].map(function(g, i){return {
-                    layout: (i + 4) + ",0,1,1", progress: G == g ? 1 : -1, progressColor: "msx-white", color: "none", iconSize: "small",
-                    icon: g, data: g, action: "execute:request:interaction:trns@" + window.location.href
+                    layout: (i + 4) + ",0,1,1", progress: G == g ? 1 : -1, progressColor: "msx-white", color: "none", iconSize: "medium",
+                    icon: (G == g ? "" : "msx-white-soft") + g, data: g, action: "execute:request:interaction:trns@" + window.location.href
                 }})},
                 template: {layout: "0,0,6,2", imageWidth: 1.3, imageFiller: "height"}, 
                 items: e ? [{headline: "{dic:label:data_load_error|Load data error}: " + d, icon: "refresh", action: "reload:content"}] : d 
