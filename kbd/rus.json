@@ -1,0 +1,53 @@
+{
+    "headline": "{ico:search} {dic:search|Search torrents}", "extension": "{ico:msx-white:keyboard} RU",
+    "type": "list", "wrap": true, "flag": "keyboard",
+    "ready": {"action": "interaction:load:http://tsmsx.yourok.ru/", "data": ""},
+    "underlay": {"items": [{"id": "val", "type": "space", "layout": "0,0,10,1", "color": "msx-black-soft", "label": ""}]},
+    "template": {"type": "button", "layout": "0,0,1,1", "area": "0,1,8,5", "enumerate": false, "iconSize": "small", "action": "interaction:commit", "data": "{context:label}"},
+    "items": [
+        {"label": "а", "key": "f"},
+        {"label": "б", "key": "comma"},
+        {"label": "в", "key": "d"},
+        {"label": "г", "key": "u"},
+        {"label": "д", "key": "l"},
+        {"label": "е", "key": "t"},
+        {"label": "ж", "key": "semicolon"},
+        {"label": "з", "key": "p"},
+
+        {"label": "и", "key": "b"},
+        {"label": "й", "key": "q"},
+        {"label": "к", "key": "r"},
+        {"label": "л", "key": "k"},
+        {"label": "м", "key": "v"},
+        {"label": "н", "key": "y"},
+        {"label": "о", "key": "j"},
+        {"label": "п", "key": "g"},
+
+        {"label": "р", "key": "h"},
+        {"label": "с", "key": "c"},
+        {"label": "т", "key": "n"},
+        {"label": "у", "key": "e", "focus": true},
+        {"label": "ф", "key": "a"},
+        {"label": "х", "key": "bracket_open"},
+        {"label": "ц", "key": "w"},
+        {"label": "ч", "key": "x"},
+        
+        {"label": "ш", "key": "i"},
+        {"label": "щ", "key": "o"},
+        {"label": "ъ", "key": "bracket_close"},
+        {"label": "ы", "key": "s"},
+        {"label": "ь", "key": "m"},
+        {"label": "э", "key": "quote"},
+        {"label": "ю", "key": "period"},
+        {"label": "я", "key": "z"},
+
+        {"icon": "backspace", "data": "bs", "key": "red|delete", "progress": 1, "progressColor": "msx-red", "offset": "0,0,1,0"},
+        {"type": "space"},
+        {"icon": "123", "data": "123", "key": "home|1|2|3|4|5|6|7|8|9|0"},
+        {"icon": "space-bar", "data": " ", "key": "yellow|space", "progress": 1, "progressColor": "msx-yellow", "offset": "0,0,1,0"},
+        {"type": "space"}, 
+        {"label": "EN", "data": "eng", "key": "end"},
+        {"type": "space"}, 
+        {"icon": "", "data": "ok", "key": "green|insert", "id": "OK", "progress": 1, "progressColor": "msx-green", "offset": "-1,0,1,0"}
+    ]
+}

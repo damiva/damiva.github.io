@@ -1,0 +1,28 @@
+{
+    "headline": "{ico:search} {dic:search|Search torrents}", "extension": "{ico:msx-white:keyboard} 123",
+    "type": "list", "wrap": true, "flag": "keyboard",
+    "ready": {"action": "interaction:load:http://tsmsx.yourok.ru/", "data": ""},
+    "underlay": {"items": [{"id": "val", "type": "space", "layout": "0,0,10,1", "color": "msx-black-soft", "label": ""}]},
+    "template": {"type": "button", "layout": "0,0,2,1", "area": "1,1,6,5", "enumerate": false, "iconSize": "small", "action": "interaction:commit", "data": "{context:label}"},
+    "items": [
+        {"label": "1", "key": "a"},
+        {"label": "2", "key": "b"},
+        {"label": "3", "key": "c"},
+
+        {"label": "4", "key": "d"},
+        {"label": "5", "key": "e", "focus": true},
+        {"label": "6", "key": "f"},
+
+        {"label": "7", "key": "g"},
+        {"label": "8", "key": "h"},
+        {"label": "9", "key": "i"},
+
+        {"label": "RU", "data": "rus", "key": "home"},
+        {"label": "0", "key": "0"},
+        {"label": "EN", "data": "eng", "key": "end"},
+
+        {"icon": "backspace", "data": "bs", "key": "red|delete", "progress": 1, "progressColor": "msx-red"},
+        {"icon": "space-bar", "data": " ", "key": "yellow|space", "progress": 1, "progressColor": "msx-yellow"},
+        {"icon": "", "data": "ok", "key": "green|insert", "id": "OK", "progress": 1, "progressColor": "msx-green"}
+    ]
+}

@@ -1,5 +1,5 @@
 {
   "name": "TorrServer Plugin",
-  "version": "0.1.132",
+  "version": "0.2.132",
   "parameter": "menu:request:interaction:init@{PREFIX}{SERVER}/msx/plugin.html"
 }

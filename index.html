@@ -5,42 +5,17 @@
         <meta charset="UTF-8" />
         <meta name="author" content="damiva" />
         <meta name="copyright" content="damiva" />
+        <script type="text/javascript" src="//msx.benzac.de/js/tvx-plugin.min.js"></script>
+        <script type="text/javascript" src="/js/main.js"></script>
         <script type="text/javascript">
-            function ajax(u, d, f, s){
-                var x = new XMLHttpRequest();
-                x.responseType = "json";
-                if(s) s.disabled = true;
-                x.onloadend = function(){
-                    if(x.status != 200) alert(x.statusText + ": " + x.responseText);
-                    else if(f) f(x.response);
-                    if(s) s.disabled = false;
-                }
-                x.open(d ? "POST" : "GET", u);
-                x.send(d ? JSON.stringify(d) : undefined);
-            }
-            window.onload = function(){
-                var f = document.forms[0], s = document.getElementById("set"), b = document.getElementById("set");
-                ajax("/files", null, function(v){
-                    f.files.value = f.files.defaultValue = v;
-                    b.disabled = true;
-                }, s);
-                f.files.onchange = function(){
-                    b.disabled = this.value == this.defaultValue;
-                }
-                f.onsubmit = function(){
-                    if(this.files.value != this.files.defaultValue) ajax("/files", this.files.value, null, s);
-                    console.log("set /files: " + this.files.value);
-                    return false;
-                };
-            };
+            TVXPluginTools.onReady(function() {
+                TVXInteractionPlugin.setupHandler(new Main());
+                TVXInteractionPlugin.init();
+            });
         </script>
     </head>
-    <body style="font-family: Arial, Helvetica, sans-serif;">
-        <form style="margin: auto; width: fit-content;">
-            <fieldset id="set">
-                <legend><b>My files</b> settings:</legend>
-                <label>Path to files on the server: <input name="files" id="files"></label><button id="ok" disabled>OK</button>
-            </fieldset>
-        </form>
+    <body style="color: white; font-size: large; font-family: Arial, Helvetica, sans-serif; background-color: black;">
+        TorrServer Plugin for Media Station X
+        <b style="float:right">© damiva 2024</b>
     </body>
 </html>
