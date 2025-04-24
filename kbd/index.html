@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>MSX Plugin for TorrServer</title>
+        <meta charset="UTF-8" />
+        <meta name="author" content="damiva" />
+        <meta name="copyright" content="damiva" />
+        <script type="text/javascript" src="//msx.benzac.de/js/tvx-plugin.min.js"></script>
+        <script type="text/javascript" src="kbd.js"></script>
+        <script type="text/javascript">
+            TVXPluginTools.onReady(function() {
+                TVXInteractionPlugin.setupHandler(new function(){
+                    var k = null;
+                    var c = function(d){
+                        if(!d || !d.action || typeof d.action != "string") return false;
+                        k = new keyboard(d.action, d.storageName, d.keyboard);
+                        return true;
+                    };
+                    this.handleData = function(d){
+                        return k ? k.handleData(d) : (c(d.data) && k.handleData({message: "kbd"}));
+                    };
+                    this.handleRequest = function(i, d, f){
+                        if(!d) TVXInteractionPlugin.error("Wrong request!");
+                        else if(d.data && (k || c(d.data)) && k.handleData({message: "kbd"})) d = {action: "[]"};
+                        else d ={action: "error:Wrong request"};
+                        f(d);
+                    };
+                }());
+                TVXInteractionPlugin.init();
+            });
+        </script>
+    </head>
+    <body></body>
+</html>

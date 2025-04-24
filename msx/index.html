@@ -1,97 +1,33 @@
 <!DOCTYPE html>
 <html>
     <head>
-        <title>Media Station X for TorrServer</title>
+        <title>MSX Plugin for TorrServer</title>
         <meta charset="UTF-8" />
         <meta name="author" content="damiva" />
         <meta name="copyright" content="damiva" />
-        <link type="image/png" rel="shortcut icon" href="https://msx.benzac.de/img/icon.png" /> 
-        <link type="image/png" rel="apple-touch-icon" href="https://msx.benzac.de/img/icon.png" />
-        <script>
-            function files(l){
-                var x = new XMLHttpRequest(), s = document.getElementById("stg");
-                s.disabled = true;
-                x.responseType = "json";
-                x.onloadend = function(){
-                    s.disabled = false;
-                    if(x.status == 200){
-                        if(!l) {
-                            s = document.getElementById("files");
-                            s.value = s.defaultValue = x.response;
-                        }
-                    }else{
-                        alert(x.status + ": " + x.responseText);
+        <script type="text/javascript" src="//msx.benzac.de/js/tvx-plugin.min.js"></script>
+        <script type="text/javascript">
+            TVXPluginTools.onReady(function() {
+                TVXInteractionPlugin.setupHandler({handleRequest: function(i, _, f){
+                    if (!i) {
+                        TVXInteractionPlugin.error("Server is not set!");
+                        f();
+                    } else {
+                        TVXServices.storage.set("ts:server", i);
+                        f({
+                            name: "TorrServer Plugin",
+                            version: "133.1.0",
+                            reference: "request:interaction:*@" + window.location.href + "nome.html",
+                            dictionary: TVXServices.storage.getBool("ts:russian", false) ? (window.location.href + "ru.json") : null
+                        });
                     }
-                }
-                x.open(l ? "POST" : "GET", "/files");
-                x.send(l ? JSON.stringify(l) : null);
-            }
-            function chn(e){
-                document.getElementById("send").disabled = e.value == e.defaultValue
-            }
-            function snd(e){
-                if(this.files.value != this.files.defaultValue) files(this.value);
-            }
-            function lng(e){
-                e.value = "ru" ? "en" : "ru";
-                document.querySelectorAll("[lang]").forEach(i => i.hidden = i.lang != e.value);
-            }
-            window.onload = function(){
-                var e = document.getElementById("msx");
-                document.getElementById("lang").onclick();
-                if(!(e.hidden = window.location.hostname == "damiva.github.io")){
-                    e.href = e.href.replace("{ORIG}", window.location.origin);
-                    document.getElementById("addr").innerText = window.location.host;
-                    document.getElementById("stg").hidden = false;
-                    files();
-                }
-            };
+                }});
+                TVXInteractionPlugin.init();
+            });
         </script>
     </head>
-    <body style="font-family: Arial, Helvetica, sans-serif; margin: 0 auto;">
-        <header style="background-color: black; color: white; font-size: larger;">
-            <img src="https://msx.benzac.de/img/icon.png" style="height:1em;">
-            TorrServer <span lang="en">on</span><span lang="ru">на</span> Media Station X
-            <input style="float: right;" id="lang" type="button" onclick="lng(this)">
-        </header>
-        <main>
-            <b lang="en">TV-set instalation</b><b lang="ru">Установка на телевизор</b>:
-            <ol>
-                <li>
-                    <span lang="en">On yuor TV-set install and launch the application:</span>
-                    <span lang="ru">На телевизоре установите и запустите приложение:</span>
-                    <a href="https://msx.benzac.de/info/">Media Station X</a>
-                </li>
-                <li>
-                    <span lang="en">Navigate to</span><span lang="ru">Перейдите к</span>:
-                    <b>Settings ⇒ Start Parameter ⇒ Setup</b>
-                </li>
-                <li>
-                    <span lang="en">Enter the address of</span><span lang="ru">Введите адрес</span>
-                    TorrServer: <b id="addr">&lt;IP&gt;:&lt;PORT&gt;</b>
-                </li>
-                <li>
-                    <span lang="en">Press</span><span lang="ru">Нажмите</span>
-                    <b>Yes</b> <span lang="en">to</span><span lang="ru">на</span>
-                    <b>Complete the setup</b>
-                </li>
-                <li>
-                    <span lang="en">Enjoy your content</span><span lang="ru">Наслождайтесь просмотром</span>
-                </li>
-            </ol>
-            <a id="msx" href="//msx.benzac.de/?start=menu:{ORIG}/msx/plugin.html">
-                <b lang="en">Run MSX in web-browser</b><b lang="ru">Запуск MSX в веб-браузере</b>
-            </a>
-            <fieldset id="stg" style="width: max-content;">
-                <legend>
-                    <b lang="en">Playing "My files" from the server</b><b lang="ru">Просмотр "Моих фалов" с сервера</b>:
-                </legend>
-                <b id="error"></b>
-                <label>
-                    <i lang="en">Path to the folder</i><i lang="ru">Путь к папке</i>:
-                    <input id="files" onchange="chn(this)">
-                </label><input id="send" type="button" value="OK" onclick="snd(this)">
-            </fieldset>
-        </main>
+    <body style="color: white; font-size: large; font-family: Arial, Helvetica, sans-serif; background-color: black;">
+        TorrServer Plugin for Media Station X
+        <b style="float:right">© damiva 2025</b>
     </body>
 </html>

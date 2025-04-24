@@ -1,9 +1,12 @@
 {
     "headline": "{ico:search} {dic:search|Search torrents}", "extension": "{ico:msx-white:keyboard} EN",
     "type": "list", "wrap": true, "flag": "keyboard",
-    "ready": {"action": "interaction:load:http://tsmsx.yourok.ru/", "data": ""},
-    "underlay": {"items": [{"id": "val", "type": "space", "layout": "0,0,10,1", "color": "msx-black-soft", "label": ""}]},
-    "template": {"type": "button", "layout": "0,0,1,1", "area": "0,1,7,5", "offset": ".5,0,0,0", "enumerate": false, "iconSize": "small", "action": "interaction:commit", "data": "{context:label}"},
+    "ready": {"action": "interaction:commit", "data": {"key": ""}},
+    "underlay": {"items": [{"id": "VAL", "type": "space", "layout": "0,0,10,1", "color": "msx-black-soft", "label": ""}]},
+    "template": {
+        "type": "button", "layout": "0,0,2,1", "area": "1,1,6,5", "enumerate": false, "iconSize": "small",
+        "action": "interaction:commit", "data": {"key": "{context:label}"}
+    },
     "items": [
         {"label": "a", "key": "a"},
         {"label": "b", "key": "b"},
@@ -37,12 +40,12 @@
         {"label": "'", "key": "quote"},
         {"label": "&"},
 
-        {"icon": "backspace", "data": "bs", "key": "red|delete", "progress": 1, "progressColor": "msx-red"},
-        {"icon": "123", "data": "123", "key": "home|1|2|3|4|5|6|7|8|9|0"},
+        {"icon": "backspace", "data": {"key": "bs"}, "key": "red|delete", "progress": 1, "progressColor": "msx-red"},
+        {"icon": "123", "data": {"key": "123"}, "key": "home|1|2|3|4|5|6|7|8|9|0"},
         {"type": "space"},
-        {"icon": "space-bar", "data": " ", "key": "yellow|space", "progress": 1, "progressColor": "msx-yellow", "offset": "-1,0,2,0"},
+        {"icon": "space-bar", "data": {"key": " "}, "key": "yellow|space", "progress": 1, "progressColor": "msx-yellow", "offset": "-1,0,2,0"},
         {"type": "space"}, 
-        {"label": "RU", "data": "rus", "key": "end"},
-        {"icon": "", "data": "ok", "key": "green|insert", "id": "OK", "progress": 1, "progressColor": "msx-green"}
+        {"label": "RU", "data": {"key": "rus"}, "key": "end"},
+        {"icon": "", "data": {"key": "ok"}, "key": "green|insert", "id": "OK", "progress": 1, "progressColor": "msx-green"}
     ]
 }
