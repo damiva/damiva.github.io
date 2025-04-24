@@ -35,7 +35,7 @@ function keyboard(act, str, kbd, url){
             else if(!v && h && o != "history") k = o = "history";
             else if(!v && !h && o) k = o = "";
             if(k !== null) TVXInteractionPlugin.executeAction("update:panel:OK", {icon: o});
-            TVXInteractionPlugin.executeAction("update:panel:VAL", {label: v + "{col:msx-white-soft}" + (v ? "_" : h)});
+            TVXInteractionPlugin.executeAction("update:panel:VAL", {label: v + "{col:msx-white-soft}" + (v ? "_" : ("{ico:history} " + h))});
             return true;        
         }
         return false;

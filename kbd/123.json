@@ -1,11 +1,11 @@
 {
     "headline": "{ico:search} {dic:search|Search torrents}", "extension": "{ico:msx-white:keyboard} 123",
     "type": "list", "wrap": true, "flag": "keyboard",
-    "ready": {"action": "interaction:commit", "data": {"key": ""}},
+    "ready": {"action": "interaction:commit:message:key", "data": ""},
     "underlay": {"items": [{"id": "VAL", "type": "space", "layout": "0,0,10,1", "color": "msx-black-soft", "label": ""}]},
     "template": {
         "type": "button", "layout": "0,0,2,1", "area": "1,1,6,5", "enumerate": false, "iconSize": "small",
-        "action": "interaction:commit", "data": {"key": "{context:label}"}
+        "action": "interaction:commit:message:key", "data": "{context:label}"
     },
     "items": [
         {"label": "1", "key": "a"},
@@ -20,12 +20,12 @@
         {"label": "8", "key": "h"},
         {"label": "9", "key": "i"},
 
-        {"label": "RU", "data": {"key": "rus"}, "key": "home"},
+        {"label": "RU", "data": "rus", "key": "home"},
         {"label": "0", "key": "0"},
-        {"label": "EN", "data": {"key": "eng"}, "key": "end"},
+        {"label": "EN", "data": "eng", "key": "end"},
 
-        {"icon": "backspace", "data": {"key": "bs"}, "key": "red|delete", "progress": 1, "progressColor": "msx-red"},
-        {"icon": "space-bar", "data": {"key": " "}, "key": "yellow|space", "progress": 1, "progressColor": "msx-yellow"},
-        {"icon": "", "data": {"key": "ok"}, "key": "green|insert", "id": "OK", "progress": 1, "progressColor": "msx-green"}
+        {"icon": "backspace", "data": "bs", "key": "red|delete", "progress": 1, "progressColor": "msx-red"},
+        {"icon": "space-bar", "data": " ", "key": "yellow|space", "progress": 1, "progressColor": "msx-yellow"},
+        {"icon": "", "data": "ok", "key": "green|insert", "id": "OK", "progress": 1, "progressColor": "msx-green"}
     ]
 }

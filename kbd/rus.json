@@ -1,11 +1,11 @@
 {
     "headline": "{ico:search} {dic:search|Search torrents}", "extension": "{ico:msx-white:keyboard} RU",
     "type": "list", "wrap": true, "flag": "keyboard",
-    "ready": {"action": "interaction:commit", "data": {"key": ""}},
+    "ready": {"action": "interaction:commit:message:key", "data": ""},
     "underlay": {"items": [{"id": "VAL", "type": "space", "layout": "0,0,10,1", "color": "msx-black-soft", "label": ""}]},
     "template": {
         "type": "button", "layout": "0,0,2,1", "area": "1,1,6,5", "enumerate": false, "iconSize": "small",
-        "action": "interaction:commit", "data": {"key": "{context:label}"}
+        "action": "interaction:commit:message:key", "data": "{context:label}"
     },
     "items": [
         {"label": "а", "key": "f"},
@@ -44,13 +44,13 @@
         {"label": "ю", "key": "period"},
         {"label": "я", "key": "z"},
 
-        {"icon": "backspace", "data": {"key": "bs"}, "key": "red|delete", "progress": 1, "progressColor": "msx-red", "offset": "0,0,1,0"},
+        {"icon": "backspace", "data": "bs", "key": "red|delete", "progress": 1, "progressColor": "msx-red", "offset": "0,0,1,0"},
         {"type": "space"},
-        {"icon": "123", "data": {"key": "123"}, "key": "home|1|2|3|4|5|6|7|8|9|0"},
-        {"icon": "space-bar", "data": {"key": " "}, "key": "yellow|space", "progress": 1, "progressColor": "msx-yellow", "offset": "0,0,1,0"},
+        {"icon": "123", "data": "123", "key": "home|1|2|3|4|5|6|7|8|9|0"},
+        {"icon": "space-bar", "data": " ", "key": "yellow|space", "progress": 1, "progressColor": "msx-yellow", "offset": "0,0,1,0"},
         {"type": "space"}, 
-        {"label": "EN", "data": {"key": "eng"}, "key": "end"},
+        {"label": "EN", "data": "eng", "key": "end"},
         {"type": "space"}, 
-        {"icon": "", "data": {"key": "ok"}, "key": "green|insert", "id": "OK", "progress": 1, "progressColor": "msx-green", "offset": "-1,0,1,0"}
+        {"icon": "", "data": "ok", "key": "green|insert", "id": "OK", "progress": 1, "progressColor": "msx-green", "offset": "-1,0,1,0"}
     ]
 }
