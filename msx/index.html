@@ -6,28 +6,16 @@
         <meta name="author" content="damiva" />
         <meta name="copyright" content="damiva" />
         <script type="text/javascript" src="//msx.benzac.de/js/tvx-plugin.min.js"></script>
+        <script type="text/javascript" src="files.js"></script>
+        <script type="text/javascript" src="search.js"></script>
+        <script type="text/javascript" src="torrents.js"></script>
+        <script type="text/javascript" src="main.js"></script>
         <script type="text/javascript">
             TVXPluginTools.onReady(function() {
-                TVXInteractionPlugin.setupHandler({handleRequest: function(i, _, f){
-                    if (!i) {
-                        TVXInteractionPlugin.error("Server is not set!");
-                        f();
-                    } else {
-                        TVXServices.storage.set("ts:server", i);
-                        f({
-                            name: "TorrServer Plugin",
-                            version: "133.1.162",
-                            reference: "request:interaction:menu@" + window.location.href + "main.html",
-                            dictionary: TVXServices.storage.getBool("ts:russian", false) ? (window.location.href + "ru.json") : null
-                        });
-                    }
-                }});
+                TVXInteractionPlugin.setupHandler(new main());
                 TVXInteractionPlugin.init();
             });
         </script>
     </head>
-    <body style="color: white; font-size: large; font-family: Arial, Helvetica, sans-serif; background-color: black;">
-        TorrServer Plugin for Media Station X
-        <b style="float:right">© damiva 2025</b>
-    </body>
+    <body></body>
 </html>
