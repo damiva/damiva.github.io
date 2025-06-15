@@ -11,9 +11,9 @@
             TVXPluginTools.onReady(function() {
                 TVXInteractionPlugin.setupHandler(new files(
                     TVXServices.urlParams.getFullStr("url", ""),
-                    TVXServices.urlParams.has("compress", TVXServices.urlParams.getFullStr("compress", true)),
-                    TVXServices.urlParams.has("group", true),
-                    TVXServices.urlParams.getFullStr("torrent", null)
+                    TVXServices.urlParams.has("remove", true),
+                    TVXServices.urlParams.getFullStr("action", null),
+                    TVXServices.urlParams.has("data", TVXServices.urlParams.getFullStr("data", true))
                 ));
                 TVXInteractionPlugin.init();
             });
