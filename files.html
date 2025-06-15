@@ -6,16 +6,18 @@
         <meta name="author" content="damiva" />
         <meta name="copyright" content="damiva" />
         <script type="text/javascript" src="//msx.benzac.de/js/tvx-plugin.min.js"></script>
-        <script type="text/javascript" src="/js/light.js"></script>
+        <script type="text/javascript" src="/js/files.js"></script>
         <script type="text/javascript">
             TVXPluginTools.onReady(function() {
-                TVXInteractionPlugin.setupHandler(new main());
+                TVXInteractionPlugin.setupHandler(new files(
+                    TVXServices.urlParams.getFullStr("url", ""),
+                    TVXServices.urlParams.has("compress", TVXServices.urlParams.getFullStr("compress", true)),
+                    TVXServices.urlParams.has("group", true),
+                    TVXServices.urlParams.getFullStr("torrent", null)
+                ));
                 TVXInteractionPlugin.init();
             });
         </script>
     </head>
-    <body style="color: white; font-size: large; font-family: Arial, Helvetica, sans-serif; background-color: black;">
-        TorrServer Plugin for Media Station X
-        <b style="float:right">© damiva 2024</b>
-    </body>
+    <body></body>
 </html>

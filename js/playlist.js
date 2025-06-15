@@ -41,7 +41,7 @@ function playlist(){
                 {icon: "folder", label: "{dic:folders|Show folders}", data: "folders", extensionIcon: icon(f), display: f !== undefined}
             ])),
             template: {type: "control", layout: c ? "0,0,16,1" : "0,0,12,1", progress: -1, live: {type: "playback", action: "player:show"}, properties: p},
-            items: d && d.length ? d : [{items: "refresh", label: "{dic:empty|Nothing found}", action: "reload:content"}]
+            items: d && d.length ? d : [{icon: "refresh", label: "{dic:empty|Nothing found}", action: "reload:content"}]
         };
     };
     var H = function(d, p, c){
