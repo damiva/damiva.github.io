@@ -9,12 +9,22 @@
         <script type="text/javascript" src="/js/files.js"></script>
         <script type="text/javascript">
             TVXPluginTools.onReady(function() {
-                TVXInteractionPlugin.setupHandler(new files(
+                files = new files(
                     TVXServices.urlParams.getFullStr("url", ""),
                     TVXServices.urlParams.has("remove", true),
                     TVXServices.urlParams.getFullStr("action", null),
                     TVXServices.urlParams.has("data", TVXServices.urlParams.getFullStr("data", true))
-                ));
+                );
+                TVXInteractionPlugin.setupHandler({
+                    init: files.init,
+                    handleData: files.handleData,
+                    handleRequest: function(i, d, f){
+                        if(!files.handleRequest(i, d, f)){
+                            TVXInteractionPlugin.error("unknow request id: " + i);
+                            f();
+                        }
+                    }
+                });
                 TVXInteractionPlugin.init();
             });
         </script>

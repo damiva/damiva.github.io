@@ -92,7 +92,7 @@ function files(url, remove, trnAct, trnDat){
                 fs = ds.concat(ts, fs);
                 ts = TVXServices.storage.getBool("files:compress", false);
                 ds = id.substr(0, id.length - 1);
-                f({
+                cb({
                     type: "list", reuse: false, cache: false, restore: false, flag: ds, refocus: true, compress: ts,
                     headline: decodeURI(ds.substr(ds.lastIndexOf("/") + 1)), extension: "{ico:msx-white:folder} " + fs.length,
                     template: {
